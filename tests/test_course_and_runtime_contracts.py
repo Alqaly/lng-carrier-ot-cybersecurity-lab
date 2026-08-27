@@ -10,11 +10,16 @@ def _walk_nav(node):
         for x in node.values(): yield from _walk_nav(x)
 
 def test_mkdocs_nav_paths_exist():
-    m=yaml.safe_load((R/'mkdocs.yml').read_text())
-    missing=[]
+    m = yaml.safe_load((R / 'mkdocs.yml').read_text())
+    docs_dir = R / m.get('docs_dir', 'docs')
+    missing = []
+
     for rel in _walk_nav(m['nav']):
-        if rel.startswith(('http://','https://')): continue
-        if not (R/rel).exists(): missing.append(rel)
+        if rel.startswith(('http://', 'https://')):
+            continue
+        if not (docs_dir / rel).exists():
+            missing.append(rel)
+
     assert not missing, missing
 
 def test_course_has_exactly_ten_numbered_chapters():

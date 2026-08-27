@@ -72,4 +72,4 @@ Explain why replay is scientifically useful but must be labeled differently from
 
 - [NMEA](../05-protocols/nmea.md)
 - [IEC 61162-450/460](../05-protocols/iec-61162-450-460.md)
-- [Navigation replay README](../../navigation/README.md)
+- [Navigation replay README](https://github.com/Alqaly/lng-carrier-ot-cybersecurity-lab/blob/main/navigation/README.md)

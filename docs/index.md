@@ -19,4 +19,4 @@ The project combines:
 
 The executable environment is deliberately separated from the real-vessel reference layer so the reader always knows what is being **simulated**, what is being **implemented as a real protocol/runtime**, and what is being **described from marine industry sources**.
 
-Start with [Start Here](../START-HERE.md).
+Start with [Start Here](start-here.md).
