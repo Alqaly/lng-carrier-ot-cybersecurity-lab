@@ -129,17 +129,22 @@ Record the NodeId and timestamps in your evidence notes.
 Do **not** stop the Cargo PLC. That would mix controller/control loss with the supervisory failure we are trying to measure. First prove the historian is fresh, then isolate only the PLC operations-network attachment:
 
 ```bash
-./labctl hist-fresh cargo --threshold 5 --out evidence/runtime/freshness-before.json
-./labctl opcua-outage cargo start
-# wait longer than the declared freshness threshold
-./labctl hist-fresh cargo --threshold 5 --out evidence/runtime/freshness-after.json || true
-./labctl opcua-outage cargo restore
+./labctl hist-fresh cargo --threshold 5 --out evidence/runs/<run-dir>/freshness-before.json
+./labctl opcua-outage cargo start --out evidence/runs/<run-dir>/opcua-outage.json
+./labctl capture cargo modbus evidence/runs/<run-dir> --duration 8
+./labctl hist-fresh cargo --threshold 5 --out evidence/runs/<run-dir>/freshness-after.json || true
+./labctl opcua-outage cargo restore --out evidence/runs/<run-dir>/opcua-outage.json
+./labctl zeek cargo evidence/runs/<run-dir>/cargo-modbus.pcap evidence/runs/<run-dir>/zeek
+./labctl evaluate EXP-OPCUA-STALE-CARGO evidence/runs/<run-dir>
+./labctl verify-run evidence/runs/<run-dir>
 ```
 
 Expected:
 
 - the Cargo PLC remains attached to the fixed `cargo_control` Modbus conduit,
 - the operations-side OPC UA path becomes unreachable,
+- the run-scoped outage record retains the isolation start, `control_preserved=true`, and restore time,
+- a timed Cargo Modbus PCAP is captured during the supervisory outage and Zeek proves at least one Modbus transaction inside that window,
 - Telegraf cannot obtain new Cargo samples and the historian becomes stale,
 - no service manufactures replacement fresh values,
 - restore reconnects the recorded operations network with the same fixed IP.

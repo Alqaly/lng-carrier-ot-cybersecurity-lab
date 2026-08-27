@@ -62,13 +62,24 @@ cmd_status(){
   say "Active alarms"; curl --fail --silent http://127.0.0.1:8400/alarms | python3 -m json.tool || true
 }
 cmd_capture(){
-  local domain="${1:-cargo}" kind="${2:-modbus}" dest="${3:-}" port sidecar filter outfile
+  local domain="${1:-cargo}" kind="${2:-modbus}" dest="" duration="" port sidecar filter outfile rc=0
+  if [ "$#" -ge 2 ]; then shift 2; else set --; fi
   case "$domain" in cargo) port=5020;; pms) port=5021;; propulsion) port=5022;; *) fail "capture domain must be cargo|pms|propulsion";; esac
   case "$kind" in
     modbus) sidecar="capture-${domain}-io"; filter="tcp port ${port}";;
     opcua) sidecar="capture-${domain}-plc"; filter="tcp port 4840";;
     *) fail "capture kind must be modbus|opcua";;
   esac
+  if [ -n "${1:-}" ] && [[ "${1:-}" != --* ]]; then dest="$1"; shift; fi
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --duration)
+        duration="${2:?--duration requires positive whole seconds}"; shift 2
+        [[ "$duration" =~ ^[1-9][0-9]*$ ]] || fail "--duration must be a positive whole number of seconds"
+        ;;
+      *) fail "Unknown capture option: $1";;
+    esac
+  done
   if [ -n "$dest" ]; then
     [[ "$dest" == evidence/* ]] || fail "capture destination must be inside evidence/ so the tool sidecar can preserve it"
     outfile="${dest%/}/${domain}-${kind}.pcap"
@@ -79,9 +90,16 @@ cmd_capture(){
   say "Starting namespace capture sidecar ${sidecar}"
   docker compose --profile tools up -d --build "$sidecar"
   say "Capturing ${domain} ${kind}: ${filter}"
-  printf 'Press Ctrl-C to stop.\n'
-  docker compose --profile tools exec "$sidecar" sh -lc "rm -f /tmp/${kind}.pcap; tcpdump -i any -nn -s0 -w /tmp/${kind}.pcap '${filter}'" || true
+  if [ -n "$duration" ]; then
+    printf 'Capturing for %s seconds.\n' "$duration"
+    docker compose --profile tools exec "$sidecar" sh -lc "rm -f /tmp/${kind}.pcap; timeout -s INT ${duration} tcpdump -i any -nn -s0 -w /tmp/${kind}.pcap '${filter}'; rc=\$?; [ \$rc -eq 0 ] || [ \$rc -eq 124 ]" || rc=$?
+    [ "$rc" -eq 0 ] || fail "Timed tcpdump failed with exit code $rc"
+  else
+    printf 'Press Ctrl-C to stop.\n'
+    docker compose --profile tools exec "$sidecar" sh -lc "rm -f /tmp/${kind}.pcap; tcpdump -i any -nn -s0 -w /tmp/${kind}.pcap '${filter}'" || true
+  fi
   docker compose --profile tools cp "${sidecar}:/tmp/${kind}.pcap" "$outfile"
+  [ -s "$outfile" ] || fail "Capture output is missing or empty: $outfile"
   printf 'Saved %s\n' "$outfile"
 }
 cmd_zeek(){
@@ -260,10 +278,19 @@ cmd_hist_fresh(){
   python3 historian/freshness_check.py "${args[@]}"
 }
 cmd_opcua_outage(){
-  local domain="${1:-cargo}" action="${2:-start}"
+  local domain="${1:-cargo}" action="${2:-start}" out=""
+  if [ "$#" -ge 2 ]; then shift 2; else set --; fi
   case "$domain" in cargo|pms|propulsion);; *) fail "opcua-outage domain must be cargo|pms|propulsion";; esac
   case "$action" in start|restore);; *) fail "opcua-outage action must be start|restore";; esac
-  python3 tools/opcua_outage.py "$domain" "$action"
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --out) out="${2:?--out requires an evidence path}"; shift 2;;
+      *) fail "Unknown opcua-outage option: $1";;
+    esac
+  done
+  local args=("$domain" "$action")
+  [ -z "$out" ] || args+=(--out "$out")
+  python3 tools/opcua_outage.py "${args[@]}"
 }
 
 case "${1:-help}" in
@@ -298,14 +325,14 @@ Usage: ./labctl <command>
   conduit-check <domain> [conn.log] [out.json]  Compare Zeek flow evidence with declared Modbus conduits
   cargo-residual <csv|jsonl> [out.json]  Compare measured Cargo flow with tank mass balance
   hist-fresh <domain> [--threshold SEC] [--out FILE]  Check latest commissioned historian sample age
-  opcua-outage <domain> start|restore  Isolate/restore only the PLC operations network
+  opcua-outage <domain> start|restore [--out evidence/run/opcua-outage.json]  Isolate/restore only the PLC operations network
   smoke                  Read-only sanity check of running process services
   runtime-verify          Post-commissioning process + service reachability verification
   acceptance             Run host/static/pre-PLC acceptance sequence
   build                  Compile all FMUs + start model/I/O learning layer
   up                     Start complete environment
   status                 Show services + three domain states + alarms
-  capture <domain> [modbus|opcua] [evidence/run-dir]  Capture inside the I/O or PLC namespace
+  capture <domain> [modbus|opcua] [evidence/run-dir] [--duration SEC]  Capture inside the I/O or PLC namespace
   zeek <domain> [pcap] [output-dir]  Analyze a saved Modbus PCAP with Zeek
   demo <scenario>        Controlled commissioning/fault lab
                          cargo | pms | propulsion | vessel

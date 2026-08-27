@@ -2,7 +2,7 @@
   "project": "LNG Carrier OT Cybersecurity Lab",
   "artifact_state": "release_candidate_for_target_server_commissioning",
   "static_validation": {
-    "pytest_expected": 61,
+    "pytest_expected": 68,
     "course_chapters": 10,
     "experiments": 7,
     "compose_services": 26,

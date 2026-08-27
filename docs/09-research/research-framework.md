@@ -40,10 +40,11 @@ Create the run first, then let the observer timestamp what it actually receives.
 ```bash
 ./labctl new-run EXP-CARGO-BLOCKED-FLOW
 ./labctl observe 60 evidence/runs/<run-dir>
-./labctl capture cargo modbus
-./labctl zeek cargo
-./labctl conduit-check cargo
+./labctl capture cargo modbus evidence/runs/<run-dir> --duration 20
+./labctl zeek cargo evidence/runs/<run-dir>/cargo-modbus.pcap evidence/runs/<run-dir>/zeek
+./labctl conduit-check cargo evidence/runs/<run-dir>/zeek/conn.log evidence/runs/<run-dir>/conduit-classification.json
 ./labctl evaluate EXP-CARGO-BLOCKED-FLOW evidence/runs/<run-dir>
+./labctl verify-run evidence/runs/<run-dir>
 ```
 
 For Cargo sensor-integrity work, the mass-balance analyzer accepts either CSV or the observer JSONL timeline:
@@ -56,14 +57,19 @@ For a Cargo supervisory outage, preserve the Modbus controller path and isolate 
 
 ```bash
 ./labctl hist-fresh cargo --threshold 5 --out evidence/runs/<run-dir>/freshness-before.json
-./labctl opcua-outage cargo start
-# wait beyond the declared freshness threshold
+./labctl opcua-outage cargo start --out evidence/runs/<run-dir>/opcua-outage.json
+./labctl capture cargo modbus evidence/runs/<run-dir> --duration 8
 ./labctl hist-fresh cargo --threshold 5 --out evidence/runs/<run-dir>/freshness-after.json || true
-./labctl opcua-outage cargo restore
+./labctl opcua-outage cargo restore --out evidence/runs/<run-dir>/opcua-outage.json
+./labctl zeek cargo evidence/runs/<run-dir>/cargo-modbus.pcap evidence/runs/<run-dir>/zeek
+./labctl evaluate EXP-OPCUA-STALE-CARGO evidence/runs/<run-dir>
+./labctl verify-run evidence/runs/<run-dir>
 ```
 
-`conduit-check` compares Zeek connection evidence against `security/conduits.json`; `cargo-residual` compares measured flow with source-tank mass balance; `hist-fresh` uses the commissioned OPC UA group/Influx measurement name rather than a guessed tag identity.
+`conduit-check` compares Zeek connection evidence against `security/conduits.json`; `cargo-residual` compares measured flow with source-tank mass balance; `hist-fresh` uses the commissioned OPC UA group/Influx measurement name rather than a guessed tag identity. Timed capture is used when an experiment needs a deterministic observation window instead of a manual Ctrl-C boundary.
 
 ## Evidence integrity and repository provenance
 
-`./labctl new-run` records the Git commit, origin URL when configured, dirty-tree state and SHA-256 of `release-manifest.json`. `./labctl evaluate` resolves concrete files inside the run directory, validates their formats, hashes every required artifact and applies experiment-specific checks. `run.json` boolean flags are not accepted as evidence. After evaluation, `./labctl verify-run <run-dir>` detects missing or modified artifacts by SHA-256.
+`./labctl new-run` records the Git commit, origin URL when configured, dirty-tree state and SHA-256 of `release-manifest.json`. `./labctl evaluate` resolves concrete files inside the run directory, validates their formats, hashes every required artifact and applies experiment-specific causal checks. Schema v3 also accounts for every declared metric: a metric is either `measured` with its evidence source, unit and timestamp semantics, or explicitly `unavailable` with a reason. `run.json` boolean flags are not accepted as evidence. After evaluation, `./labctl verify-run <run-dir>` detects missing or modified artifacts by SHA-256.
+
+The semantic evaluator now requires evidence appropriate to each hypothesis rather than accepting shape-valid files alone. In particular, the PMS trip experiment requires the PMS state timeline and proves intervention → breaker loss → frequency/blackout excursion → vessel consequence plus alarm chronology; the propulsion cooling experiment requires high coolant followed by the PLC-visible `engineEnable=false` protective inhibit; and the Cargo OPC UA outage requires a run-scoped outage record plus a Zeek Modbus transaction inside the verified supervisory-outage window.
