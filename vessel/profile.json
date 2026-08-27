@@ -1,0 +1,11 @@
+{
+  "name": "Mechanical-propulsion LNG carrier teaching profile",
+  "description": "Main propulsion is mechanical; the PMS supplies hotel/auxiliary and cargo electrical loads. Propulsion contributes auxiliary electrical demand, not shaft power.",
+  "cargo_power_from_pms": true,
+  "propulsion_aux_power_from_pms": true,
+  "electric_propulsion_main_load": false,
+  "source_references": [
+    "https://www.wartsila.com/encyclopedia/term/cargo-handling-equipment-of-a-typical-138-000m3-lng-tanker",
+    "https://www.wartsila.com/marine/customer-segments/merchant/small-and-medium-gas-carriers"
+  ]
+}

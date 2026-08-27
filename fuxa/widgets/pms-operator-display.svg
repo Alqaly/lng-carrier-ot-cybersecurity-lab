@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#1b2024"/>
+<text x="55" y="62" fill="#e7edf1" font-family="Arial" font-size="32" font-weight="700">POWER MANAGEMENT — SYSTEM OVERVIEW</text>
+<text x="55" y="94" fill="#9caab3" font-family="Arial" font-size="15">Task: maintain electrical availability and sufficient reserve</text>
+<rect x="45" y="125" width="1510" height="560" rx="12" fill="#22292e" stroke="#59666f"/>
+<rect x="45" y="710" width="1510" height="130" rx="12" fill="#171b1e" stroke="#59666f"/>
+<text x="70" y="745" fill="#bbc5ca" font-family="Arial" font-size="15">ACTIVE ALARMS — reserved attention region</text>
+<rect x="140" y="260" width="260" height="150" rx="10" fill="#2a3237" stroke="#7a8992" stroke-width="2"/>
+<text x="270.0" y="335.0" fill="#e4eaed" text-anchor="middle" font-family="Arial" font-size="18">GENERATOR 1</text>
+<rect x="600" y="260" width="360" height="150" rx="10" fill="#2a3237" stroke="#7a8992" stroke-width="2"/>
+<text x="780.0" y="335.0" fill="#e4eaed" text-anchor="middle" font-family="Arial" font-size="18">MAIN BUS</text>
+<rect x="1160" y="260" width="260" height="150" rx="10" fill="#2a3237" stroke="#7a8992" stroke-width="2"/>
+<text x="1290.0" y="335.0" fill="#e4eaed" text-anchor="middle" font-family="Arial" font-size="18">GENERATOR 2</text>
+<rect x="80" y="580" width="210" height="76" rx="8" fill="#171b1e" stroke="#4f5a61"/>
+<text x="95" y="605" fill="#94a3ab" font-family="Arial" font-size="13">Frequency</text>
+<text x="95" y="638" fill="#eef2f4" font-family="Arial" font-size="24">— Hz</text>
+<rect x="325" y="580" width="210" height="76" rx="8" fill="#171b1e" stroke="#4f5a61"/>
+<text x="340" y="605" fill="#94a3ab" font-family="Arial" font-size="13">Voltage</text>
+<text x="340" y="638" fill="#eef2f4" font-family="Arial" font-size="24">— p.u.</text>
+<rect x="570" y="580" width="210" height="76" rx="8" fill="#171b1e" stroke="#4f5a61"/>
+<text x="585" y="605" fill="#94a3ab" font-family="Arial" font-size="13">Gen 1</text>
+<text x="585" y="638" fill="#eef2f4" font-family="Arial" font-size="24">— kW</text>
+<rect x="815" y="580" width="210" height="76" rx="8" fill="#171b1e" stroke="#4f5a61"/>
+<text x="830" y="605" fill="#94a3ab" font-family="Arial" font-size="13">Gen 2</text>
+<text x="830" y="638" fill="#eef2f4" font-family="Arial" font-size="24">— kW</text>
+<rect x="1060" y="580" width="210" height="76" rx="8" fill="#171b1e" stroke="#4f5a61"/>
+<text x="1075" y="605" fill="#94a3ab" font-family="Arial" font-size="13">Load</text>
+<text x="1075" y="638" fill="#eef2f4" font-family="Arial" font-size="24">— kW</text>
+<rect x="1305" y="580" width="210" height="76" rx="8" fill="#171b1e" stroke="#4f5a61"/>
+<text x="1320" y="605" fill="#94a3ab" font-family="Arial" font-size="13">Reserve</text>
+<text x="1320" y="638" fill="#eef2f4" font-family="Arial" font-size="24">— kW</text>
+<text x="70" y="815" fill="#73818a" font-family="Arial" font-size="14">Normal display is deliberately muted; abnormal conditions should gain visual priority.</text>
+</svg>

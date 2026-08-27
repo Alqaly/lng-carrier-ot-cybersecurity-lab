@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#83cfff"/></marker></defs>
+<rect width="100%" height="100%" fill="#0b1117"/>
+<text x="55" y="60" fill="#fff" font-family="Arial" font-size="34" font-weight="700">Cargo Model — Aggregate Pump Bank Anchored to a Public LNG-Carrier Example</text>
+<rect x="70" y="150" width="260" height="100" rx="16" fill="#15342d" stroke="#78c8f4" stroke-width="2"/>
+<text x="200.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">4 Cargo Tanks</text>
+<text x="200.0" y="216" fill="#c5d5e2" text-anchor="middle" font-family="Arial" font-size="14">aggregate source state</text>
+<rect x="410" y="150" width="260" height="100" rx="16" fill="#15342d" stroke="#78c8f4" stroke-width="2"/>
+<text x="540.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">8 Submerged Pumps</text>
+<text x="540.0" y="216" fill="#c5d5e2" text-anchor="middle" font-family="Arial" font-size="14">2 per tank × 1700 m³/h</text>
+<rect x="750" y="150" width="260" height="100" rx="16" fill="#15342d" stroke="#78c8f4" stroke-width="2"/>
+<text x="880.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Valve / Header</text>
+<text x="880.0" y="216" fill="#c5d5e2" text-anchor="middle" font-family="Arial" font-size="14">aggregate transfer path</text>
+<rect x="1090" y="150" width="260" height="100" rx="16" fill="#15342d" stroke="#78c8f4" stroke-width="2"/>
+<text x="1220.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Receiving Side</text>
+<text x="1220.0" y="216" fill="#c5d5e2" text-anchor="middle" font-family="Arial" font-size="14">aggregate destination</text>
+<rect x="410" y="450" width="260" height="100" rx="16" fill="#3b2c1d" stroke="#78c8f4" stroke-width="2"/>
+<text x="540.0" y="487" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Pump Power</text>
+<text x="540.0" y="516" fill="#c5d5e2" text-anchor="middle" font-family="Arial" font-size="14">hydraulic estimate → kW</text>
+<rect x="750" y="450" width="260" height="100" rx="16" fill="#1d2c45" stroke="#78c8f4" stroke-width="2"/>
+<text x="880.0" y="487" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Modbus I/O</text>
+<text x="880.0" y="516" fill="#c5d5e2" text-anchor="middle" font-family="Arial" font-size="14">flow / level / feedback</text>
+<rect x="1090" y="450" width="260" height="100" rx="16" fill="#30263d" stroke="#78c8f4" stroke-width="2"/>
+<text x="1220.0" y="487" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">PMS</text>
+<text x="1220.0" y="516" fill="#c5d5e2" text-anchor="middle" font-family="Arial" font-size="14">electrical dependency</text>
+<line x1="330" y1="200" x2="410" y2="200" stroke="#83cfff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="670" y1="200" x2="750" y2="200" stroke="#83cfff" stroke-width="3" marker-end="url(#a)"/>
+<text x="710.0" y="193.0" fill="#ffd98a" text-anchor="middle" font-family="Arial" font-size="14">13,600 m³/h nominal</text>
+<line x1="1010" y1="200" x2="1090" y2="200" stroke="#83cfff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="540" y1="250" x2="540" y2="450" stroke="#83cfff" stroke-width="3" marker-end="url(#a)"/>
+<text x="540.0" y="343.0" fill="#ffd98a" text-anchor="middle" font-family="Arial" font-size="14">calculated</text>
+<line x1="670" y1="500" x2="750" y2="500" stroke="#83cfff" stroke-width="3" marker-end="url(#a)"/>
+<line x1="1010" y1="500" x2="1090" y2="500" stroke="#83cfff" stroke-width="3" marker-end="url(#a)"/>
+<text x="1050.0" y="493.0" fill="#ffd98a" text-anchor="middle" font-family="Arial" font-size="14">external load</text>
+<text x="55" y="865" fill="#8fa5b8" font-family="Arial" font-size="14">Pump count/flow anchor: Wärtsilä public reference for a typical 138,000 m³ LNG tanker. Head/efficiency remain teaching assumptions.</text>
+</svg>

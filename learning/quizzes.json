@@ -1,0 +1,30 @@
+{
+  "ot": [
+    {"q":"A pump command is ON, pump feedback is ON, but measured flow is zero. Name three different classes of explanation before calling it a cyberattack.","a":"Examples: blocked hydraulic path/process fault; incorrect valve/path state; sensor/transmitter/I-O mapping problem; communication/configuration error; unauthorized control action. The key is command/feedback/measurement are different evidence."},
+    {"q":"Explain the difference between permissive, interlock, alarm, and trip in one sentence each.","a":"Permissive: condition required before an action is allowed. Interlock: logic that prevents/changes action based on state. Alarm: operator notification of abnormal condition. Trip: protective action that stops/isolates or requests safe state."},
+    {"q":"What is the PLC evidence chain for one process value?","a":"Process/model state → I/O representation → protocol message → PLC symbol/engineering unit → OPC UA node → HMI/historian → evidence."}
+  ],
+  "modbus": [
+    {"q":"Why does 'register 40001' not tell you what a value means?","a":"Modbus defines data areas and operations, but the semantic meaning/address mapping is device/project specific and must come from the documented I/O map/manual."},
+    {"q":"What does the MBAP header add in Modbus TCP?","a":"Transaction ID, protocol ID, length and unit identifier around the Modbus PDU so request/response transactions can be carried over TCP."},
+    {"q":"What can a Modbus packet prove and what can it not prove?","a":"It can prove a source/destination, operation, address and transferred value at that point in time. It cannot alone prove the physical equipment actually moved or the process responded correctly."}
+  ],
+  "cargo": [
+    {"q":"Why is the executable Cargo profile explicitly ship unloading rather than ambiguous loading/unloading?","a":"Because the model couples ship cargo-pump electrical demand into the vessel PMS. A clear unloading profile keeps process and electrical causality defensible."},
+    {"q":"In the blocked-flow experiment, why can pump feedback remain healthy while flow collapses?","a":"The motor/pump can still be commanded/running while the hydraulic discharge path is blocked; equipment state and useful process flow are separate evidence."},
+    {"q":"Trace measured Cargo flow from physics to investigation evidence.","a":"Modelica flow state → sensor-lag/measured flow → Cargo Modbus input register → OpenPLC engineering tag → live-discovered OPC UA node → HMI/historian → PCAP/process-residual evidence."}
+  ],
+  "pms": [
+    {"q":"Why should Generator 2 start decision wait until Generator 1 has established the bus?","a":"Reserve is meaningful only after a source/bus state exists; evaluating zero reserve before the bus is established creates a false early-start condition."},
+    {"q":"What is spinning reserve in the teaching model?","a":"Available online generation capacity above current load; it indicates how much additional demand or generation loss can be absorbed before corrective action."}
+  ],
+  "propulsion": [
+    {"q":"Why is pre-lube a permissive rather than just an HMI status?","a":"Adequate lubrication is a prerequisite for safe engine start, so the control sequence must require it before engine enable."},
+    {"q":"What evidence distinguishes a cooling fault from a network-only symptom?","a":"Controller commands/communications may remain normal while the thermal process state trends abnormally and eventually triggers a temperature protection condition."}
+  ],
+  "opcua": [
+    {"q":"Why does the project refuse to hard-code guessed OPC UA NodeIds?","a":"NodeIds/namespaces are server/project specific. The lab first browses the live OpenPLC address space and only installs bindings that resolve without missing or ambiguous nodes."},
+    {"q":"Why are OPC UA Quality/status and timestamps important in OT evidence?","a":"A number without freshness/trust context can be misleading. Status and source/server timing help distinguish valid, stale, uncertain or delayed supervisory data."},
+    {"q":"How is OPC UA outage separated from process-source outage in this lab?","a":"The operations/supervisory interface can be isolated while the PLC control network remains alive; historian freshness is measured independently from direct process-runtime API availability."}
+  ]
+}

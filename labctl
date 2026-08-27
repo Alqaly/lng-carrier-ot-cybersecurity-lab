@@ -1,0 +1,324 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT"
+say(){ printf '\n==> %s\n' "$*"; }
+fail(){ printf 'ERROR: %s\n' "$*" >&2; exit 1; }
+have(){ command -v "$1" >/dev/null 2>&1; }
+cmd_preflight(){ exec "$ROOT/deploy/preflight.sh"; }
+cmd_secrets_check(){ exec "$ROOT/deploy/check-secrets.sh" "$ROOT/.env"; }
+cmd_backup(){ exec "$ROOT/deploy/backup.sh" "${1:-}" --cold; }
+cmd_restore(){ exec "$ROOT/deploy/restore.sh" "${1:?backup directory required}" "${2:-}" "${3:-}"; }
+cmd_doctor(){
+  say "Checking prerequisites"
+  have docker || fail "Docker is not installed or not in PATH."
+  docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 is unavailable."
+  have python3 || fail "Python 3 is unavailable."
+  printf 'Docker: %s\n' "$(docker --version)"
+  printf 'Compose: %s\n' "$(docker compose version)"
+  printf 'Python: %s\n' "$(python3 --version)"
+  printf '\nOpenPLC Editor 4.2.10 is the reviewed Editor release for PLC project commissioning.\n'
+  printf 'Wireshark is recommended for packet analysis.\n'
+}
+cmd_build(){
+  say "Compiling Cargo, PMS and Propulsion FMUs"
+  docker compose run --rm modelica-builder
+  say "Starting process models, I/O, alarm chronicle and learning portal"
+  docker compose up -d --build cargo-plant pms-plant propulsion-plant cargo-io pms-io propulsion-io vessel-coordinator alarm-engine learning-portal
+  cmd_status
+}
+cmd_up(){
+  say "Starting the complete environment"
+  docker compose up -d --build
+  docker compose ps
+  cat <<'TXT'
+
+Immediate endpoints:
+  Learning Portal: http://127.0.0.1:8500
+  FUXA HMI editor: http://127.0.0.1:1881
+  Alarm API:       http://127.0.0.1:8400/alarms
+  Cargo model:     http://127.0.0.1:8100/state
+  PMS model:       http://127.0.0.1:8200/state
+  Propulsion:      http://127.0.0.1:8300/state
+  Vessel coupling:  http://127.0.0.1:8600/state
+  Grafana:         http://127.0.0.1:3000
+  InfluxDB:        http://127.0.0.1:8086
+
+PLC runtimes:
+  Cargo:       https://127.0.0.1:8443
+  PMS:         https://127.0.0.1:8444
+  Propulsion:  https://127.0.0.1:8445
+
+Commission the OpenPLC projects before calling the control path complete.
+TXT
+}
+json_state(){ local name=$1 port=$2; say "$name state"; curl --fail --silent "http://127.0.0.1:${port}/state" | python3 -m json.tool || true; }
+cmd_status(){
+  say "Compose services"; docker compose ps
+  json_state Cargo 8100
+  json_state PMS 8200
+  json_state Propulsion 8300
+  json_state "Vessel coupling" 8600
+  say "Active alarms"; curl --fail --silent http://127.0.0.1:8400/alarms | python3 -m json.tool || true
+}
+cmd_capture(){
+  local domain="${1:-cargo}" kind="${2:-modbus}" dest="${3:-}" port sidecar filter outfile
+  case "$domain" in cargo) port=5020;; pms) port=5021;; propulsion) port=5022;; *) fail "capture domain must be cargo|pms|propulsion";; esac
+  case "$kind" in
+    modbus) sidecar="capture-${domain}-io"; filter="tcp port ${port}";;
+    opcua) sidecar="capture-${domain}-plc"; filter="tcp port 4840";;
+    *) fail "capture kind must be modbus|opcua";;
+  esac
+  if [ -n "$dest" ]; then
+    [[ "$dest" == evidence/* ]] || fail "capture destination must be inside evidence/ so the tool sidecar can preserve it"
+    outfile="${dest%/}/${domain}-${kind}.pcap"
+  else
+    dest="evidence/live/${domain}"; outfile="${dest}/${kind}.pcap"
+  fi
+  mkdir -p "$dest"
+  say "Starting namespace capture sidecar ${sidecar}"
+  docker compose --profile tools up -d --build "$sidecar"
+  say "Capturing ${domain} ${kind}: ${filter}"
+  printf 'Press Ctrl-C to stop.\n'
+  docker compose --profile tools exec "$sidecar" sh -lc "rm -f /tmp/${kind}.pcap; tcpdump -i any -nn -s0 -w /tmp/${kind}.pcap '${filter}'" || true
+  docker compose --profile tools cp "${sidecar}:/tmp/${kind}.pcap" "$outfile"
+  printf 'Saved %s\n' "$outfile"
+}
+cmd_zeek(){
+  local domain="${1:-cargo}" host_pcap="${2:-evidence/live/${domain}/modbus.pcap}" host_out="${3:-evidence/analysis/${domain}-modbus}" pcap out
+  [[ "$host_pcap" == evidence/* ]] || fail "Zeek PCAP must be inside evidence/"
+  [[ "$host_out" == evidence/* ]] || fail "Zeek output must be inside evidence/"
+  test -f "$host_pcap" || fail "Missing $host_pcap — capture it first."
+  mkdir -p "$host_out"
+  pcap="/evidence/${host_pcap#evidence/}"; out="/evidence/${host_out#evidence/}"
+  say "Analyzing ${domain} Modbus capture with Zeek"
+  docker compose --profile tools run --rm zeek-offline "cd '${out}' && zeek -Cr '${pcap}' /scripts/local.zeek"
+  printf 'Zeek logs: %s/\n' "$host_out"
+}
+cmd_demo(){
+  local domain="${1:-cargo}"
+  case "$domain" in cargo|pms|propulsion|cargo-fault|pms-trip|propulsion-lube|vessel);; *) fail "demo must be cargo|pms|propulsion|cargo-fault|pms-trip|propulsion-lube|vessel";; esac
+  say "Running ${domain} pre-PLC commissioning scenario"
+  printf 'NOTE: this intentionally bypasses OpenPLC and drives the Modbus I/O endpoint directly.\n'
+  docker compose --profile tools run --rm commissioning-client "$domain"
+}
+
+cmd_opcua(){
+  local domain="${1:-cargo}"
+  case "$domain" in cargo|pms|propulsion);; *) fail "opcua domain must be cargo|pms|propulsion";; esac
+  mkdir -p evidence/opcua
+  say "Browsing live ${domain} OPC UA address space"
+  docker compose --profile tools run --rm commissioning-tools opcua_tool.py "$domain" --outdir /evidence/opcua
+}
+cmd_bind_plan(){
+  local domain="${1:-cargo}"
+  case "$domain" in cargo|pms|propulsion);; *) fail "bind-plan domain must be cargo|pms|propulsion";; esac
+  mkdir -p evidence/opcua
+  test -f "evidence/opcua/${domain}-opcua-discovery.json" || fail "Run ./labctl opcua ${domain} first."
+  say "Generating verified ${domain} binding plan from discovery evidence"
+  docker compose --profile tools run --rm commissioning-tools binding_plan.py "$domain" --outdir /evidence/opcua
+}
+cmd_hist_install(){
+  local domain="${1:-cargo}" src dst plan
+  case "$domain" in cargo|pms|propulsion);; *) fail "hist-install domain must be cargo|pms|propulsion";; esac
+  src="evidence/opcua/${domain}-telegraf-fragment.conf"
+  plan="evidence/opcua/${domain}-binding-plan.json"
+  dst="historian/generated/${domain}.conf"
+  test -f "$src" || fail "Missing $src — run ./labctl opcua ${domain} && ./labctl bind-plan ${domain} first."
+  test -f "$plan" || fail "Missing $plan — run ./labctl bind-plan ${domain} first."
+  python3 - "$plan" <<'PY2'
+import json,sys
+p=sys.argv[1]
+d=json.load(open(p))
+if d.get('missing') or d.get('ambiguous'):
+    raise SystemExit('Binding plan is not complete; refusing historian install.')
+if not d.get('bindings'):
+    raise SystemExit('Binding plan resolved zero nodes; refusing historian install.')
+print(f"Verified bindings: {len(d['bindings'])}")
+PY2
+  mkdir -p historian/generated
+  cp "$src" "$dst"
+  say "Installed verified ${domain} OPC UA input at ${dst}"
+  printf '%s\n' "--- installed fragment ---"
+  cat "$dst"
+  if have docker && docker compose version >/dev/null 2>&1; then
+    say "Starting/restarting historian services"
+    docker compose up -d influxdb telegraf
+    docker compose restart telegraf >/dev/null 2>&1 || true
+  else
+    printf '\nDocker unavailable here; fragment installed but Telegraf was not restarted.\n'
+  fi
+}
+cmd_fuxa(){
+  local action="${1:-export}" file="${2:-/evidence/fuxa/fuxa-project.json}"
+  case "$action" in export|validate|import|bootstrap);; *) fail "fuxa action must be bootstrap|export|import|validate";; esac
+  mkdir -p evidence/fuxa
+  say "FUXA project ${action}"
+  if [ "$action" = bootstrap ]; then
+    file="/project/fuxa/project-unbound.fuxap"
+    action="import"
+  fi
+  if [ "$action" = import ]; then
+    docker compose --profile tools run --rm -e FUXA_TOKEN="${FUXA_TOKEN:-}" -e FUXA_API_KEY="${FUXA_API_KEY:-}" commissioning-tools fuxa_tool.py import --file "$file" --yes
+  else
+    docker compose --profile tools run --rm -e FUXA_TOKEN="${FUXA_TOKEN:-}" -e FUXA_API_KEY="${FUXA_API_KEY:-}" commissioning-tools fuxa_tool.py "$action" --file "$file"
+  fi
+}
+cmd_smoke(){ python3 tools/runtime_smoke.py; }
+cmd_runtime_verify(){ python3 tools/runtime_smoke.py; python3 tools/service_probe.py; }
+cmd_acceptance(){ cmd_preflight; cmd_test; cmd_config_check; cmd_build; cmd_smoke; printf "\nPRE-PLC ACCEPTANCE PASS. Next: commission OpenPLC/OPC UA/HMI using docs/04-build/server-acceptance-test.md\n"; }
+cmd_walk(){ python3 scripts/guided_walkthrough.py; }
+cmd_review(){ python3 tools/generate_io_reference.py --check; python3 tools/traceability_check.py; python3 tools/quality_gate.py; python3 tools/deep_review.py; python3 tools/research_gate.py; python3 tools/pedagogy_gate.py; python3 tools/release_gate.py; pytest -q tests; }
+cmd_test(){
+  say "Running recursive static/research gates"
+  python3 -m pytest -q
+  python3 tools/traceability_check.py
+  python3 tools/generate_io_reference.py --check
+  python3 tools/quality_gate.py
+  python3 tools/deep_review.py
+  python3 tools/research_gate.py
+  python3 tools/pedagogy_gate.py
+  python3 tools/release_gate.py
+}
+cmd_config_check(){
+  say "Checking Compose YAML"
+  python3 - <<'PY2'
+import yaml
+for p in ('docker-compose.yml','compose.production.yml'):
+  yaml.safe_load(open(p))
+  print(p, 'PASS')
+PY2
+  if have docker && docker compose version >/dev/null 2>&1; then
+    docker compose -f docker-compose.yml -f compose.production.yml config >/dev/null
+    echo "Rendered Compose configuration: PASS"
+  else
+    echo "Docker unavailable: rendered config check deferred to target server."
+  fi
+}
+cmd_daemon(){
+  local op="${1:-status}"
+  case "$op" in
+    install) exec "$ROOT/deploy/install-systemd.sh";;
+    start|stop|restart|status) exec sudo systemctl "$op" lng-ot-lab.service;;
+    logs) exec journalctl -u lng-ot-lab.service -f;;
+    *) fail "daemon operation must be install|start|stop|restart|status|logs";;
+  esac
+}
+cmd_quiz(){ python3 tools/quiz.py "${1:?topic required}" "${@:2}"; }
+cmd_new_run(){ python3 experiments/new_run.py "${1:?experiment id required}"; }
+cmd_observe(){
+  local seconds="${1:?duration seconds required}" outdir="${2:?evidence run directory required}"
+  shift 2
+  python3 tools/runtime_observer.py "$seconds" "$outdir" "$@"
+}
+cmd_verify_run(){ python3 experiments/verify_run.py "${1:?run directory required}"; }
+cmd_profile_resources(){ python3 tools/resource_profile.py "$@"; }
+cmd_evaluate(){
+  local first="${1:?run directory or experiment id required}" second="${2:-}"
+  if [[ "$first" == EXP-* ]]; then
+    [ -n "$second" ] || fail "evaluate with an experiment ID also requires the run directory"
+    python3 - "$first" "$second" <<'PY2'
+import json,sys
+from pathlib import Path
+exp,run=sys.argv[1],Path(sys.argv[2])
+meta=json.loads((run/'run.json').read_text())
+if meta.get('experiment_id') != exp:
+    raise SystemExit(f"run.json experiment_id={meta.get('experiment_id')} does not match requested {exp}")
+PY2
+    python3 experiments/evaluate.py "$second"
+  else
+    python3 experiments/evaluate.py "$first"
+  fi
+}
+cmd_conduit_check(){
+  local domain="${1:-cargo}" conn="${2:-}" out="${3:-}"
+  case "$domain" in cargo|pms|propulsion);; *) fail "conduit-check domain must be cargo|pms|propulsion";; esac
+  [ -n "$conn" ] || conn="evidence/analysis/${domain}-modbus/conn.log"
+  [ -f "$conn" ] || fail "Missing $conn — run ./labctl zeek ${domain} first or provide conn.log explicitly."
+  [ -n "$out" ] || out="evidence/analysis/${domain}-modbus/conduit-classification.json"
+  python3 security/conduit_classifier.py "$conn" --domain "$domain" --json --out "$out"
+}
+cmd_cargo_residual(){
+  local input="${1:?Cargo state CSV/JSONL required}" out="${2:-}"
+  [ -f "$input" ] || fail "Missing $input"
+  [ -n "$out" ] || out="$(dirname "$input")/process-residual.json"
+  python3 security/process_residual.py "$input" --out "$out"
+}
+cmd_hist_fresh(){
+  local domain="${1:-cargo}"; shift || true
+  case "$domain" in cargo|pms|propulsion);; *) fail "hist-fresh domain must be cargo|pms|propulsion";; esac
+  local threshold=5 out=""
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --threshold) threshold="${2:?--threshold requires seconds}"; shift 2;;
+      --out) out="${2:?--out requires path}"; shift 2;;
+      *) fail "Unknown hist-fresh option: $1";;
+    esac
+  done
+  local args=("$domain" --max-age "$threshold")
+  [ -z "$out" ] || args+=(--out "$out")
+  python3 historian/freshness_check.py "${args[@]}"
+}
+cmd_opcua_outage(){
+  local domain="${1:-cargo}" action="${2:-start}"
+  case "$domain" in cargo|pms|propulsion);; *) fail "opcua-outage domain must be cargo|pms|propulsion";; esac
+  case "$action" in start|restore);; *) fail "opcua-outage action must be start|restore";; esac
+  python3 tools/opcua_outage.py "$domain" "$action"
+}
+
+case "${1:-help}" in
+ preflight) cmd_preflight;; secrets-check) cmd_secrets_check;; backup) shift; cmd_backup "${1:-}";; restore) shift; cmd_restore "$@";;
+ doctor) cmd_doctor;; test) cmd_test;; config-check) cmd_config_check;;
+ daemon) shift; cmd_daemon "$@";; quiz) shift; cmd_quiz "$@";; new-run) shift; cmd_new_run "$@";; observe) shift; cmd_observe "$@";; evaluate) shift; cmd_evaluate "$@";; verify-run) shift; cmd_verify_run "$@";; profile-resources) shift; cmd_profile_resources "$@";;
+ conduit-check) shift; cmd_conduit_check "$@";; cargo-residual) shift; cmd_cargo_residual "$@";; hist-fresh) shift; cmd_hist_fresh "$@";; opcua-outage) shift; cmd_opcua_outage "$@";;
+ smoke) cmd_smoke;; runtime-verify) cmd_runtime_verify;; acceptance) cmd_acceptance;;
+ build) cmd_build;; up) cmd_up;; status) cmd_status;;
+ capture) shift; cmd_capture "$@";; zeek) shift; cmd_zeek "$@";; demo) shift; cmd_demo "${1:-cargo}";;
+ opcua) shift; cmd_opcua "${1:-cargo}";; bind-plan) shift; cmd_bind_plan "${1:-cargo}";; hist-install) shift; cmd_hist_install "${1:-cargo}";; fuxa) shift; cmd_fuxa "${1:-export}" "${2:-/evidence/fuxa/fuxa-project.json}";;
+ walk) cmd_walk;; review) cmd_review;;
+ down) docker compose down;; logs) docker compose logs -f;;
+ help|-h|--help)
+ cat <<'TXT'
+Usage: ./labctl <command>
+  preflight              Validate target server prerequisites/ports/time
+  secrets-check          Fail closed if .env secrets/permissions are unsafe
+  backup [directory]     Create a cold backup with SHA-256 manifest
+  restore <dir> --verify  Verify backup hashes without changing state
+  restore <dir> --yes [--force]  Verify and restore persistent volumes
+  doctor                 Check prerequisites
+  test                   Run all recursive tests/gates
+  config-check           Validate base + production Compose configuration
+  daemon <op>            install|start|stop|restart|status|logs
+  quiz <topic>           Retrieval practice: ot|modbus|cargo|pms|propulsion|opcua
+  new-run <experiment>   Create an evidence run from experiment manifest
+  observe <sec> <run-dir> [--interval SEC]  Capture normalized state/alarm runtime evidence
+  evaluate [experiment] <run-dir>  Evaluate concrete artifacts + experiment-specific checks
+  verify-run <run-dir>    Verify evaluated evidence SHA-256 integrity
+  profile-resources [--samples N --interval S]  Record Docker resource evidence without inventing limits
+  conduit-check <domain> [conn.log] [out.json]  Compare Zeek flow evidence with declared Modbus conduits
+  cargo-residual <csv|jsonl> [out.json]  Compare measured Cargo flow with tank mass balance
+  hist-fresh <domain> [--threshold SEC] [--out FILE]  Check latest commissioned historian sample age
+  opcua-outage <domain> start|restore  Isolate/restore only the PLC operations network
+  smoke                  Read-only sanity check of running process services
+  runtime-verify          Post-commissioning process + service reachability verification
+  acceptance             Run host/static/pre-PLC acceptance sequence
+  build                  Compile all FMUs + start model/I/O learning layer
+  up                     Start complete environment
+  status                 Show services + three domain states + alarms
+  capture <domain> [modbus|opcua] [evidence/run-dir]  Capture inside the I/O or PLC namespace
+  zeek <domain> [pcap] [output-dir]  Analyze a saved Modbus PCAP with Zeek
+  demo <scenario>        Controlled commissioning/fault lab
+                         cargo | pms | propulsion | vessel
+                         cargo-fault | pms-trip | propulsion-lube
+  opcua <domain>         Browse live OPC UA nodes and save JSON/Markdown evidence
+  bind-plan <domain>     Resolve teaching tags from live OPC UA discovery evidence
+  hist-install <domain>  Install only a verified OPC UA binding into Telegraf
+  fuxa bootstrap|export|import|validate [file]  Round-trip the commissioned FUXA project
+  walk                   Run narrated live-state walkthrough
+  review                 Run quality, deep review and tests
+  logs                    Follow service logs
+  down                    Stop environment
+TXT
+ ;;
+ *) fail "Unknown command: $1";;
+esac

@@ -1,0 +1,233 @@
+{
+  "domain": "pms",
+  "plant_url": "http://pms-plant:8200",
+  "port": 5021,
+  "poll_seconds": 0.1,
+  "commands": {
+    "gen1StartCmd": {
+      "source": "coil",
+      "address": 0,
+      "unit": "BOOL",
+      "description": "Generator 1 start command",
+      "role": "PLC command"
+    },
+    "gen2StartCmd": {
+      "source": "coil",
+      "address": 1,
+      "unit": "BOOL",
+      "description": "Generator 2 start command",
+      "role": "PLC command"
+    },
+    "gen1BreakerCmd": {
+      "source": "coil",
+      "address": 2,
+      "unit": "BOOL",
+      "description": "Generator 1 breaker close command",
+      "role": "PLC command"
+    },
+    "gen2BreakerCmd": {
+      "source": "coil",
+      "address": 3,
+      "unit": "BOOL",
+      "description": "Generator 2 breaker close command",
+      "role": "PLC command"
+    },
+    "shedHotel": {
+      "source": "coil",
+      "address": 4,
+      "unit": "BOOL",
+      "description": "Hotel/auxiliary load shed command",
+      "role": "PLC command"
+    },
+    "shedCargo": {
+      "source": "coil",
+      "address": 5,
+      "unit": "BOOL",
+      "description": "Cargo electrical load shed command",
+      "role": "PLC command"
+    },
+    "loadHotelDemand": {
+      "source": "holding",
+      "address": 0,
+      "scale": 1.0,
+      "unit": "BOOL",
+      "description": "Standalone hotel-load demand selector",
+      "role": "Commissioning demand"
+    },
+    "loadCargoDemand": {
+      "source": "holding",
+      "address": 1,
+      "scale": 1.0,
+      "unit": "BOOL",
+      "description": "Standalone cargo-load demand selector",
+      "role": "Commissioning demand"
+    },
+    "loadPropulsionDemand": {
+      "source": "holding",
+      "address": 2,
+      "scale": 1.0,
+      "unit": "BOOL",
+      "description": "Optional electric-propulsion load selector",
+      "role": "Commissioning demand"
+    },
+    "faultGen1Trip": {
+      "source": "coil",
+      "address": 20,
+      "unit": "BOOL",
+      "description": "Instructor generator 1 trip",
+      "role": "Instructor-only fault"
+    },
+    "faultGen2Trip": {
+      "source": "coil",
+      "address": 21,
+      "unit": "BOOL",
+      "description": "Instructor generator 2 trip",
+      "role": "Instructor-only fault"
+    }
+  },
+  "outputs": {
+    "frequencyHz": {
+      "dest": "input",
+      "address": 0,
+      "scale": 0.01,
+      "unit": "Hz",
+      "description": "Electrical bus frequency",
+      "role": "Process measurement"
+    },
+    "voltagePU": {
+      "dest": "input",
+      "address": 1,
+      "scale": 0.001,
+      "unit": "p.u.",
+      "description": "Electrical bus voltage",
+      "role": "Process measurement"
+    },
+    "gen1PowerKW": {
+      "dest": "input",
+      "address": 2,
+      "scale": 1.0,
+      "unit": "kW",
+      "description": "Generator 1 active power",
+      "role": "Equipment measurement"
+    },
+    "gen2PowerKW": {
+      "dest": "input",
+      "address": 3,
+      "scale": 1.0,
+      "unit": "kW",
+      "description": "Generator 2 active power",
+      "role": "Equipment measurement"
+    },
+    "totalLoadKW": {
+      "dest": "input",
+      "address": 4,
+      "scale": 1.0,
+      "unit": "kW",
+      "description": "Total connected model load",
+      "role": "Process measurement"
+    },
+    "spinningReserveKW": {
+      "dest": "input",
+      "address": 5,
+      "scale": 1.0,
+      "unit": "kW",
+      "description": "Online generation capacity minus current load",
+      "role": "Derived process value"
+    },
+    "gen1SpeedPU": {
+      "dest": "input",
+      "address": 6,
+      "scale": 0.001,
+      "unit": "p.u.",
+      "description": "Generator 1 prime-mover speed",
+      "role": "Equipment measurement"
+    },
+    "gen2SpeedPU": {
+      "dest": "input",
+      "address": 7,
+      "scale": 0.001,
+      "unit": "p.u.",
+      "description": "Generator 2 prime-mover speed",
+      "role": "Equipment measurement"
+    },
+    "gen1Ready": {
+      "dest": "discrete",
+      "address": 0,
+      "unit": "BOOL",
+      "description": "Generator 1 ready",
+      "role": "Equipment feedback"
+    },
+    "gen2Ready": {
+      "dest": "discrete",
+      "address": 1,
+      "unit": "BOOL",
+      "description": "Generator 2 ready",
+      "role": "Equipment feedback"
+    },
+    "gen1BreakerFB": {
+      "dest": "discrete",
+      "address": 2,
+      "unit": "BOOL",
+      "description": "Generator 1 breaker closed feedback",
+      "role": "Equipment feedback"
+    },
+    "gen2BreakerFB": {
+      "dest": "discrete",
+      "address": 3,
+      "unit": "BOOL",
+      "description": "Generator 2 breaker closed feedback",
+      "role": "Equipment feedback"
+    },
+    "underFrequency": {
+      "dest": "discrete",
+      "address": 4,
+      "unit": "BOOL",
+      "description": "Bus under-frequency condition",
+      "role": "Protective condition"
+    },
+    "blackout": {
+      "dest": "discrete",
+      "address": 5,
+      "unit": "BOOL",
+      "description": "Bus blackout/unavailable condition",
+      "role": "Protective condition"
+    },
+    "gen1SyncPermissive": {
+      "dest": "discrete",
+      "address": 6,
+      "unit": "BOOL",
+      "description": "Generator 1 simplified synchronizing permissive",
+      "role": "Interlock/permissive"
+    },
+    "gen2SyncPermissive": {
+      "dest": "discrete",
+      "address": 7,
+      "unit": "BOOL",
+      "description": "Generator 2 simplified synchronizing permissive",
+      "role": "Interlock/permissive"
+    },
+    "busEnergized": {
+      "dest": "discrete",
+      "address": 8,
+      "unit": "BOOL",
+      "description": "Electrical bus available/energized",
+      "role": "Process state"
+    },
+    "cargoLoadActualKW": {
+      "dest": "input",
+      "address": 8,
+      "scale": 1.0,
+      "unit": "kW",
+      "description": "Actual cargo electrical load seen by PMS",
+      "role": "Cross-system measurement"
+    },
+    "auxiliaryLoadActualKW": {
+      "dest": "input",
+      "address": 9,
+      "scale": 1.0,
+      "unit": "kW",
+      "description": "Actual propulsion/machinery auxiliary load seen by PMS",
+      "role": "Cross-system measurement"
+    }
+  }
+}

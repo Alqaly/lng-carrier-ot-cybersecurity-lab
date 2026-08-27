@@ -1,0 +1,83 @@
+site_name: LNG Carrier OT Cybersecurity Lab
+site_description: A software-defined applied OT cybersecurity course based on LNG-carrier
+  systems.
+theme:
+  name: material
+  features:
+  - navigation.tabs
+  - navigation.sections
+  - content.code.copy
+  - toc.follow
+nav:
+- Start:
+  - Home: docs/index.md
+  - Start Here: START-HERE.md
+  - How to Learn: docs/00-learning/how-to-use-this-course.md
+  - Remember & Explain: docs/00-learning/memory-and-explain-back.md
+- "Course 01\u201310":
+  - "01 \u2014 Project Orientation": docs/course/01-project-orientation.md
+  - "02 \u2014 LNG Carrier System": docs/course/02-lng-carrier-system.md
+  - "03 \u2014 OT Foundations": docs/course/03-ot-foundations.md
+  - "04 \u2014 Architecture": docs/course/04-architecture.md
+  - "05 \u2014 Build & Commission": docs/course/05-build-and-commission.md
+  - "06 \u2014 Cargo": docs/course/06-cargo.md
+  - "07 \u2014 Protocol Academy": docs/course/07-protocol-academy.md
+  - "08 \u2014 Safety, HMI & Alarms": docs/course/08-safety-hmi-alarms.md
+  - "09 \u2014 Navigation": docs/course/09-navigation.md
+  - "10 \u2014 Detection & Reconstruction": docs/course/10-detection-reconstruction.md
+- Vessel:
+  - LNG Carrier 101: docs/01-vessel/lng-carrier-101.md
+  - Cargo System: docs/01-vessel/cargo-system.md
+  - Marine Automation Reference: docs/01-vessel/marine-automation-reference.md
+- OT Foundations:
+  - OT From Zero: docs/02-ot-foundations/ot-from-zero.md
+  - Signals & I/O: docs/02-ot-foundations/signals-and-io.md
+  - Safety vs Control: docs/02-ot-foundations/safety-vs-control.md
+- Architecture:
+  - System Design: docs/03-architecture/system-design.md
+  - Software Testbed: docs/03-architecture/software-testbed.md
+  - Realism Model: docs/03-architecture/software-realism.md
+  - Vessel Profile: docs/03-architecture/vessel-profile.md
+  - Deployment Decision: docs/03-architecture/deployment-decision.md
+  - Network Fidelity Decision: docs/03-architecture/network-fidelity-decision.md
+- Build:
+  - Full Walkthrough: docs/04-build/software-lab-walkthrough.md
+  - Server Daemon: docs/04-build/server-daemon-deployment.md
+  - OpenPLC Commissioning: docs/04-build/openplc-editor-commissioning.md
+  - OPC UA Commissioning: docs/04-build/opcua-commissioning.md
+  - HMI & Alarms: docs/04-build/hmi-and-alarm-system.md
+  - PMS: docs/04-build/pms-module.md
+  - Propulsion: docs/04-build/propulsion-module.md
+  - Backup & Recovery: docs/04-build/backup-and-recovery.md
+  - Server Acceptance Test: docs/04-build/server-acceptance-test.md
+- Protocol Academy:
+  - Map: docs/05-protocols/protocol-map.md
+  - Ethernet/IP/TCP: docs/05-protocols/ethernet-ip-stack.md
+  - Modbus TCP: docs/05-protocols/modbus-tcp.md
+  - OPC UA: docs/05-protocols/opc-ua.md
+  - NMEA: docs/05-protocols/nmea.md
+  - CAN/J1939: docs/05-protocols/can-j1939.md
+  - IEC 61162-450/460: docs/05-protocols/iec-61162-450-460.md
+  - Packet Labs: docs/05-protocols/packet-labs.md
+- Scenarios:
+  - Full Vessel Event: docs/06-scenarios/full-vessel-operational-event.md
+  - Evidence Workbook: docs/06-scenarios/cross-layer-evidence-workbook.md
+  - Troubleshooting: docs/06-scenarios/troubleshooting-cases.md
+- Security:
+  - Detection Engineering: docs/07-security/detection-engineering.md
+  - Incident Walkthrough: docs/07-security/incident-walkthrough.md
+- Research:
+  - Framework: docs/09-research/research-framework.md
+  - Reconciliation 2026-08-27: docs/09-research/reconciliation-2026-08-27.md
+  - Research-to-Model: docs/09-research/research-to-model-matrix.md
+  - Standards Mapping: docs/09-research/standards-mapping.md
+  - Visual Sources: docs/09-research/visual-source-registry.md
+  - Source Registry: docs/09-research/source-registry.md
+- Reference:
+  - Glossary: docs/08-reference/glossary.md
+  - Data Provenance: docs/08-reference/data-provenance.md
+  - I/O Map: docs/08-reference/generated-io-map.md
+  - Technology Selection: docs/08-reference/technology-selection.md
+  - Engineering Review: docs/08-reference/engineering-review.md
+- Series Method:
+  - Build the Next OT Lab: docs/10-series-method/reusable-method.md

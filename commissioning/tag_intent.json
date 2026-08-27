@@ -1,0 +1,50 @@
+{
+  "cargo": {
+    "level_source_m": ["LevelSource_m"],
+    "level_destination_m": ["LevelDestination_m"],
+    "flow_m3h": ["Flow_m3h"],
+    "pressure_kpa": ["Pressure_kPa"],
+    "valve_position": ["ValvePosition"],
+    "pump_speed": ["PumpSpeed"],
+    "pump_power_kw": ["PumpPower_kW"],
+    "transfer_enable": ["Transfer_Enable"],
+    "valve_command": ["AO_ValvePermille"],
+    "valve_feedback": ["DI_ValveOpenFB"],
+    "pump_command": ["DO_Pump"],
+    "pump_feedback": ["DI_PumpRunFB"],
+    "safety_trip": ["Safety_Trip"],
+    "mismatch_alarm": ["Alarm_CommandFeedbackMismatch"],
+    "no_flow_alarm": ["Alarm_NoFlow"]
+  },
+  "pms": {
+    "frequency_hz": ["Frequency_Hz"],
+    "voltage_pu": ["Voltage_PU"],
+    "gen1_power_kw": ["Gen1Power_kW"],
+    "gen2_power_kw": ["Gen2Power_kW"],
+    "total_load_kw": ["TotalLoad_kW"],
+    "reserve_kw": ["Reserve_kW"],
+    "gen1_speed_pu": ["Gen1Speed_PU"],
+    "gen2_speed_pu": ["Gen2Speed_PU"],
+    "cargo_load_kw": ["CargoLoad_kW"],
+    "aux_load_kw": ["AuxLoad_kW"],
+    "gen1_breaker": ["DI_Gen1BreakerFB"],
+    "gen2_breaker": ["DI_Gen2BreakerFB"],
+    "under_frequency": ["DI_UnderFrequency"],
+    "blackout": ["DI_Blackout"],
+    "plant_enable": ["Plant_Enable"]
+  },
+  "propulsion": {
+    "rpm": ["EngineRPM"],
+    "lube_bar": ["LubeBar"],
+    "coolant_c": ["Coolant_C"],
+    "vessel_speed_kn": ["VesselSpeed_kn"],
+    "engine_load_pct": ["EngineLoad_pct"],
+    "propeller_torque_nm": ["PropellerTorque_Nm"],
+    "aux_load_kw": ["AuxLoad_kW"],
+    "engine_running": ["DI_EngineRunning"],
+    "low_lube": ["DI_LowLubePressure"],
+    "high_coolant": ["DI_HighCoolantTemp"],
+    "overspeed": ["DI_Overspeed"],
+    "propulsion_enable": ["Propulsion_Enable"]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "cargo": {
+    "program": "openplc/cargo/CargoControl.st",
+    "commands": {
+      "pumpCmd": "DO_Pump",
+      "valveCommand": "AO_ValvePermille"
+    },
+    "outputs": {
+      "levelSource": "AI_LevelSource_mm",
+      "levelDestination": "AI_LevelDestination_mm",
+      "flowMeasured": "AI_Flow_m3h",
+      "pressureSource": "AI_Pressure_kPa_x10",
+      "valvePosition": "AI_ValvePosition_x1000",
+      "pumpSpeed": "AI_PumpSpeed_x1000",
+      "pumpPowerKW": "AI_PumpPower_kW",
+      "valveFeedback": "DI_ValveOpenFB",
+      "pumpFeedback": "DI_PumpRunFB",
+      "highHighDestination": "DI_HighHighDestination",
+      "lowLowSource": "DI_LowLowSource"
+    }
+  },
+  "pms": {
+    "program": "openplc/pms/PowerManagement.st",
+    "commands": {
+      "gen1StartCmd": "DO_Gen1Start",
+      "gen2StartCmd": "DO_Gen2Start",
+      "gen1BreakerCmd": "DO_Gen1Breaker",
+      "gen2BreakerCmd": "DO_Gen2Breaker",
+      "shedHotel": "DO_ShedHotel",
+      "shedCargo": "DO_ShedCargo",
+      "loadHotelDemand": "AO_LoadHotel",
+      "loadCargoDemand": "AO_LoadCargo",
+      "loadPropulsionDemand": "AO_LoadPropulsion"
+    },
+    "outputs": {
+      "frequencyHz": "AI_Frequency_x100",
+      "voltagePU": "AI_Voltage_x1000",
+      "gen1PowerKW": "AI_Gen1Power_kW",
+      "gen2PowerKW": "AI_Gen2Power_kW",
+      "totalLoadKW": "AI_TotalLoad_kW",
+      "spinningReserveKW": "AI_Reserve_kW",
+      "gen1SpeedPU": "AI_Gen1Speed_x1000",
+      "gen2SpeedPU": "AI_Gen2Speed_x1000",
+      "cargoLoadActualKW": "AI_CargoLoad_kW",
+      "auxiliaryLoadActualKW": "AI_AuxLoad_kW",
+      "gen1Ready": "DI_Gen1Ready",
+      "gen2Ready": "DI_Gen2Ready",
+      "gen1BreakerFB": "DI_Gen1BreakerFB",
+      "gen2BreakerFB": "DI_Gen2BreakerFB",
+      "underFrequency": "DI_UnderFrequency",
+      "blackout": "DI_Blackout",
+      "gen1SyncPermissive": "DI_Gen1SyncPermissive",
+      "gen2SyncPermissive": "DI_Gen2SyncPermissive",
+      "busEnergized": "DI_BusEnergized"
+    }
+  },
+  "propulsion": {
+    "program": "openplc/propulsion/PropulsionControl.st",
+    "commands": {
+      "preLubeCmd": "DO_PreLube",
+      "engineEnable": "DO_EngineEnable",
+      "fuelCommand": "AO_FuelPermille",
+      "pitchCommand": "AO_PitchPermille"
+    },
+    "outputs": {
+      "engineRPM": "AI_EngineRPM_x10",
+      "lubeOilPressureBar": "AI_LubeBar_x100",
+      "coolantTempC": "AI_CoolantC_x10",
+      "vesselSpeedKn": "AI_VesselSpeed_kn_x100",
+      "engineLoadPct": "AI_EngineLoad_pct_x10",
+      "propellerTorqueNm": "AI_PropellerTorque_10Nm",
+      "auxiliaryElectricalLoadKW": "AI_AuxLoad_kW",
+      "engineRunning": "DI_EngineRunning",
+      "lowLubePressure": "DI_LowLubePressure",
+      "highCoolantTemp": "DI_HighCoolantTemp",
+      "overspeed": "DI_Overspeed"
+    }
+  }
+}

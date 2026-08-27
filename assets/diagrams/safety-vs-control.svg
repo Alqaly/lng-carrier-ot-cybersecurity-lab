@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="850" viewBox="0 0 1500 850">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#83cfff"/></marker></defs>
+<rect width="100%" height="100%" fill="#0b1117"/>
+<text x="55" y="60" fill="white" font-family="Arial" font-size="34" font-weight="700">Normal Control and Protective Shutdown</text>
+<rect x="80" y="140" width="250" height="100" rx="16" fill="#233348" stroke="#7dc8f4" stroke-width="2"/>
+<text x="205.0" y="177" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Operator Request</text>
+<text x="205.0" y="207" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">normal operation</text>
+<rect x="420" y="140" width="250" height="100" rx="16" fill="#233348" stroke="#7dc8f4" stroke-width="2"/>
+<text x="545.0" y="177" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">PLC Control</text>
+<text x="545.0" y="207" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">permissives / sequence</text>
+<rect x="760" y="140" width="250" height="100" rx="16" fill="#15342d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="885.0" y="177" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Pump / Valve</text>
+<text x="885.0" y="207" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">process action</text>
+<rect x="1100" y="140" width="250" height="100" rx="16" fill="#15342d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="1225.0" y="177" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Cargo Process</text>
+<text x="1225.0" y="207" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">level / flow</text>
+<rect x="1100" y="450" width="250" height="100" rx="16" fill="#3b1f26" stroke="#7dc8f4" stroke-width="2"/>
+<text x="1225.0" y="487" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">High-High</text>
+<text x="1225.0" y="517" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">hazard condition</text>
+<rect x="760" y="450" width="250" height="100" rx="16" fill="#3b1f26" stroke="#7dc8f4" stroke-width="2"/>
+<text x="885.0" y="487" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Safety State</text>
+<text x="885.0" y="517" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">trip latched</text>
+<rect x="420" y="450" width="250" height="100" rx="16" fill="#3b1f26" stroke="#7dc8f4" stroke-width="2"/>
+<text x="545.0" y="487" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Transfer Permit</text>
+<text x="545.0" y="517" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">removed</text>
+<line x1="330" y1="190" x2="420" y2="190" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="670" y1="190" x2="760" y2="190" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1010" y1="190" x2="1100" y2="190" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1225" y1="240" x2="1225" y2="450" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1225.0" y="337.0" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">condition</text>
+<line x1="1100" y1="500" x2="1010" y2="500" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="760" y1="500" x2="670" y2="500" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="545" y1="450" x2="545" y2="240" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="545.0" y="337.0" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">blocks operation</text>
+<text x="55" y="815" fill="#8fa5b8" font-family="Arial" font-size="14">This software cause-and-effect lesson is not a certified marine safety system.</text>
+</svg>

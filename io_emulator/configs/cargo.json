@@ -1,0 +1,139 @@
+{
+  "domain": "cargo",
+  "plant_url": "http://cargo-plant:8100",
+  "port": 5020,
+  "poll_seconds": 0.1,
+  "commands": {
+    "pumpCmd": {
+      "source": "coil",
+      "address": 0,
+      "unit": "BOOL",
+      "description": "Pump bank run command",
+      "role": "Operator/PLC command"
+    },
+    "valveCommand": {
+      "source": "holding",
+      "address": 0,
+      "scale": 0.001,
+      "unit": "p.u.",
+      "description": "Cargo transfer valve position command",
+      "role": "Operator/PLC command"
+    },
+    "faultPumpFail": {
+      "source": "coil",
+      "address": 20,
+      "unit": "BOOL",
+      "description": "Instructor pump-bank failure injection",
+      "role": "Instructor-only fault"
+    },
+    "faultValveStuck": {
+      "source": "coil",
+      "address": 21,
+      "unit": "BOOL",
+      "description": "Instructor valve-stuck failure injection",
+      "role": "Instructor-only fault"
+    },
+    "flowSensorBiasPct": {
+      "source": "holding",
+      "address": 20,
+      "scale": 0.1,
+      "offset": 0.0,
+      "unit": "%",
+      "description": "Instructor positive flow-transmitter bias",
+      "role": "Instructor-only fault"
+    },
+    "faultFlowPathBlocked": {
+      "source": "coil",
+      "address": 22,
+      "unit": "BOOL",
+      "description": "Instructor hydraulic transfer-path blockage injection",
+      "role": "Instructor-only fault"
+    }
+  },
+  "outputs": {
+    "levelSource": {
+      "dest": "input",
+      "address": 0,
+      "scale": 0.001,
+      "unit": "m",
+      "description": "Aggregate ship cargo-tank liquid level in the selected unloading profile",
+      "role": "Process measurement"
+    },
+    "levelDestination": {
+      "dest": "input",
+      "address": 1,
+      "scale": 0.001,
+      "unit": "m",
+      "description": "Terminal-side receiving inventory proxy for mass-balance teaching; not an onboard tank measurement",
+      "role": "Process measurement"
+    },
+    "flowMeasured": {
+      "dest": "input",
+      "address": 2,
+      "scale": 0.0002777777777777778,
+      "unit": "m3/s",
+      "description": "Lagged aggregate measured transfer flow",
+      "role": "Process measurement"
+    },
+    "pressureSource": {
+      "dest": "input",
+      "address": 3,
+      "scale": 0.1,
+      "unit": "kPa",
+      "description": "Hydrostatic source pressure teaching value",
+      "role": "Process measurement"
+    },
+    "valvePosition": {
+      "dest": "input",
+      "address": 4,
+      "scale": 0.001,
+      "unit": "p.u.",
+      "description": "Actual cargo transfer valve position",
+      "role": "Equipment feedback"
+    },
+    "pumpSpeed": {
+      "dest": "input",
+      "address": 5,
+      "scale": 0.001,
+      "unit": "p.u.",
+      "description": "Aggregate cargo pump-bank speed",
+      "role": "Equipment feedback"
+    },
+    "valveFeedback": {
+      "dest": "discrete",
+      "address": 0,
+      "unit": "BOOL",
+      "description": "Valve fully-open feedback",
+      "role": "Equipment feedback"
+    },
+    "pumpFeedback": {
+      "dest": "discrete",
+      "address": 1,
+      "unit": "BOOL",
+      "description": "Pump bank running feedback",
+      "role": "Equipment feedback"
+    },
+    "highHighDestination": {
+      "dest": "discrete",
+      "address": 2,
+      "unit": "BOOL",
+      "description": "Receiving-boundary high-high limit in the teaching model; not a vessel cargo-tank trip",
+      "role": "Lab-model boundary state"
+    },
+    "lowLowSource": {
+      "dest": "discrete",
+      "address": 3,
+      "unit": "BOOL",
+      "description": "Source tank low-low condition",
+      "role": "Protective condition"
+    },
+    "pumpPowerKW": {
+      "dest": "input",
+      "address": 6,
+      "scale": 1.0,
+      "unit": "kW",
+      "description": "Calculated aggregate cargo-pump electrical demand",
+      "role": "Cross-system measurement"
+    }
+  }
+}

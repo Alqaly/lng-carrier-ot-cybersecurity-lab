@@ -1,0 +1,22 @@
+.env
+__pycache__/
+*.pyc
+*.pcap
+*.pcapng
+*.log
+*.db
+*.sqlite
+site/
+.fmu-build/
+plant/fmu/*.fmu
+evidence/*
+!evidence/README.md
+.DS_Store
+# Environment-specific OPC UA bindings are generated from live discovery.
+historian/generated/*.conf
+!historian/generated/.gitkeep
+.pytest_cache/
+.venv/
+venv/
+backups/
+*.bundle

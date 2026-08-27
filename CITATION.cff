@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this project in research or teaching, cite the repository."
+title: "LNG Carrier OT Cybersecurity Lab"
+type: software
+authors:
+  - name: "Project Contributors"
+license: MIT
+keywords:
+  - OT cybersecurity
+  - maritime cybersecurity
+  - LNG carrier
+  - industrial control systems
+  - OpenPLC
+  - Modelica
+repository-code: "https://github.com/Alqaly/lng-carrier-ot-cybersecurity-lab"
+url: "https://github.com/Alqaly/lng-carrier-ot-cybersecurity-lab"

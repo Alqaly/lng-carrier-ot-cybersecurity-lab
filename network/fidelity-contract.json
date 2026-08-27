@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "status": "design_accepted_runtime_unvalidated",
+  "purpose": "Add explicit routed and policy-enforced OT network fidelity without replacing the stable Docker Compose experiment baseline.",
+  "canonical_baseline": {
+    "runtime": "Docker Compose v2 + systemd",
+    "compose_source": "docker-compose.yml",
+    "conduit_ground_truth": "security/conduits.json",
+    "must_remain_runnable_without_extension": true
+  },
+  "selected_extension": {
+    "topology_orchestrator": {
+      "name": "Containerlab",
+      "reviewed_version": "0.77.0",
+      "role": "optional explicit dataplane/veth topology only",
+      "integration_mode": "ext-container for Compose-owned services",
+      "lifecycle_rule": "Containerlab must not become the lifecycle owner of canonical Compose services",
+      "reconciliation_rule": "Any runtime implementation must prove interface restoration after Compose container restart before daemon acceptance"
+    },
+    "routing": {
+      "implementation": "Linux kernel static routing",
+      "dynamic_routing_suite": "not selected",
+      "dynamic_routing_admission_rule": "Add FRR only if a documented experiment or learning objective requires a routing protocol"
+    },
+    "policy_enforcement": {
+      "implementation": "Linux nftables",
+      "policy": "default deny with explicit stateful permits derived from declared conduits",
+      "claim_boundary": "This is a software policy-enforcement point, not a vendor industrial-firewall appliance and not an IEC/IACS compliance claim"
+    },
+    "passive_visibility": {
+      "baseline": "namespace/interface capture already present in the Compose lab",
+      "span_candidate": "Open vSwitch mirror/SPAN",
+      "admission_rule": "Add OVS only when an experiment explicitly requires passive mirrored traffic rather than capture at a known endpoint/interface"
+    }
+  },
+  "not_selected_as_reference": [
+    {
+      "technology": "GNS3",
+      "reason": "Useful network emulation platform, but its Docker mode treats containers as lightweight virtual machines and is not designed to manage the existing Compose container infrastructure."
+    },
+    {
+      "technology": "EVE-NG",
+      "reason": "Useful for vendor virtual appliances, but it adds QEMU/vendor-image lifecycle and licensed-image burden that is not required for the current open reproducible experiment baseline."
+    },
+    {
+      "technology": "Kubernetes/k3s",
+      "reason": "Does not solve the current single-host network-fidelity requirement and would add CNI/Service abstractions to packet ground truth."
+    },
+    {
+      "technology": "FRRouting",
+      "reason": "Static inter-zone routing is sufficient unless dynamic-routing behavior becomes an explicit experiment."
+    }
+  ],
+  "design_invariants": [
+    "The existing Compose baseline remains independently startable, testable, and publishable.",
+    "No second source of truth for current OT endpoint IP addresses is introduced; docker-compose.yml and security/conduits.json remain authoritative.",
+    "Every newly permitted routed flow must map to a documented conduit and have an explicit protocol/port purpose.",
+    "Default-deny behavior must be demonstrated by both a permitted-flow test and a denied-flow test.",
+    "Control traffic and supervisory traffic must remain distinguishable in packet evidence.",
+    "The extension must preserve deterministic source/destination identities needed by experiment evaluators.",
+    "A service or link being up is not acceptance; evidence must prove policy, path, capture, restart, and recovery behavior.",
+    "No vendor firewall behavior, class approval, IEC 62443 compliance, or IACS compliance is claimed from Linux/nftables/Containerlab emulation."
+  ],
+  "runtime_acceptance_gates": [
+    {
+      "id": "NF-A",
+      "name": "baseline isolation",
+      "pass_condition": "Canonical Compose baseline passes its existing Gates A-G without the network-fidelity extension enabled."
+    },
+    {
+      "id": "NF-B",
+      "name": "deterministic attachment",
+      "pass_condition": "Extension attaches only declared interfaces and preserves deterministic experiment identities."
+    },
+    {
+      "id": "NF-C",
+      "name": "default deny",
+      "pass_condition": "An undeclared inter-zone flow is denied and logged while every declared required conduit remains functional."
+    },
+    {
+      "id": "NF-D",
+      "name": "path evidence",
+      "pass_condition": "PCAP and policy logs prove the expected routed path for at least one Modbus and one OPC UA flow."
+    },
+    {
+      "id": "NF-E",
+      "name": "restart reconciliation",
+      "pass_condition": "After a selected Compose service restarts, required extension interfaces/routes/policies are restored without changing the canonical IP/conduit ground truth."
+    },
+    {
+      "id": "NF-F",
+      "name": "failure and recovery",
+      "pass_condition": "A gateway/policy-enforcement failure produces the documented operational evidence and recovery restores the expected path."
+    },
+    {
+      "id": "NF-G",
+      "name": "passive visibility",
+      "pass_condition": "If SPAN/mirroring is enabled, the sensor receives a copy of the selected traffic without becoming an inline forwarding dependency."
+    }
+  ]
+}

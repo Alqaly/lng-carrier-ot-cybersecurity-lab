@@ -1,0 +1,138 @@
+{
+  "domain": "propulsion",
+  "plant_url": "http://propulsion-plant:8300",
+  "port": 5022,
+  "poll_seconds": 0.1,
+  "commands": {
+    "preLubeCmd": {
+      "source": "coil",
+      "address": 0,
+      "unit": "BOOL",
+      "description": "Pre-lubrication pump command",
+      "role": "PLC command"
+    },
+    "engineEnable": {
+      "source": "coil",
+      "address": 1,
+      "unit": "BOOL",
+      "description": "Main engine enable command",
+      "role": "PLC command"
+    },
+    "fuelCommand": {
+      "source": "holding",
+      "address": 0,
+      "scale": 0.001,
+      "unit": "p.u.",
+      "description": "Normalized fuel/torque command",
+      "role": "PLC command"
+    },
+    "pitchCommand": {
+      "source": "holding",
+      "address": 1,
+      "scale": 0.001,
+      "unit": "p.u.",
+      "description": "Normalized propeller pitch/load command",
+      "role": "PLC command"
+    },
+    "faultLubePumpFail": {
+      "source": "coil",
+      "address": 20,
+      "unit": "BOOL",
+      "description": "Instructor lube-pump failure injection",
+      "role": "Instructor-only fault"
+    },
+    "faultCoolingFail": {
+      "source": "coil",
+      "address": 21,
+      "unit": "BOOL",
+      "description": "Instructor cooling-system impairment injection",
+      "role": "Instructor-only fault"
+    }
+  },
+  "outputs": {
+    "engineRPM": {
+      "dest": "input",
+      "address": 0,
+      "scale": 0.1,
+      "unit": "rpm",
+      "description": "Main engine/shaft speed",
+      "role": "Machinery measurement"
+    },
+    "lubeOilPressureBar": {
+      "dest": "input",
+      "address": 1,
+      "scale": 0.01,
+      "unit": "bar",
+      "description": "Lube-oil pressure",
+      "role": "Machinery measurement"
+    },
+    "coolantTempC": {
+      "dest": "input",
+      "address": 2,
+      "scale": 0.1,
+      "unit": "degC",
+      "description": "Cooling-water temperature",
+      "role": "Machinery measurement"
+    },
+    "vesselSpeedKn": {
+      "dest": "input",
+      "address": 3,
+      "scale": 0.01,
+      "unit": "kn",
+      "description": "Teaching vessel-speed response",
+      "role": "Process measurement"
+    },
+    "engineLoadPct": {
+      "dest": "input",
+      "address": 4,
+      "scale": 0.1,
+      "unit": "%",
+      "description": "Normalized engine load",
+      "role": "Derived process value"
+    },
+    "engineRunning": {
+      "dest": "discrete",
+      "address": 0,
+      "unit": "BOOL",
+      "description": "Engine running feedback",
+      "role": "Equipment feedback"
+    },
+    "lowLubePressure": {
+      "dest": "discrete",
+      "address": 1,
+      "unit": "BOOL",
+      "description": "Low lube-oil protective condition",
+      "role": "Protective condition"
+    },
+    "highCoolantTemp": {
+      "dest": "discrete",
+      "address": 2,
+      "unit": "BOOL",
+      "description": "High coolant-temperature condition",
+      "role": "Protective condition"
+    },
+    "overspeed": {
+      "dest": "discrete",
+      "address": 3,
+      "unit": "BOOL",
+      "description": "Engine overspeed condition",
+      "role": "Protective condition"
+    },
+    "propellerTorqueNm": {
+      "dest": "input",
+      "address": 5,
+      "scale": 10.0,
+      "unit": "N*m",
+      "description": "Propeller load torque",
+      "role": "Machinery measurement"
+    },
+    "auxiliaryElectricalLoadKW": {
+      "dest": "input",
+      "address": 6,
+      "scale": 1.0,
+      "unit": "kW",
+      "description": "Propulsion/machinery auxiliary electrical demand",
+      "role": "Cross-system measurement"
+    }
+  }
+}

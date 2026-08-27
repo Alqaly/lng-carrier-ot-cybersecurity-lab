@@ -1,0 +1,220 @@
+{
+  "policy": {
+    "priority": [
+      "official_or_open_license_figure",
+      "runtime_screenshot",
+      "packet_capture",
+      "operator_hmi",
+      "opcua_browser",
+      "historian_trend",
+      "vendor_manual",
+      "custom_only_if_unavoidable"
+    ],
+    "external_visual_fields": [
+      "source",
+      "license_or_reuse_status",
+      "what_to_notice",
+      "lab_mapping",
+      "limitation"
+    ],
+    "publication_rule": "Custom block diagrams are not accepted as the primary visual for Chapters 1-10 when an authoritative real-system visual is available."
+  },
+  "chapters": {
+    "01-start": [
+      {
+        "source": "https://www.mdpi.com/2077-1312/12/7/1236",
+        "visual": "Figure 3 \u2014 HIL simulator and target system concept for LNGC-PMS",
+        "license_or_reuse_status": "CC BY 4.0",
+        "what_to_notice": "controller/test-object separation and simulator/target boundary",
+        "lab_mapping": "OpenPLC is controller; Modelica/FMU is dynamic process side",
+        "limitation": "our reference build is software-in-the-loop, not physical HIL"
+      },
+      {
+        "source": "https://www.mdpi.com/2077-1312/12/7/1236",
+        "visual": "Figure 10 \u2014 network configuration of PMS-HIL test bed",
+        "license_or_reuse_status": "CC BY 4.0",
+        "what_to_notice": "bidirectional integration of target and simulation network",
+        "lab_mapping": "fixed Compose control and operations networks",
+        "limitation": "our transport and hardware differ"
+      }
+    ],
+    "02-vessel": [
+      {
+        "source": "https://www.kongsberg.com/globalassets/kongsberg-maritime/km-products/product-documents/k-chief-600-marine-automation-system/",
+        "visual": "K-Chief 600 system architecture/operator material",
+        "license_or_reuse_status": "link/reference; do not redistribute artwork without permission",
+        "what_to_notice": "operator stations, distributed processing, redundant process/network concepts",
+        "lab_mapping": "separate controller, I/O, operator, operations and evidence layers",
+        "limitation": "not a K-Chief clone"
+      },
+      {
+        "source": "https://www.wartsila.com/marine/products/gas-solutions",
+        "visual": "W\u00e4rtsil\u00e4 Gas Solutions product/system visuals",
+        "license_or_reuse_status": "link/reference",
+        "what_to_notice": "LNG/gas handling is a multi-equipment process, not one PLC",
+        "lab_mapping": "Cargo dynamic model teaches control causality",
+        "limitation": "does not reproduce cryogenic plant fidelity"
+      }
+    ],
+    "03-ot-foundations": [
+      {
+        "source": "https://www.kongsberg.com/globalassets/kongsberg-maritime/documents/certificates/product/k-chief-600-marine-automation-system/american-bureau-of-shipping/hardware-list.pdf",
+        "visual": "K-Chief approved hardware list",
+        "license_or_reuse_status": "link/reference",
+        "what_to_notice": "remote analog/digital I/O, controllers and gateways are real marine building blocks",
+        "lab_mapping": "virtual I/O and PLC layers preserve the same conceptual separation",
+        "limitation": "software I/O is not type-approved hardware"
+      },
+      {
+        "source": "https://www.modbus.org/modbus-specifications",
+        "visual": "official Modbus protocol/data model material",
+        "license_or_reuse_status": "link/reference",
+        "what_to_notice": "protocol data objects are not physical meaning until mapped",
+        "lab_mapping": "register map maps process model to PLC",
+        "limitation": "lab address map is project-specific"
+      }
+    ],
+    "04-architecture": [
+      {
+        "source": "https://www.kongsberg.com/globalassets/kongsberg-maritime/km-products/product-documents/k-chief-600-marine-automation-system/",
+        "visual": "K-Chief distributed automation architecture",
+        "license_or_reuse_status": "link/reference",
+        "what_to_notice": "distributed controllers, process bus/network and operator stations",
+        "lab_mapping": "fixed function-specific networks and explicit conduits",
+        "limitation": "actual vessel redundancy/topology varies"
+      },
+      {
+        "source": "https://www.mdpi.com/2077-1312/12/7/1236",
+        "visual": "Figure 10 \u2014 LNGC PMS-HIL network configuration",
+        "license_or_reuse_status": "CC BY 4.0",
+        "what_to_notice": "test network has named interfaces and target/simulator boundaries",
+        "lab_mapping": "our experimental conduits have fixed ground-truth IPs",
+        "limitation": "our network is containerized"
+      }
+    ],
+    "05-build": [
+      {
+        "source": "https://github.com/Autonomy-Logic/openplc-runtime",
+        "visual": "OpenPLC Runtime/Editor project documentation and UI",
+        "license_or_reuse_status": "upstream open-source project; preserve upstream license/attribution",
+        "what_to_notice": "engineering deployment is separate from operator operation",
+        "lab_mapping": "three OpenPLC runtimes are commissioned independently",
+        "limitation": "runtime screenshots must be captured from the learner's actual deployment"
+      },
+      {
+        "source": "https://www.mdpi.com/2077-1312/12/7/1236",
+        "visual": "Figure 9 \u2014 integrated LNGC PMS HIL test bed",
+        "license_or_reuse_status": "CC BY 4.0",
+        "what_to_notice": "commissioning separates model/simulation console from the target PMS/MSBD",
+        "lab_mapping": "pre-PLC commissioning proves process+I/O before control commissioning",
+        "limitation": "no physical switchboard in this lab"
+      }
+    ],
+    "06-cargo": [
+      {
+        "source": "https://www.sigtto.org/publications/recommendations-for-cargo-control-room-hmi/",
+        "visual": "SIGTTO cargo-control-room task-based HMI guidance",
+        "license_or_reuse_status": "official publication; reference/link per publication terms",
+        "what_to_notice": "operator displays should be task/process centered",
+        "lab_mapping": "Cargo view centers permit, command, feedback, flow and alarms",
+        "limitation": "teaching HMI is not an approved CCR design"
+      },
+      {
+        "source": "https://www.sigtto.org/publications/esd-systems/",
+        "visual": "SIGTTO gas-carrier ESD / ship-shore guidance figures",
+        "license_or_reuse_status": "official publication; reference/link per publication terms",
+        "what_to_notice": "transfer safety crosses ship/shore and is distinct from ordinary control",
+        "lab_mapping": "ship-shore ESD is a teaching permissive/reference boundary",
+        "limitation": "not a certified linked ESD system"
+      }
+    ],
+    "07-protocols": [
+      {
+        "source": "https://www.modbus.org/modbus-specifications",
+        "visual": "Modbus application/TCP specification figures",
+        "license_or_reuse_status": "official reference",
+        "what_to_notice": "MBAP, function and data model",
+        "lab_mapping": "capture actual lab Modbus transactions in Wireshark/Zeek",
+        "limitation": "classic Modbus security properties differ from Modbus Security"
+      },
+      {
+        "source": "https://opcfoundation.org/about/opc-technologies/opc-ua/",
+        "visual": "OPC UA information model/security architecture",
+        "license_or_reuse_status": "official reference",
+        "what_to_notice": "typed address space, services and security",
+        "lab_mapping": "live discovery resolves exact NodeIds before historian binding",
+        "limitation": "we do not implement every OPC UA profile"
+      },
+      {
+        "source": "https://www.nmea.org/",
+        "visual": "NMEA 0183/NMEA 2000 public interface material",
+        "license_or_reuse_status": "official reference; standards are copyrighted",
+        "what_to_notice": "serial talker/listener and CAN-based multi-device models differ",
+        "lab_mapping": "0183 replay + CAN mechanics/reference extension",
+        "limitation": "no licensed NMEA 2000 PGN database redistributed"
+      }
+    ],
+    "08-safety-alarms": [
+      {
+        "source": "https://www.sigtto.org/publications/esd-systems/",
+        "visual": "ESD systems figures and ship/shore concepts",
+        "license_or_reuse_status": "official reference",
+        "what_to_notice": "trip logic and linked transfer shutdown differ from process sequence",
+        "lab_mapping": "safety state removes transfer permission",
+        "limitation": "software service is not SIL/class safety equipment"
+      },
+      {
+        "source": "https://www.sigtto.org/publications/recommendations-for-management-of-cargo-alarm-systems/",
+        "visual": "cargo alarm-management guidance",
+        "license_or_reuse_status": "official reference",
+        "what_to_notice": "priority, flood/chatter and operator response matter",
+        "lab_mapping": "alarm catalog uses delays, priority, consequence and response",
+        "limitation": "teaching alarm chronicle is separate from certified alarm system"
+      }
+    ],
+    "09-navigation": [
+      {
+        "source": "https://www.nmea.org/nmea-0183.html",
+        "visual": "NMEA 0183 public interface overview",
+        "license_or_reuse_status": "official reference",
+        "what_to_notice": "one-way serial talker/listener model",
+        "lab_mapping": "recorded real-data replay through GPSD",
+        "limitation": "replay is not a live GNSS sensor"
+      },
+      {
+        "source": "https://www.nmea.org/nmea-2000.html",
+        "visual": "NMEA 2000 public network overview",
+        "license_or_reuse_status": "official reference",
+        "what_to_notice": "CAN-based bidirectional multi-device network",
+        "lab_mapping": "SocketCAN teaches CAN mechanics only",
+        "limitation": "SocketCAN exercise is not certified NMEA 2000"
+      },
+      {
+        "source": "https://webstore.iec.ch/en/publication/82336",
+        "visual": "IEC 61162-460:2024 publication/reference",
+        "license_or_reuse_status": "standard reference; do not reproduce protected standard text",
+        "what_to_notice": "marine Ethernet safety/security add-on to 61162-450",
+        "lab_mapping": "reference architecture only",
+        "limitation": "no compliance claim"
+      }
+    ],
+    "10-detection": [
+      {
+        "source": "https://docs.zeek.org/en/lts/logs/modbus.html",
+        "visual": "Zeek Modbus log examples",
+        "license_or_reuse_status": "official open-source documentation",
+        "what_to_notice": "network evidence can show source, destination and Modbus operations",
+        "lab_mapping": "conduit classifier consumes Zeek connection evidence",
+        "limitation": "network evidence alone cannot prove physical cause"
+      },
+      {
+        "source": "https://doi.org/10.1109/SmartGridComm52983.2022.9961010",
+        "visual": "M\u00fcller, Ziras & Heussen cyber-physical IDS study",
+        "license_or_reuse_status": "citation/reference; use figures only if license permits",
+        "what_to_notice": "network+process evidence can outperform network-only detection/classification",
+        "lab_mapping": "experiments compare network, process and cross-layer evidence",
+        "limitation": "their dataset/domain is not LNG maritime"
+      }
+    ]
+  }
+}

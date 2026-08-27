@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="850" viewBox="0 0 1500 850">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#83cfff"/></marker></defs>
+<rect width="100%" height="100%" fill="#0b1117"/>
+<text x="55" y="60" fill="white" font-family="Arial" font-size="34" font-weight="700">Cargo Transfer Walkthrough — Command, Feedback, Process</text>
+<rect x="50" y="150" width="205" height="95" rx="16" fill="#233348" stroke="#7dc8f4" stroke-width="2"/>
+<text x="152.5" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Transfer Enable</text>
+<text x="152.5" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">operator intent</text>
+<rect x="300" y="150" width="205" height="95" rx="16" fill="#233348" stroke="#7dc8f4" stroke-width="2"/>
+<text x="402.5" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">PLC Permissive</text>
+<text x="402.5" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">logic</text>
+<rect x="550" y="150" width="205" height="95" rx="16" fill="#15342d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="652.5" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Valve Command</text>
+<text x="652.5" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">Modbus coil</text>
+<rect x="800" y="150" width="205" height="95" rx="16" fill="#15342d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="902.5" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Valve Feedback</text>
+<text x="902.5" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">discrete input</text>
+<rect x="1050" y="150" width="205" height="95" rx="16" fill="#15342d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="1152.5" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Pump Command</text>
+<text x="1152.5" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">Modbus coil</text>
+<rect x="1300" y="150" width="150" height="95" rx="16" fill="#15342d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="1375.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Pump FB</text>
+<text x="1375.0" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">DI</text>
+<rect x="300" y="430" width="205" height="95" rx="16" fill="#3b2c1d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="402.5" y="467" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Flow</text>
+<text x="402.5" y="497" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">process equation</text>
+<rect x="550" y="430" width="205" height="95" rx="16" fill="#3b2c1d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="652.5" y="467" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Source Level</text>
+<text x="652.5" y="497" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">falls</text>
+<rect x="800" y="430" width="205" height="95" rx="16" fill="#3b2c1d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="902.5" y="467" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Destination</text>
+<text x="902.5" y="497" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">rises</text>
+<rect x="1050" y="430" width="205" height="95" rx="16" fill="#30263d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="1152.5" y="467" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Historian</text>
+<text x="1152.5" y="497" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">trend</text>
+<line x1="255" y1="198" x2="300" y2="198" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="505" y1="198" x2="550" y2="198" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="755" y1="198" x2="800" y2="198" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1005" y1="198" x2="1050" y2="198" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1255" y1="198" x2="1300" y2="198" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1375" y1="245" x2="402" y2="430" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="888.5" y="329.5" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">process starts</text>
+<line x1="505" y1="478" x2="550" y2="478" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="755" y1="478" x2="800" y2="478" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1005" y1="478" x2="1050" y2="478" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="55" y="815" fill="#8fa5b8" font-family="Arial" font-size="14">The pump is not allowed to start until the valve-open feedback is present.</text>
+</svg>

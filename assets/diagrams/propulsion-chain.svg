@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="850" viewBox="0 0 1500 850">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#6f8794"/></marker></defs>
+<rect width="100%" height="100%" fill="#eef0f2"/>
+<text x="55" y="60" fill="#252a2e" font-family="Arial" font-size="32" font-weight="700">Propulsion and Machinery Control Chain</text>
+<rect x="60" y="150" width="230" height="100" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="175.0" y="186" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Propulsion Enable</text>
+<text x="175.0" y="215" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">operator demand</text>
+<rect x="350" y="150" width="230" height="100" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="465.0" y="186" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Pre-Lube</text>
+<text x="465.0" y="215" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">pressure permissive</text>
+<rect x="640" y="150" width="230" height="100" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="755.0" y="186" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Engine Enable</text>
+<text x="755.0" y="215" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">protective gate</text>
+<rect x="930" y="150" width="230" height="100" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="1045.0" y="186" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Fuel / Pitch</text>
+<text x="1045.0" y="215" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">control demand</text>
+<rect x="1220" y="150" width="220" height="100" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="1330.0" y="186" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Shaft / Propeller</text>
+<text x="1330.0" y="215" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">dynamic load</text>
+<rect x="350" y="440" width="230" height="100" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="465.0" y="476" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Lube Pressure</text>
+<text x="465.0" y="505" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">measurement</text>
+<rect x="640" y="440" width="230" height="100" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="755.0" y="476" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">RPM / Load</text>
+<text x="755.0" y="505" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">feedback</text>
+<rect x="930" y="440" width="230" height="100" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="1045.0" y="476" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Coolant Temp</text>
+<text x="1045.0" y="505" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">slow thermal state</text>
+<line x1="290" y1="200" x2="350" y2="200" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<line x1="580" y1="200" x2="640" y2="200" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<text x="610.0" y="193.0" text-anchor="middle" fill="#7a5a00" font-family="Arial" font-size="13">permissive</text>
+<line x1="870" y1="200" x2="930" y2="200" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<line x1="1160" y1="200" x2="1220" y2="200" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<line x1="465" y1="440" x2="465" y2="250" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<text x="465.0" y="338.0" text-anchor="middle" fill="#7a5a00" font-family="Arial" font-size="13">feedback</text>
+<line x1="755" y1="440" x2="755" y2="250" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<text x="755.0" y="338.0" text-anchor="middle" fill="#7a5a00" font-family="Arial" font-size="13">feedback</text>
+<line x1="1045" y1="440" x2="1045" y2="250" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<text x="1045.0" y="338.0" text-anchor="middle" fill="#7a5a00" font-family="Arial" font-size="13">trip</text>
+<text x="55" y="820" fill="#6b7379" font-family="Arial" font-size="13">Low lube, high coolant temperature or overspeed remove engine enable in the training PLC.</text>
+</svg>

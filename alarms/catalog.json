@@ -1,0 +1,383 @@
+{
+  "alarms": [
+    {
+      "id": "CARGO_DEST_HH",
+      "domain": "cargo",
+      "priority": "HIGH",
+      "category": "process/safety",
+      "title": "Destination tank high-high",
+      "conditions": [
+        {
+          "field": "highHighDestination",
+          "op": "is_true"
+        }
+      ],
+      "activation_delay_s": 0.5,
+      "clear_delay_s": 2.0,
+      "consequence": "Continued transfer would exceed the teaching model's destination operating envelope.",
+      "operator_response": "Verify destination level and transfer state; stop transfer if the condition is credible; investigate any disagreement between level, flow and command state.",
+      "rationale": "A high-high level is a distinct abnormal condition that should drive protective transfer logic in the teaching model.",
+      "condition_logic": "all"
+    },
+    {
+      "id": "CARGO_SOURCE_LL",
+      "domain": "cargo",
+      "priority": "HIGH",
+      "category": "process",
+      "title": "Source tank low-low",
+      "conditions": [
+        {
+          "field": "lowLowSource",
+          "op": "is_true"
+        }
+      ],
+      "activation_delay_s": 0.5,
+      "clear_delay_s": 2.0,
+      "consequence": "The source is nearly depleted and pump operation may no longer be meaningful in the model.",
+      "operator_response": "Stop or inhibit transfer and verify source level and pump condition.",
+      "rationale": "Separates depletion from ordinary low-level indication.",
+      "condition_logic": "all"
+    },
+    {
+      "id": "CARGO_NO_FLOW",
+      "domain": "cargo",
+      "priority": "MEDIUM",
+      "category": "equipment/process",
+      "title": "No flow with pump and valve feedback",
+      "conditions": [
+        {
+          "field": "pumpFeedback",
+          "op": "is_true"
+        },
+        {
+          "field": "valveFeedback",
+          "op": "is_true"
+        },
+        {
+          "field": "flowMeasured",
+          "op": "lt",
+          "value": 0.013888888888888888
+        }
+      ],
+      "activation_delay_s": 3.0,
+      "clear_delay_s": 1.0,
+      "consequence": "Equipment feedback says the transfer path is active while the measured process response is absent.",
+      "operator_response": "Compare command, feedback, Modbus I/O, actual model flow and sensor-bias/fault state before assigning a cyber cause.",
+      "rationale": "A process-integrity alarm linking equipment state to measurement; delay reduces nuisance alarms during normal run-up.",
+      "clear_conditions": [
+        {
+          "field": "flowMeasured",
+          "op": "ge",
+          "value": 0.027777777777777776
+        }
+      ],
+      "condition_logic": "all",
+      "clear_logic": "all"
+    },
+    {
+      "id": "PMS_UNDER_FREQUENCY",
+      "domain": "pms",
+      "priority": "HIGH",
+      "category": "power",
+      "title": "Bus under-frequency",
+      "conditions": [
+        {
+          "field": "underFrequency",
+          "op": "is_true"
+        }
+      ],
+      "activation_delay_s": 1.0,
+      "clear_delay_s": 2.0,
+      "consequence": "Generation and demand are not balanced in the teaching AC-bus model.",
+      "operator_response": "Check online generators, breaker feedback, total load, reserve and load-shed actions.",
+      "rationale": "Frequency is the primary dynamic indicator of active-power imbalance in this simplified model.",
+      "clear_conditions": [
+        {
+          "field": "frequencyHz",
+          "op": "ge",
+          "value": 59.0
+        }
+      ],
+      "condition_logic": "all",
+      "clear_logic": "all"
+    },
+    {
+      "id": "PMS_BLACKOUT",
+      "domain": "pms",
+      "priority": "CRITICAL",
+      "category": "power/safety",
+      "title": "Power bus unavailable / blackout",
+      "conditions": [
+        {
+          "field": "blackout",
+          "op": "is_true"
+        }
+      ],
+      "activation_delay_s": 0.2,
+      "clear_delay_s": 1.0,
+      "consequence": "The teaching electrical bus is unavailable; Cargo/propulsion dependencies may be lost.",
+      "operator_response": "Establish source/breaker state first; follow the training recovery sequence rather than randomly restarting loads.",
+      "rationale": "A distinct top-level plant state requiring immediate operator attention.",
+      "condition_logic": "all"
+    },
+    {
+      "id": "PMS_LOW_RESERVE",
+      "domain": "pms",
+      "priority": "MEDIUM",
+      "category": "power",
+      "title": "Low spinning reserve",
+      "conditions": [
+        {
+          "field": "frequencyHz",
+          "op": "gt",
+          "value": 1.0
+        },
+        {
+          "field": "spinningReserveKW",
+          "op": "lt",
+          "value": 1200.0
+        }
+      ],
+      "activation_delay_s": 5.0,
+      "clear_delay_s": 3.0,
+      "consequence": "A further load increase or generator loss could cause a larger frequency excursion.",
+      "operator_response": "Review load forecast and generator availability; verify automatic second-generator logic.",
+      "rationale": "Early operational warning; delayed to avoid alarming on short expected transients.",
+      "clear_conditions": [
+        {
+          "field": "spinningReserveKW",
+          "op": "ge",
+          "value": 1500.0
+        }
+      ],
+      "condition_logic": "all",
+      "clear_logic": "all"
+    },
+    {
+      "id": "PROP_LOW_LUBE",
+      "domain": "propulsion",
+      "priority": "CRITICAL",
+      "category": "machinery/safety",
+      "title": "Low lube-oil pressure while engine running",
+      "conditions": [
+        {
+          "field": "lowLubePressure",
+          "op": "is_true"
+        }
+      ],
+      "activation_delay_s": 1.0,
+      "clear_delay_s": 2.0,
+      "consequence": "Insufficient lubrication can damage engine/shaft machinery in the represented control concept.",
+      "operator_response": "Verify pressure, pre-lube/engine state and the lube-pump fault input; remove engine enable through the designed protective sequence.",
+      "rationale": "Based on the real marine concept that low lube-oil pressure is an engine safety condition.",
+      "clear_conditions": [
+        {
+          "field": "lowLubePressure",
+          "op": "is_false"
+        }
+      ],
+      "condition_logic": "all",
+      "clear_logic": "all"
+    },
+    {
+      "id": "PROP_HIGH_COOLANT",
+      "domain": "propulsion",
+      "priority": "HIGH",
+      "category": "machinery",
+      "title": "High coolant temperature",
+      "conditions": [
+        {
+          "field": "highCoolantTemp",
+          "op": "is_true"
+        }
+      ],
+      "activation_delay_s": 3.0,
+      "clear_delay_s": 5.0,
+      "consequence": "The thermal state is outside the teaching operating envelope.",
+      "operator_response": "Reduce load and inspect cooling/load state; confirm the measurement trend rather than reacting to one sample.",
+      "rationale": "Slow process variable; delay and clear delay prevent a noisy boundary alarm.",
+      "clear_conditions": [
+        {
+          "field": "coolantTempC",
+          "op": "lt",
+          "value": 88.0
+        }
+      ],
+      "condition_logic": "all",
+      "clear_logic": "all"
+    },
+    {
+      "id": "PROP_OVERSPEED",
+      "domain": "propulsion",
+      "priority": "CRITICAL",
+      "category": "machinery/safety",
+      "title": "Engine overspeed",
+      "conditions": [
+        {
+          "field": "overspeed",
+          "op": "is_true"
+        }
+      ],
+      "activation_delay_s": 0.2,
+      "clear_delay_s": 2.0,
+      "consequence": "Excessive shaft/engine speed is a protective condition in real marine engine-control systems.",
+      "operator_response": "Remove propulsion enable/fuel through the protective sequence and verify speed feedback/control demand.",
+      "rationale": "Fast protective condition; short activation delay.",
+      "clear_conditions": [
+        {
+          "field": "engineRPM",
+          "op": "lt",
+          "value": 98.0
+        }
+      ],
+      "condition_logic": "all",
+      "clear_logic": "all"
+    },
+    {
+      "id": "CARGO_PROCESS_SOURCE_STALE",
+      "domain": "cargo",
+      "priority": "HIGH",
+      "category": "system/visibility",
+      "title": "Cargo process-source telemetry unavailable",
+      "conditions": [
+        {
+          "field": "__stale__",
+          "op": "is_true"
+        }
+      ],
+      "clear_conditions": [
+        {
+          "field": "__stale__",
+          "op": "is_false"
+        }
+      ],
+      "activation_delay_s": 3.0,
+      "clear_delay_s": 1.0,
+      "consequence": "The operator/learning layer cannot confirm fresh process state for this domain.",
+      "operator_response": "Verify process runtime health and the communications path before trusting stale displayed values.",
+      "rationale": "This Teaching Alarm Chronicle entry covers loss of the direct process-runtime source. OPC UA/historian freshness is evaluated independently.",
+      "condition_logic": "all",
+      "clear_logic": "all"
+    },
+    {
+      "id": "PMS_PROCESS_SOURCE_STALE",
+      "domain": "pms",
+      "priority": "HIGH",
+      "category": "system/visibility",
+      "title": "Power-management process-source telemetry unavailable",
+      "conditions": [
+        {
+          "field": "__stale__",
+          "op": "is_true"
+        }
+      ],
+      "clear_conditions": [
+        {
+          "field": "__stale__",
+          "op": "is_false"
+        }
+      ],
+      "activation_delay_s": 3.0,
+      "clear_delay_s": 1.0,
+      "consequence": "The operator/learning layer cannot confirm fresh process state for this domain.",
+      "operator_response": "Verify process runtime health and the communications path before trusting stale displayed values.",
+      "rationale": "This Teaching Alarm Chronicle entry covers loss of the direct process-runtime source. OPC UA/historian freshness is evaluated independently.",
+      "condition_logic": "all",
+      "clear_logic": "all"
+    },
+    {
+      "id": "PROPULSION_PROCESS_SOURCE_STALE",
+      "domain": "propulsion",
+      "priority": "HIGH",
+      "category": "system/visibility",
+      "title": "Propulsion process-source telemetry unavailable",
+      "conditions": [
+        {
+          "field": "__stale__",
+          "op": "is_true"
+        }
+      ],
+      "clear_conditions": [
+        {
+          "field": "__stale__",
+          "op": "is_false"
+        }
+      ],
+      "activation_delay_s": 3.0,
+      "clear_delay_s": 1.0,
+      "consequence": "The operator/learning layer cannot confirm fresh process state for this domain.",
+      "operator_response": "Verify process runtime health and the communications path before trusting stale displayed values.",
+      "rationale": "This Teaching Alarm Chronicle entry covers loss of the direct process-runtime source. OPC UA/historian freshness is evaluated independently.",
+      "condition_logic": "all",
+      "clear_logic": "all"
+    },
+    {
+      "id": "CARGO_POWER_UNAVAILABLE",
+      "domain": "cargo",
+      "priority": "HIGH",
+      "category": "cross-system/power",
+      "title": "Cargo transfer requested while electrical power is unavailable",
+      "conditions": [
+        {
+          "field": "pumpCmd",
+          "op": "is_true"
+        },
+        {
+          "field": "powerAvailable",
+          "op": "is_false"
+        }
+      ],
+      "condition_logic": "all",
+      "clear_conditions": [
+        {
+          "field": "powerAvailable",
+          "op": "is_true"
+        },
+        {
+          "field": "pumpCmd",
+          "op": "is_false"
+        }
+      ],
+      "clear_logic": "any",
+      "activation_delay_s": 1.0,
+      "clear_delay_s": 1.0,
+      "consequence": "The Cargo controller/process requests pumping but the selected vessel profile has removed Cargo electrical availability.",
+      "operator_response": "Check PMS bus availability, Cargo load-shed state and generator/breaker condition before investigating the Cargo pump itself.",
+      "rationale": "Makes a cross-domain cause explicit so a power event is not misdiagnosed as a Cargo control failure."
+    },
+    {
+      "id": "PMS_GEN1_UNAVAILABLE",
+      "domain": "pms",
+      "priority": "HIGH",
+      "category": "equipment/power",
+      "title": "Generator 1 commanded but unavailable",
+      "conditions": [
+        {
+          "field": "gen1StartCmd",
+          "op": "is_true"
+        },
+        {
+          "field": "gen1Ready",
+          "op": "is_false"
+        }
+      ],
+      "condition_logic": "all",
+      "clear_conditions": [
+        {
+          "field": "gen1Ready",
+          "op": "is_true"
+        },
+        {
+          "field": "gen1StartCmd",
+          "op": "is_false"
+        }
+      ],
+      "clear_logic": "any",
+      "activation_delay_s": 8.0,
+      "clear_delay_s": 1.0,
+      "consequence": "The expected primary generator has not reached or retained the ready state.",
+      "operator_response": "Check prime-mover run-up, trip state and whether an alternate generator is available before closing a breaker.",
+      "rationale": "The activation delay suppresses the expected starting transient but exposes a persistent failed-start/trip condition."
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#8fd3ff"/></marker></defs>
+<rect width="100%" height="100%" fill="#0b1117"/>
+<text x="55" y="60" fill="#fff" font-family="Arial" font-size="34" font-weight="700">LNG Carrier as a System of Systems</text>
+<rect x="70" y="160" width="230" height="100" rx="16" fill="#15342d" stroke="#77c8ff" stroke-width="2"/>
+<text x="185.0" y="198" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Cargo</text>
+<text x="185.0" y="228" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">tanks / pumps / valves / BOG</text>
+<rect x="370" y="160" width="230" height="100" rx="16" fill="#30263d" stroke="#77c8ff" stroke-width="2"/>
+<text x="485.0" y="198" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Power</text>
+<text x="485.0" y="228" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">generation / bus / load shedding</text>
+<rect x="670" y="160" width="230" height="100" rx="16" fill="#30263d" stroke="#77c8ff" stroke-width="2"/>
+<text x="785.0" y="198" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Machinery</text>
+<text x="785.0" y="228" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">propulsion / auxiliaries</text>
+<rect x="970" y="160" width="230" height="100" rx="16" fill="#3b1e26" stroke="#77c8ff" stroke-width="2"/>
+<text x="1085.0" y="198" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Safety</text>
+<text x="1085.0" y="228" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">F&amp;G / ESD</text>
+<rect x="1270" y="160" width="180" height="100" rx="16" fill="#1d2c45" stroke="#77c8ff" stroke-width="2"/>
+<text x="1360.0" y="198" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Bridge</text>
+<text x="1360.0" y="228" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">navigation</text>
+<rect x="220" y="450" width="230" height="100" rx="16" fill="#1d2c45" stroke="#77c8ff" stroke-width="2"/>
+<text x="335.0" y="488" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Engineering</text>
+<text x="335.0" y="518" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">maintenance / configuration</text>
+<rect x="560" y="450" width="230" height="100" rx="16" fill="#1d2c45" stroke="#77c8ff" stroke-width="2"/>
+<text x="675.0" y="488" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">IAS</text>
+<text x="675.0" y="518" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">automation / HMI</text>
+<rect x="900" y="450" width="230" height="100" rx="16" fill="#3b2c1d" stroke="#77c8ff" stroke-width="2"/>
+<text x="1015.0" y="488" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Historian</text>
+<text x="1015.0" y="518" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">events / trends</text>
+<rect x="1220" y="450" width="230" height="100" rx="16" fill="#30263d" stroke="#77c8ff" stroke-width="2"/>
+<text x="1335.0" y="488" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Ship / Shore</text>
+<text x="1335.0" y="518" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">terminal interface</text>
+<line x1="185" y1="260" x2="335" y2="450" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="260.0" y="348.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">operations</text>
+<line x1="485" y1="260" x2="675" y2="450" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="580.0" y="348.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">automation</text>
+<line x1="785" y1="260" x2="675" y2="450" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="730.0" y="348.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">status</text>
+<line x1="1085" y1="260" x2="1015" y2="450" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1050.0" y="348.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">safety status</text>
+<line x1="1360" y1="260" x2="1335" y2="450" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1347.5" y="348.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">external data</text>
+<text x="55" y="865" fill="#90a7ba" font-family="Arial" font-size="14">Reference model only; actual system boundaries vary by vessel and vendor.</text>
+</svg>

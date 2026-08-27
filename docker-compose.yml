@@ -1,0 +1,485 @@
+services:
+  modelica-builder:
+    image: openmodelica/openmodelica:v1.27.0-minimal
+    working_dir: /workspace
+    volumes:
+    - ./:/workspace:ro
+    - plant-fmu:/out
+    command:
+    - omc
+    - /workspace/plant/modelica/build_all_fmus.mos
+    restart: 'no'
+  cargo-plant:
+    build:
+      context: plant/runtime
+    environment:
+      FMU_PATH: /fmu/cargo_plant.fmu
+      MODEL_CONFIG: /config/cargo.json
+      PORT: '8100'
+    volumes:
+    - plant-fmu:/fmu:ro
+    - ./plant/configs:/config:ro
+    ports:
+    - 127.0.0.1:8100:8100
+    depends_on:
+      modelica-builder:
+        condition: service_completed_successfully
+    networks:
+      cargo_process:
+        ipv4_address: 172.28.10.10
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8100/health',
+        timeout=2)" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+  pms-plant:
+    build:
+      context: plant/runtime
+    environment:
+      FMU_PATH: /fmu/pms_plant.fmu
+      MODEL_CONFIG: /config/pms.json
+      PORT: '8200'
+    volumes:
+    - plant-fmu:/fmu:ro
+    - ./plant/configs:/config:ro
+    ports:
+    - 127.0.0.1:8200:8200
+    depends_on:
+      modelica-builder:
+        condition: service_completed_successfully
+    networks:
+      pms_process:
+        ipv4_address: 172.28.30.10
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8200/health',
+        timeout=2)" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+  propulsion-plant:
+    build:
+      context: plant/runtime
+    environment:
+      FMU_PATH: /fmu/propulsion_plant.fmu
+      MODEL_CONFIG: /config/propulsion.json
+      PORT: '8300'
+    volumes:
+    - plant-fmu:/fmu:ro
+    - ./plant/configs:/config:ro
+    ports:
+    - 127.0.0.1:8300:8300
+    depends_on:
+      modelica-builder:
+        condition: service_completed_successfully
+    networks:
+      propulsion_process:
+        ipv4_address: 172.28.50.10
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8300/health',
+        timeout=2)" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+  cargo-io:
+    build:
+      context: io_emulator
+    environment:
+      IO_CONFIG: /config/cargo.json
+      MODBUS_PORT: '5020'
+    volumes:
+    - ./io_emulator/configs:/config:ro
+    ports:
+    - 127.0.0.1:5020:5020
+    depends_on:
+    - cargo-plant
+    networks:
+      cargo_process:
+        ipv4_address: 172.28.10.20
+      cargo_control:
+        ipv4_address: 172.28.20.20
+    restart: unless-stopped
+  pms-io:
+    build:
+      context: io_emulator
+    environment:
+      IO_CONFIG: /config/pms.json
+      MODBUS_PORT: '5021'
+    volumes:
+    - ./io_emulator/configs:/config:ro
+    ports:
+    - 127.0.0.1:5021:5021
+    depends_on:
+    - pms-plant
+    networks:
+      pms_process:
+        ipv4_address: 172.28.30.20
+      pms_control:
+        ipv4_address: 172.28.40.20
+    restart: unless-stopped
+  propulsion-io:
+    build:
+      context: io_emulator
+    environment:
+      IO_CONFIG: /config/propulsion.json
+      MODBUS_PORT: '5022'
+    volumes:
+    - ./io_emulator/configs:/config:ro
+    ports:
+    - 127.0.0.1:5022:5022
+    depends_on:
+    - propulsion-plant
+    networks:
+      propulsion_process:
+        ipv4_address: 172.28.50.20
+      propulsion_control:
+        ipv4_address: 172.28.60.20
+    restart: unless-stopped
+  openplc-cargo:
+    image: ghcr.io/autonomy-logic/openplc-runtime:v4.1.9
+    cap_add:
+    - SYS_NICE
+    - SYS_RESOURCE
+    ports:
+    - 127.0.0.1:8443:8443
+    - 127.0.0.1:4840:4840
+    volumes:
+    - openplc-cargo-data:/var/run/runtime
+    networks:
+      cargo_control:
+        ipv4_address: 172.28.20.10
+      operations:
+        ipv4_address: 172.28.70.10
+    restart: unless-stopped
+  openplc-pms:
+    image: ghcr.io/autonomy-logic/openplc-runtime:v4.1.9
+    cap_add:
+    - SYS_NICE
+    - SYS_RESOURCE
+    ports:
+    - 127.0.0.1:8444:8443
+    - 127.0.0.1:4841:4840
+    volumes:
+    - openplc-pms-data:/var/run/runtime
+    networks:
+      pms_control:
+        ipv4_address: 172.28.40.10
+      operations:
+        ipv4_address: 172.28.70.11
+    restart: unless-stopped
+  openplc-propulsion:
+    image: ghcr.io/autonomy-logic/openplc-runtime:v4.1.9
+    cap_add:
+    - SYS_NICE
+    - SYS_RESOURCE
+    ports:
+    - 127.0.0.1:8445:8443
+    - 127.0.0.1:4842:4840
+    volumes:
+    - openplc-propulsion-data:/var/run/runtime
+    networks:
+      propulsion_control:
+        ipv4_address: 172.28.60.10
+      operations:
+        ipv4_address: 172.28.70.12
+    restart: unless-stopped
+  alarm-engine:
+    build:
+      context: alarms
+    volumes:
+    - alarm-data:/data
+    ports:
+    - 127.0.0.1:8400:8400
+    depends_on:
+    - cargo-plant
+    - pms-plant
+    - propulsion-plant
+    networks:
+      cargo_process: {}
+      pms_process: {}
+      propulsion_process: {}
+      operations:
+        ipv4_address: 172.28.70.24
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8400/health',
+        timeout=2)" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+  learning-portal:
+    build:
+      context: portal
+    ports:
+    - 127.0.0.1:8500:8500
+    depends_on:
+    - alarm-engine
+    - vessel-coordinator
+    networks:
+      cargo_process: {}
+      pms_process: {}
+      propulsion_process: {}
+      operations:
+        ipv4_address: 172.28.70.25
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8500/health',
+        timeout=2)" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+  fuxa:
+    image: frangoteam/fuxa:1.3.4
+    ports:
+    - 127.0.0.1:1881:1881
+    volumes:
+    - ./fuxa/appdata:/usr/src/app/FUXA/server/_appdata
+    - ./fuxa/db:/usr/src/app/FUXA/server/_db
+    - ./fuxa/logs:/usr/src/app/FUXA/server/_logs
+    - ./fuxa/images:/usr/src/app/FUXA/server/_images
+    networks:
+      operations:
+        ipv4_address: 172.28.70.23
+    restart: unless-stopped
+  influxdb:
+    image: influxdb:2.9.1
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_PASSWORD:?set INFLUX_PASSWORD in .env}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUX_ORG:-otlab}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUX_BUCKET:-vessel}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN:?set INFLUX_TOKEN in .env}
+    ports:
+    - 127.0.0.1:8086:8086
+    volumes:
+    - influx-data:/var/lib/influxdb2
+    networks:
+      operations:
+        ipv4_address: 172.28.70.20
+    restart: unless-stopped
+  telegraf:
+    image: telegraf:1.39.3
+    environment:
+      INFLUX_ORG: ${INFLUX_ORG:-otlab}
+      INFLUX_BUCKET: ${INFLUX_BUCKET:-vessel}
+      INFLUX_TOKEN: ${INFLUX_TOKEN:?set INFLUX_TOKEN in .env}
+    volumes:
+    - ./historian/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    - ./historian/generated:/etc/telegraf/telegraf.d:ro
+    depends_on:
+    - influxdb
+    networks:
+      operations:
+        ipv4_address: 172.28.70.21
+    command:
+    - telegraf
+    - --config
+    - /etc/telegraf/telegraf.conf
+    - --config-directory
+    - /etc/telegraf/telegraf.d
+    restart: unless-stopped
+  grafana:
+    image: grafana/grafana:13.2.0
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?set GRAFANA_ADMIN_PASSWORD in .env}
+      INFLUX_ORG: ${INFLUX_ORG:-otlab}
+      INFLUX_BUCKET: ${INFLUX_BUCKET:-vessel}
+      INFLUX_TOKEN: ${INFLUX_TOKEN:?set INFLUX_TOKEN in .env}
+    ports:
+    - 127.0.0.1:3000:3000
+    volumes:
+    - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+    - influxdb
+    networks:
+      operations:
+        ipv4_address: 172.28.70.22
+    restart: unless-stopped
+  commissioning-client:
+    build:
+      context: scenario
+    profiles:
+    - tools
+    networks:
+    - cargo_control
+    - pms_control
+    - propulsion_control
+    - operations
+    volumes:
+    - ./evidence:/evidence
+  capture-cargo-io:
+    build:
+      context: .
+      dockerfile: tools/capture.Dockerfile
+    profiles:
+    - tools
+    network_mode: service:cargo-io
+    depends_on:
+    - cargo-io
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+  capture-cargo-plc:
+    build:
+      context: .
+      dockerfile: tools/capture.Dockerfile
+    profiles:
+    - tools
+    network_mode: service:openplc-cargo
+    depends_on:
+    - openplc-cargo
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+  capture-pms-io:
+    build:
+      context: .
+      dockerfile: tools/capture.Dockerfile
+    profiles:
+    - tools
+    network_mode: service:pms-io
+    depends_on:
+    - pms-io
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+  capture-pms-plc:
+    build:
+      context: .
+      dockerfile: tools/capture.Dockerfile
+    profiles:
+    - tools
+    network_mode: service:openplc-pms
+    depends_on:
+    - openplc-pms
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+  capture-propulsion-io:
+    build:
+      context: .
+      dockerfile: tools/capture.Dockerfile
+    profiles:
+    - tools
+    network_mode: service:propulsion-io
+    depends_on:
+    - propulsion-io
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+  capture-propulsion-plc:
+    build:
+      context: .
+      dockerfile: tools/capture.Dockerfile
+    profiles:
+    - tools
+    network_mode: service:openplc-propulsion
+    depends_on:
+    - openplc-propulsion
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+  zeek-offline:
+    image: zeek/zeek:8.0.10
+    profiles:
+    - tools
+    volumes:
+    - ./evidence:/evidence
+    - ./security/zeek:/scripts:ro
+    working_dir: /evidence
+    entrypoint:
+    - bash
+    - -lc
+  vessel-coordinator:
+    build:
+      context: vessel
+    volumes:
+    - ./vessel/profile.json:/config/profile.json:ro
+    ports:
+    - 127.0.0.1:8600:8600
+    depends_on:
+    - cargo-plant
+    - pms-plant
+    - propulsion-plant
+    networks:
+      cargo_process: {}
+      pms_process: {}
+      propulsion_process: {}
+      operations:
+        ipv4_address: 172.28.70.26
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8600/health',
+        timeout=2)" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+  commissioning-tools:
+    build:
+      context: commissioning
+    profiles:
+    - tools
+    volumes:
+    - ./evidence:/evidence
+    - ./fuxa:/project/fuxa:ro
+    networks:
+    - operations
+volumes:
+  plant-fmu: null
+  openplc-cargo-data: null
+  openplc-pms-data: null
+  openplc-propulsion-data: null
+  influx-data: null
+  alarm-data: null
+networks:
+  cargo_process:
+    ipam:
+      config:
+      - subnet: 172.28.10.0/24
+  cargo_control:
+    ipam:
+      config:
+      - subnet: 172.28.20.0/24
+  pms_process:
+    ipam:
+      config:
+      - subnet: 172.28.30.0/24
+  pms_control:
+    ipam:
+      config:
+      - subnet: 172.28.40.0/24
+  propulsion_process:
+    ipam:
+      config:
+      - subnet: 172.28.50.0/24
+  propulsion_control:
+    ipam:
+      config:
+      - subnet: 172.28.60.0/24
+  operations:
+    ipam:
+      config:
+      - subnet: 172.28.70.0/24

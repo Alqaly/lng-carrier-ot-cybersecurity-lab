@@ -1,0 +1,12 @@
+{
+  "modbus": [
+    {"domain":"cargo","src":"172.28.20.10","dst":"172.28.20.20","port":5020,"purpose":"Cargo PLC to Cargo remote I/O"},
+    {"domain":"pms","src":"172.28.40.10","dst":"172.28.40.20","port":5021,"purpose":"PMS PLC to PMS remote I/O"},
+    {"domain":"propulsion","src":"172.28.60.10","dst":"172.28.60.20","port":5022,"purpose":"Propulsion PLC to machinery remote I/O"}
+  ],
+  "opcua": [
+    {"domain":"cargo","src":"172.28.70.21","dst":"172.28.70.10","port":4840,"purpose":"Historian collector to Cargo PLC OPC UA"},
+    {"domain":"pms","src":"172.28.70.21","dst":"172.28.70.11","port":4840,"purpose":"Historian collector to PMS PLC OPC UA"},
+    {"domain":"propulsion","src":"172.28.70.21","dst":"172.28.70.12","port":4840,"purpose":"Historian collector to Propulsion PLC OPC UA"}
+  ]
+}

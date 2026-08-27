@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="850" viewBox="0 0 1500 850">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#83cfff"/></marker></defs>
+<rect width="100%" height="100%" fill="#0b1117"/>
+<text x="55" y="60" fill="white" font-family="Arial" font-size="34" font-weight="700">Trace One Tag From Physics to Evidence</text>
+<rect x="50" y="150" width="210" height="95" rx="16" fill="#15342d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="155.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Process Equation</text>
+<text x="155.0" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">OpenModelica / FMU</text>
+<rect x="310" y="150" width="210" height="95" rx="16" fill="#15342d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="415.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">I/O Device</text>
+<text x="415.0" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">input/discrete values</text>
+<rect x="570" y="150" width="210" height="95" rx="16" fill="#233348" stroke="#7dc8f4" stroke-width="2"/>
+<text x="675.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Modbus TCP</text>
+<text x="675.0" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">message on conduit</text>
+<rect x="830" y="150" width="210" height="95" rx="16" fill="#233348" stroke="#7dc8f4" stroke-width="2"/>
+<text x="935.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">PLC Variable</text>
+<text x="935.0" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">IEC 61131-3</text>
+<rect x="1090" y="150" width="210" height="95" rx="16" fill="#30263d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="1195.0" y="187" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">OPC UA Node</text>
+<text x="1195.0" y="217" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">typed information</text>
+<rect x="570" y="430" width="210" height="95" rx="16" fill="#3b2c1d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="675.0" y="467" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">PCAP</text>
+<text x="675.0" y="497" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">packet evidence</text>
+<rect x="830" y="430" width="210" height="95" rx="16" fill="#3b2c1d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="935.0" y="467" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Historian</text>
+<text x="935.0" y="497" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">time series</text>
+<rect x="1090" y="430" width="210" height="95" rx="16" fill="#3b2c1d" stroke="#7dc8f4" stroke-width="2"/>
+<text x="1195.0" y="467" fill="#fff" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Investigation</text>
+<text x="1195.0" y="497" fill="#c4d4e2" text-anchor="middle" font-family="Arial" font-size="14">process meaning</text>
+<line x1="260" y1="198" x2="310" y2="198" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="285.0" y="190.0" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">state</text>
+<line x1="520" y1="198" x2="570" y2="198" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="545.0" y="190.0" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">read</text>
+<line x1="780" y1="198" x2="830" y2="198" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="805.0" y="190.0" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">map</text>
+<line x1="1040" y1="198" x2="1090" y2="198" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1065.0" y="190.0" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">publish</text>
+<line x1="675" y1="245" x2="675" y2="430" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="675.0" y="329.5" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">capture</text>
+<line x1="1195" y1="245" x2="935" y2="430" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1065.0" y="329.5" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">store</text>
+<line x1="1040" y1="478" x2="1090" y2="478" stroke="#83cfff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1065.0" y="470.0" fill="#ffd98c" text-anchor="middle" font-family="Arial" font-size="14">explain</text>
+<text x="55" y="815" fill="#8fa5b8" font-family="Arial" font-size="14">A value is not trusted merely because it appears on a dashboard.</text>
+</svg>

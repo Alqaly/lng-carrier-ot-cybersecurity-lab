@@ -1,0 +1,12 @@
+loadFile("/workspace/plant/modelica/CargoTransferPlant.mo");
+loadFile("/workspace/plant/modelica/PowerManagementPlant.mo");
+loadFile("/workspace/plant/modelica/PropulsionPlant.mo");
+
+// Use the standard FMI 2.0 Co-Simulation export path. OpenModelica's default
+// CS integrator avoids introducing extra dynamic CVODE runtime dependencies
+// into this portable teaching repository. The models use a 50 ms communication
+// step and are intentionally simple enough for this integration approach.
+buildModelFMU(CargoTransferPlant, version="2.0", fmuType="cs", fileNamePrefix="/out/cargo_plant");
+buildModelFMU(PowerManagementPlant, version="2.0", fmuType="cs", fileNamePrefix="/out/pms_plant");
+buildModelFMU(PropulsionPlant, version="2.0", fmuType="cs", fileNamePrefix="/out/propulsion_plant");
+getErrorString();

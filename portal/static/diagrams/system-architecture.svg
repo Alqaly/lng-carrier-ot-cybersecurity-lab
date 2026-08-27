@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#8fd3ff"/></marker></defs>
+<rect width="100%" height="100%" fill="#0b1117"/>
+<text x="55" y="60" fill="#fff" font-family="Arial" font-size="34" font-weight="700">Software-Defined OT Testbed Architecture</text>
+<rect x="50" y="150" width="230" height="90" rx="16" fill="#1d2c45" stroke="#77c8ff" stroke-width="2"/>
+<text x="165.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">OpenPLC Editor</text>
+<text x="165.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">engineering / project config</text>
+<rect x="350" y="150" width="230" height="90" rx="16" fill="#1d2c45" stroke="#77c8ff" stroke-width="2"/>
+<text x="465.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">OpenPLC Runtime</text>
+<text x="465.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">IEC 61131-3 control</text>
+<rect x="670" y="150" width="230" height="90" rx="16" fill="#15342d" stroke="#77c8ff" stroke-width="2"/>
+<text x="785.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Virtual Remote I/O</text>
+<text x="785.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">Modbus TCP device</text>
+<rect x="990" y="150" width="230" height="90" rx="16" fill="#15342d" stroke="#77c8ff" stroke-width="2"/>
+<text x="1105.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Process Runtime</text>
+<text x="1105.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">FMU co-simulation</text>
+<rect x="1230" y="150" width="220" height="90" rx="16" fill="#15342d" stroke="#77c8ff" stroke-width="2"/>
+<text x="1340.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">OpenModelica</text>
+<text x="1340.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">process equations</text>
+<rect x="350" y="430" width="230" height="90" rx="16" fill="#30263d" stroke="#77c8ff" stroke-width="2"/>
+<text x="465.0" y="468" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">OPC UA</text>
+<text x="465.0" y="498" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">structured process data</text>
+<rect x="670" y="430" width="230" height="90" rx="16" fill="#30263d" stroke="#77c8ff" stroke-width="2"/>
+<text x="785.0" y="468" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Telegraf</text>
+<text x="785.0" y="498" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">collector</text>
+<rect x="990" y="430" width="230" height="90" rx="16" fill="#3b2c1d" stroke="#77c8ff" stroke-width="2"/>
+<text x="1105.0" y="468" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">InfluxDB</text>
+<text x="1105.0" y="498" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">historian</text>
+<rect x="1230" y="430" width="220" height="90" rx="16" fill="#3b2c1d" stroke="#77c8ff" stroke-width="2"/>
+<text x="1340.0" y="468" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Grafana</text>
+<text x="1340.0" y="498" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">trends / visualization</text>
+<rect x="670" y="680" width="230" height="90" rx="16" fill="#2e2f32" stroke="#77c8ff" stroke-width="2"/>
+<text x="785.0" y="718" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Evidence</text>
+<text x="785.0" y="748" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">PCAP + logs + notes</text>
+<line x1="280" y1="195" x2="350" y2="195" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="315.0" y="188.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">deploy</text>
+<line x1="580" y1="195" x2="670" y2="195" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="625.0" y="188.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">Modbus</text>
+<line x1="900" y1="195" x2="990" y2="195" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="945.0" y="188.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">commands / state</text>
+<line x1="1220" y1="195" x2="1230" y2="195" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1225.0" y="188.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">FMU</text>
+<line x1="465" y1="240" x2="465" y2="430" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="465.0" y="328.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">OPC UA</text>
+<line x1="580" y1="475" x2="670" y2="475" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="900" y1="475" x2="990" y2="475" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1220" y1="475" x2="1230" y2="475" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="785" y1="240" x2="785" y2="680" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="785.0" y="453.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">capture / verify</text>
+<text x="55" y="865" fill="#90a7ba" font-family="Arial" font-size="14">Control, process physics, protocol traffic and historical data are separate layers.</text>
+</svg>

@@ -1,0 +1,38 @@
+{
+  "name": "Cargo Unloading Plant",
+  "fmu_path": "/fmu/cargo_plant.fmu",
+  "step_seconds": 0.05,
+  "inputs": {
+    "pumpCmd": "boolean",
+    "valveCommand": "real",
+    "faultValveStuck": "boolean",
+    "faultPumpFail": "boolean",
+    "flowSensorBiasPct": "real",
+    "powerAvailable": "boolean",
+    "faultFlowPathBlocked": "boolean"
+  },
+  "outputs": {
+    "levelSource": "real",
+    "levelDestination": "real",
+    "flow": "real",
+    "flowMeasured": "real",
+    "pressureSource": "real",
+    "pressureDestination": "real",
+    "pumpSpeed": "real",
+    "valvePosition": "real",
+    "pumpFeedback": "boolean",
+    "valveFeedback": "boolean",
+    "highHighDestination": "boolean",
+    "lowLowSource": "boolean",
+    "pumpPowerKW": "real"
+  },
+  "defaults": {
+    "pumpCmd": false,
+    "valveCommand": 0.0,
+    "faultValveStuck": false,
+    "faultPumpFail": false,
+    "flowSensorBiasPct": 0.0,
+    "powerAvailable": true,
+    "faultFlowPathBlocked": false
+  }
+}

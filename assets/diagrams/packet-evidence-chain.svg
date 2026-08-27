@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="850" viewBox="0 0 1500 850">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#6f8794"/></marker></defs>
+<rect width="100%" height="100%" fill="#eef0f2"/>
+<text x="55" y="60" fill="#252a2e" font-family="Arial" font-size="32" font-weight="700">Packet Evidence Chain</text>
+<rect x="60" y="160" width="220" height="95" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="170.0" y="196" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Operator / PLC</text>
+<text x="170.0" y="225" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">intent</text>
+<rect x="330" y="160" width="220" height="95" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="440.0" y="196" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Modbus Packet</text>
+<text x="440.0" y="225" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">function + address</text>
+<rect x="600" y="160" width="220" height="95" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="710.0" y="196" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">I/O Point</text>
+<text x="710.0" y="225" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">command / feedback</text>
+<rect x="870" y="160" width="220" height="95" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="980.0" y="196" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Plant State</text>
+<text x="980.0" y="225" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">physics response</text>
+<rect x="1140" y="160" width="260" height="95" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="1270.0" y="196" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Historian / Alarm</text>
+<text x="1270.0" y="225" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">time correlation</text>
+<rect x="330" y="440" width="220" height="95" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="440.0" y="476" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">PCAP</text>
+<text x="440.0" y="505" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">wire evidence</text>
+<rect x="600" y="440" width="220" height="95" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="710.0" y="476" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">PLC Online View</text>
+<text x="710.0" y="505" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">controller evidence</text>
+<rect x="870" y="440" width="220" height="95" rx="10" fill="#fafbfc" stroke="#7d858c" stroke-width="2"/>
+<text x="980.0" y="476" text-anchor="middle" fill="#252a2e" font-family="Arial" font-size="19" font-weight="700">Timeline</text>
+<text x="980.0" y="505" text-anchor="middle" fill="#626b72" font-family="Arial" font-size="13">chronology</text>
+<line x1="280" y1="207" x2="330" y2="207" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<line x1="550" y1="207" x2="600" y2="207" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<line x1="820" y1="207" x2="870" y2="207" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<line x1="1090" y1="207" x2="1140" y2="207" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<line x1="440" y1="255" x2="440" y2="440" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<text x="440.0" y="340.5" text-anchor="middle" fill="#7a5a00" font-family="Arial" font-size="13">capture</text>
+<line x1="710" y1="255" x2="710" y2="440" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<text x="710.0" y="340.5" text-anchor="middle" fill="#7a5a00" font-family="Arial" font-size="13">verify</text>
+<line x1="980" y1="255" x2="980" y2="440" stroke="#6f8794" stroke-width="3" marker-end="url(#a)"/>
+<text x="980.0" y="340.5" text-anchor="middle" fill="#7a5a00" font-family="Arial" font-size="13">correlate</text>
+<text x="55" y="820" fill="#6b7379" font-family="Arial" font-size="13">The investigation is strongest when network, controller and process evidence tell the same story.</text>
+</svg>

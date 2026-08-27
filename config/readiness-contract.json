@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "principle": "container running is not equivalent to OT semantic readiness",
+  "levels": [
+    {
+      "id": "process_alive",
+      "meaning": "container/process exists and has not exited"
+    },
+    {
+      "id": "reachable",
+      "meaning": "expected HTTP/TCP endpoint is reachable from the intended observation point"
+    },
+    {
+      "id": "commissioned",
+      "meaning": "required PLC/project/protocol identities and bindings have been explicitly commissioned"
+    },
+    {
+      "id": "semantic_ready",
+      "meaning": "live values, quality/timestamps, historian freshness and role-specific behavior satisfy the documented contract"
+    }
+  ],
+  "service_coverage": {
+    "modelica-builder": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "cargo-plant": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "pms-plant": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "propulsion-plant": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "cargo-io": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "pms-io": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "propulsion-io": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "openplc-cargo": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "openplc-pms": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "openplc-propulsion": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "alarm-engine": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "learning-portal": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "fuxa": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "influxdb": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "telegraf": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "grafana": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "commissioning-client": {
+      "covered": true,
+      "profiles": "tools"
+    },
+    "capture-cargo-io": {
+      "covered": true,
+      "profiles": "tools"
+    },
+    "capture-cargo-plc": {
+      "covered": true,
+      "profiles": "tools"
+    },
+    "capture-pms-io": {
+      "covered": true,
+      "profiles": "tools"
+    },
+    "capture-pms-plc": {
+      "covered": true,
+      "profiles": "tools"
+    },
+    "capture-propulsion-io": {
+      "covered": true,
+      "profiles": "tools"
+    },
+    "capture-propulsion-plc": {
+      "covered": true,
+      "profiles": "tools"
+    },
+    "zeek-offline": {
+      "covered": true,
+      "profiles": "tools"
+    },
+    "vessel-coordinator": {
+      "covered": true,
+      "profiles": "baseline"
+    },
+    "commissioning-tools": {
+      "covered": true,
+      "profiles": "tools"
+    }
+  },
+  "runtime_validation": "pending_target_server"
+}

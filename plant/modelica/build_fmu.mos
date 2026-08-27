@@ -1,0 +1,9 @@
+loadFile("/workspace/plant/modelica/CargoTransferPlant.mo");
+getErrorString();
+buildModelFMU(
+  CargoTransferPlant,
+  version="2.0",
+  fmuType="cs",
+  fileNamePrefix="/out/cargo_plant"
+);
+getErrorString();

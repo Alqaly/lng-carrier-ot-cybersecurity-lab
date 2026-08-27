@@ -1,0 +1,37 @@
+{
+  "name": "Propulsion and Machinery Plant",
+  "fmu_path": "/fmu/propulsion_plant.fmu",
+  "step_seconds": 0.05,
+  "inputs": {
+    "preLubeCmd": "boolean",
+    "engineEnable": "boolean",
+    "fuelCommand": "real",
+    "pitchCommand": "real",
+    "faultLubePumpFail": "boolean",
+    "auxPowerAvailable": "boolean",
+    "faultCoolingFail": "boolean"
+  },
+  "outputs": {
+    "engineRPM": "real",
+    "lubeOilPressureBar": "real",
+    "coolantTempC": "real",
+    "vesselSpeedKn": "real",
+    "engineLoadPct": "real",
+    "shaftTorqueNm": "real",
+    "engineRunning": "boolean",
+    "lowLubePressure": "boolean",
+    "highCoolantTemp": "boolean",
+    "overspeed": "boolean",
+    "propellerTorqueNm": "real",
+    "auxiliaryElectricalLoadKW": "real"
+  },
+  "defaults": {
+    "preLubeCmd": false,
+    "engineEnable": false,
+    "fuelCommand": 0.0,
+    "pitchCommand": 0.0,
+    "faultLubePumpFail": false,
+    "auxPowerAvailable": true,
+    "faultCoolingFail": false
+  }
+}

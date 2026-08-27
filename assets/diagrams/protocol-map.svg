@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#8fd3ff"/></marker></defs>
+<rect width="100%" height="100%" fill="#0b1117"/>
+<text x="55" y="60" fill="#fff" font-family="Arial" font-size="34" font-weight="700">Protocol Academy Map</text>
+<rect x="70" y="150" width="250" height="100" rx="16" fill="#15342d" stroke="#77c8ff" stroke-width="2"/>
+<text x="195.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">OpenPLC ↔ I/O</text>
+<text x="195.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">Modbus TCP</text>
+<rect x="380" y="150" width="250" height="100" rx="16" fill="#30263d" stroke="#77c8ff" stroke-width="2"/>
+<text x="505.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">PLC ↔ Historian</text>
+<text x="505.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">OPC UA</text>
+<rect x="690" y="150" width="250" height="100" rx="16" fill="#1d2c45" stroke="#77c8ff" stroke-width="2"/>
+<text x="815.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Navigation Replay</text>
+<text x="815.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">NMEA 0183</text>
+<rect x="1000" y="150" width="250" height="100" rx="16" fill="#1d2c45" stroke="#77c8ff" stroke-width="2"/>
+<text x="1125.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Marine CAN</text>
+<text x="1125.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">NMEA 2000 reference</text>
+<rect x="1310" y="150" width="150" height="100" rx="16" fill="#1d2c45" stroke="#77c8ff" stroke-width="2"/>
+<text x="1385.0" y="188" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Nav Ethernet</text>
+<text x="1385.0" y="218" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">IEC 61162</text>
+<rect x="380" y="450" width="250" height="100" rx="16" fill="#30263d" stroke="#77c8ff" stroke-width="2"/>
+<text x="505.0" y="488" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Engineering</text>
+<text x="505.0" y="518" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">HTTPS / runtime API</text>
+<rect x="690" y="450" width="250" height="100" rx="16" fill="#3b2c1d" stroke="#77c8ff" stroke-width="2"/>
+<text x="815.0" y="488" fill="white" text-anchor="middle" font-family="Arial" font-size="20" font-weight="700">Evidence</text>
+<text x="815.0" y="518" fill="#c8d7e5" text-anchor="middle" font-family="Arial" font-size="14">PCAP / logs</text>
+<line x1="320" y1="200" x2="380" y2="200" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="630" y1="200" x2="690" y2="200" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="940" y1="200" x2="1000" y2="200" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1250" y1="200" x2="1310" y2="200" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="505" y1="250" x2="505" y2="450" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="815" y1="250" x2="815" y2="450" stroke="#8fd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="815.0" y="343.0" fill="#ffd890" text-anchor="middle" font-family="Arial" font-size="14">capture</text>
+<text x="55" y="865" fill="#90a7ba" font-family="Arial" font-size="14">Different vessel functions use different interface families; no single protocol explains the ship.</text>
+</svg>

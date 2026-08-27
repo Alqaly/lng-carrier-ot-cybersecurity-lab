@@ -1,0 +1,18 @@
+services:
+  cargo-plant:
+    logging: &rotating_logs {driver: json-file, options: {max-size: "20m", max-file: "5"}}
+  pms-plant: {logging: *rotating_logs}
+  propulsion-plant: {logging: *rotating_logs}
+  cargo-io: {logging: *rotating_logs}
+  pms-io: {logging: *rotating_logs}
+  propulsion-io: {logging: *rotating_logs}
+  openplc-cargo: {logging: *rotating_logs}
+  openplc-pms: {logging: *rotating_logs}
+  openplc-propulsion: {logging: *rotating_logs}
+  alarm-engine: {logging: *rotating_logs}
+  vessel-coordinator: {logging: *rotating_logs}
+  learning-portal: {logging: *rotating_logs}
+  fuxa: {logging: *rotating_logs}
+  influxdb: {logging: *rotating_logs}
+  telegraf: {logging: *rotating_logs}
+  grafana: {logging: *rotating_logs}
