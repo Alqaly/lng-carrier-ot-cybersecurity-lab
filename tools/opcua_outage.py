@@ -73,11 +73,19 @@ def verify_control_attached(networks: dict[str, dict[str, Any]], control_ip: str
     return name
 
 
-def state_path(domain: str) -> Path:
-    return STATE_DIR / f"opcua-outage-{domain}.json"
+def state_path(domain: str, out: str | Path | None = None) -> Path:
+    if out is None:
+        return STATE_DIR / f"opcua-outage-{domain}.json"
+    raw = Path(out)
+    path = raw if raw.is_absolute() else ROOT / raw
+    path = path.resolve()
+    evidence = (ROOT / "evidence").resolve()
+    if path != evidence and evidence not in path.parents:
+        raise ValueError("--out must be inside evidence/")
+    return path
 
 
-def start(domain: str) -> dict[str, Any]:
+def start(domain: str, out: str | Path | None = None) -> dict[str, Any]:
     service = SERVICES[domain]
     truth = ground_truth(domain)
     cid = container_id(service)
@@ -89,7 +97,8 @@ def start(domain: str) -> dict[str, Any]:
     if operations_network == control_network:
         raise RuntimeError("control and operations resolved to the same Docker network; isolation would violate experiment design")
 
-    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    path = state_path(domain, out)
+    path.parent.mkdir(parents=True, exist_ok=True)
     record = {
         "domain": domain,
         "service": service,
@@ -101,7 +110,7 @@ def start(domain: str) -> dict[str, Any]:
         "control_network": control_network,
         "operations_network": operations_network,
     }
-    state_path(domain).write_text(json.dumps(record, indent=2) + "\n")
+    path.write_text(json.dumps(record, indent=2) + "\n")
 
     run("docker", "network", "disconnect", operations_network, cid)
     after = network_map(cid)
@@ -109,12 +118,12 @@ def start(domain: str) -> dict[str, Any]:
     if network_for_ip(after, truth["operations_ip"]):
         raise RuntimeError("operations network still attached after disconnect")
     record.update({"status": "isolated", "verified_at": utc_iso(), "control_preserved": True})
-    state_path(domain).write_text(json.dumps(record, indent=2) + "\n")
+    path.write_text(json.dumps(record, indent=2) + "\n")
     return record
 
 
-def restore(domain: str) -> dict[str, Any]:
-    path = state_path(domain)
+def restore(domain: str, out: str | Path | None = None) -> dict[str, Any]:
+    path = state_path(domain, out)
     if not path.exists():
         raise RuntimeError(f"missing {path}; cannot prove which operations network should be restored")
     record = json.loads(path.read_text())
@@ -153,8 +162,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Create/restore a supervisory-only OPC UA network outage.")
     parser.add_argument("domain", choices=sorted(SERVICES))
     parser.add_argument("action", choices=["start", "restore"])
+    parser.add_argument("--out", default=None, help="run-scoped outage record path inside evidence/")
     args = parser.parse_args()
-    result = start(args.domain) if args.action == "start" else restore(args.domain)
+    result = start(args.domain, args.out) if args.action == "start" else restore(args.domain, args.out)
     print(json.dumps(result, indent=2))
 
 

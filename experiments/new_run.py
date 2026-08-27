@@ -7,7 +7,8 @@ DEFAULT_FILES={
  'cargo_modbus_pcap':'cargo-modbus.pcap','pms_modbus_pcap':'pms-modbus.pcap','propulsion_modbus_pcap':'propulsion-modbus.pcap',
  'cargo_state_timeline':'cargo-state.jsonl','pms_state_timeline':'pms-state.jsonl','propulsion_state_timeline':'propulsion-state.jsonl','vessel_state_timeline':'vessel-state.jsonl','alarm_timeline':'alarm-timeline.jsonl',
  'cargo_state_csv':'cargo-state.csv','process_residual_json':'process-residual.json','modbus_conn_log':'conn.log','conduit_classification_json':'conduit-classification.json',
- 'historian_freshness_before':'freshness-before.json','historian_freshness_after':'freshness-after.json'}
+ 'historian_freshness_before':'freshness-before.json','historian_freshness_after':'freshness-after.json',
+ 'cargo_modbus_log':'zeek/modbus.log','opcua_outage_record':'opcua-outage.json'}
 def cmd(*args):
  try:return subprocess.check_output(args,cwd=ROOT,text=True,stderr=subprocess.DEVNULL).strip()
  except Exception:return None

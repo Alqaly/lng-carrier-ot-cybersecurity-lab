@@ -30,7 +30,8 @@ def test_runtime_evidence_helpers_match_commissioned_measurement_and_formats(tmp
     labctl = (R / 'labctl').read_text()
     for token in ['cmd_conduit_check', 'cmd_cargo_residual', 'cmd_hist_fresh', 'conduit-check <domain>', 'hist-fresh <domain>']:
         assert token in labctl
-    assert 'dest="${3:-}"' in labctl and '${domain}-${kind}.pcap' in labctl
+    assert 'dest="" duration=""' in labctl and '${domain}-${kind}.pcap' in labctl
+    assert '--duration' in labctl and 'timeout -s INT ${duration} tcpdump' in labctl
     assert 'host_pcap="${2:-evidence/live/${domain}/modbus.pcap}"' in labctl
 
     binding = (R / 'commissioning/binding_plan.py').read_text()
