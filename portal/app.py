@@ -25,6 +25,10 @@ C={
 @app.get('/')
 def home(): return FileResponse('/app/static/index.html')
 
+@app.get('/health')
+def health():
+    return {'ready': True, 'service': 'learning-portal'}
+
 async def fetch_json(client,url):
     try: return (await client.get(url)).json()
     except Exception as e: return {'ready':False,'error':str(e)}

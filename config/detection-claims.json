@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "prospective_claim": "Cross-layer evidence may improve event-order accuracy and reconstruction completeness over network-only evidence.",
+  "required_comparators": ["network_only", "process_only", "cross_layer"],
+  "required_before_claim": [
+    "repeated controlled runs",
+    "declared initial conditions",
+    "retained raw evidence",
+    "experiment-specific semantic evaluation",
+    "metric units and timestamp semantics",
+    "comparison against related work and limitations"
+  ],
+  "forbidden_without_evidence": [
+    "improves detection",
+    "outperforms network-only monitoring",
+    "proves root cause",
+    "prevents attacks",
+    "real-time detection performance"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "public_identity": "LNG Carrier Virtual Engineering Lab",
+  "artifact_type": "software-defined teaching and research testbed",
+  "executable_scope": [
+    "cargo unloading process and control",
+    "teaching-scale power management",
+    "mechanical propulsion and machinery auxiliaries",
+    "declared cross-domain electrical dependencies",
+    "Modbus TCP control I/O",
+    "OPC UA supervisory publication",
+    "operator, historian, alarm and packet evidence"
+  ],
+  "claim_boundaries": {
+    "complete_vessel_simulation": false,
+    "hardware_in_the_loop": false,
+    "class_approved": false,
+    "iec_or_iacs_compliant": false,
+    "vendor_equivalent": false,
+    "production_control_system": false
+  },
+  "validation_states": [
+    "static_validated",
+    "runtime_commissioned",
+    "experimentally_evaluated"
+  ],
+  "current_validation_state": "static_validated_pending_target_server_commissioning"
+}

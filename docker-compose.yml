@@ -104,12 +104,19 @@ services:
     ports:
     - 127.0.0.1:5020:5020
     depends_on:
-    - cargo-plant
+      cargo-plant:
+        condition: service_healthy
     networks:
       cargo_process:
         ipv4_address: 172.28.10.20
       cargo_control:
         ipv4_address: 172.28.20.20
+    healthcheck:
+      test: [CMD-SHELL, "python -c \"import socket; socket.create_connection(('127.0.0.1',5020),2).close()\""]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 10s
     restart: unless-stopped
   pms-io:
     build:
@@ -122,12 +129,19 @@ services:
     ports:
     - 127.0.0.1:5021:5021
     depends_on:
-    - pms-plant
+      pms-plant:
+        condition: service_healthy
     networks:
       pms_process:
         ipv4_address: 172.28.30.20
       pms_control:
         ipv4_address: 172.28.40.20
+    healthcheck:
+      test: [CMD-SHELL, "python -c \"import socket; socket.create_connection(('127.0.0.1',5021),2).close()\""]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 10s
     restart: unless-stopped
   propulsion-io:
     build:
@@ -140,12 +154,19 @@ services:
     ports:
     - 127.0.0.1:5022:5022
     depends_on:
-    - propulsion-plant
+      propulsion-plant:
+        condition: service_healthy
     networks:
       propulsion_process:
         ipv4_address: 172.28.50.20
       propulsion_control:
         ipv4_address: 172.28.60.20
+    healthcheck:
+      test: [CMD-SHELL, "python -c \"import socket; socket.create_connection(('127.0.0.1',5022),2).close()\""]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 10s
     restart: unless-stopped
   openplc-cargo:
     image: ghcr.io/autonomy-logic/openplc-runtime:v4.1.9
@@ -203,9 +224,12 @@ services:
     ports:
     - 127.0.0.1:8400:8400
     depends_on:
-    - cargo-plant
-    - pms-plant
-    - propulsion-plant
+      cargo-plant:
+        condition: service_healthy
+      pms-plant:
+        condition: service_healthy
+      propulsion-plant:
+        condition: service_healthy
     networks:
       cargo_process: {}
       pms_process: {}
@@ -228,8 +252,10 @@ services:
     ports:
     - 127.0.0.1:8500:8500
     depends_on:
-    - alarm-engine
-    - vessel-coordinator
+      alarm-engine:
+        condition: service_healthy
+      vessel-coordinator:
+        condition: service_healthy
     networks:
       cargo_process: {}
       pms_process: {}
@@ -418,9 +444,12 @@ services:
     ports:
     - 127.0.0.1:8600:8600
     depends_on:
-    - cargo-plant
-    - pms-plant
-    - propulsion-plant
+      cargo-plant:
+        condition: service_healthy
+      pms-plant:
+        condition: service_healthy
+      propulsion-plant:
+        condition: service_healthy
     networks:
       cargo_process: {}
       pms_process: {}

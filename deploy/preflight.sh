@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
 fail=0
 check(){ if "$@" >/dev/null 2>&1; then printf 'PASS  %s
 ' "$*"; else printf 'FAIL  %s
 ' "$*"; fail=1; fi; }
-printf 'LNG OT Lab server preflight
+printf 'LNG Carrier Virtual Engineering Lab server preflight
 
 '
 check command -v docker

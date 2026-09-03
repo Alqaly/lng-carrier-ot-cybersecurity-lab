@@ -2,6 +2,8 @@
 
 This page answers a simple question: **what exists in the project, what role does it play, and what has actually been validated?**
 
+Machine-readable boundaries are maintained in `config/project-scope.json`, `config/architecture-contract.json`, `vessel/coverage-contract.json`, and `config/data-semantics-contract.json`.
+
 Validation labels:
 
 - **Static PASS** — source/configuration/contract is covered by automated local gates.
@@ -18,6 +20,8 @@ Validation labels:
 | Vessel coordinator | cross-domain electrical/operational coupling | real software service | Static PASS | verify coupled event ordering |
 | Cargo/PMS/Propulsion I/O | protocol-facing remote I/O abstraction | Modbus TCP emulation | Static PASS | capture packets and compare with tag map |
 | Cargo/PMS/Propulsion PLC | control logic | IEC 61131-3 Structured Text on OpenPLC Runtime | source/mapping PASS | deploy three Editor projects and verify online state |
+
+The Vessel Coordinator exchanges dependency values through the three process HTTP APIs. It is intentionally separate from the OpenPLC ↔ Modbus Remote I/O control path; its events must not be described as Modbus traffic unless a capture actually shows a separate Modbus action.
 
 ## Operations and evidence
 

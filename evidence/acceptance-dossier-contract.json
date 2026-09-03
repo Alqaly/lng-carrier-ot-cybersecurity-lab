@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "pending_target_server",
+  "gates": {
+    "A": ["static-review.json", "rendered-compose.txt"],
+    "B": ["process-io-commissioning.json"],
+    "C": ["plc-commissioning.json", "plc-io-map-review.json"],
+    "D": ["opcua-discovery-index.json", "historian-binding-review.json"],
+    "E": ["hmi-alarm-review.json", "normal-baseline-run.json"],
+    "F": ["experiment-run-index.json", "repeated-run-aggregation.json"],
+    "G": ["reboot-persistence.json", "backup-restore.json", "resource-profile.json"]
+  },
+  "rule": "Every artifact must be retained and tied to the tested Git commit; a checklist assertion alone is not evidence."
+}

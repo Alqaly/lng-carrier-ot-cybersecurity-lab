@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "paths": {
+    "control": "process model <-> software remote I/O <-> Modbus TCP <-> OpenPLC",
+    "supervisory": "OpenPLC -> OPC UA -> FUXA and Telegraf/InfluxDB/Grafana",
+    "evidence": "process/controller snapshots + PCAP/Zeek + alarms + historian",
+    "cross_domain_coupling": "Cargo and Propulsion model outputs -> Vessel Coordinator HTTP API -> PMS model inputs; PMS model outputs -> Vessel Coordinator HTTP API -> Cargo and Propulsion model inputs"
+  },
+  "invariants": [
+    "The Vessel Coordinator couples plant models directly and is not part of the PLC Modbus control path.",
+    "Operator HMI and historian bindings use live-discovered OPC UA identities.",
+    "Control, supervisory and evidence paths remain distinguishable.",
+    "No service health result is accepted as proof of semantic commissioning."
+  ]
+}

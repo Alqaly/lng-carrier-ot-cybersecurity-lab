@@ -47,6 +47,6 @@ The repository must not ship invented screenshots. During commissioning, capture
 - Wireshark Modbus transaction decode,
 - Zeek `conn.log` / Modbus evidence,
 - alarm chronology,
-- full-vessel event timeline.
+- cross-domain event timeline.
 
 Store them in the experiment run directory and use those screenshots in the final website/Notion publication.

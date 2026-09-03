@@ -11,6 +11,9 @@ site/
 plant/fmu/*.fmu
 evidence/*
 !evidence/README.md
+!evidence/aggregate_runs.py
+!evidence/build_acceptance_dossier.py
+!evidence/acceptance-dossier-contract.json
 .DS_Store
 # Environment-specific OPC UA bindings are generated from live discovery.
 historian/generated/*.conf
@@ -20,3 +23,9 @@ historian/generated/*.conf
 venv/
 backups/
 *.bundle
+# FUXA writes runtime state into bind-mounted directories. Commissioned exports
+# belong under evidence/; mutable application state must never enter Git.
+fuxa/appdata/
+fuxa/db/
+fuxa/logs/
+fuxa/images/

@@ -1,6 +1,7 @@
 import json, os, time, threading
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from fmpy import read_model_description, extract
 from fmpy.fmi2 import FMU2Slave
 import uvicorn
@@ -85,7 +86,9 @@ def loop():
 
 @app.get('/health')
 def health():
-    return {'ready': plant is not None and fatal_error is None, 'error': fatal_error, 'model': CONFIG['name']}
+    ready = plant is not None and fatal_error is None
+    payload = {'ready': ready, 'error': fatal_error, 'model': CONFIG['name']}
+    return JSONResponse(payload, status_code=200 if ready else 503)
 
 @app.get('/state')
 def state():

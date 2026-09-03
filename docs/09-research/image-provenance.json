@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "external_visual_registry": "docs/09-research/visual-manifest.json",
+  "runtime_visual_policy": {
+    "status": "pending_target_server_commissioning",
+    "required_provenance": ["run_id", "git_commit", "capture_time", "source_service_or_tool", "redaction_review"],
+    "accepted_types": ["HMI screenshot", "Grafana trend", "OPC UA browser capture", "Wireshark decode", "Zeek evidence"]
+  },
+  "project_authored_diagrams": {
+    "role": "secondary explanatory schematics",
+    "evidence_status": "not runtime evidence",
+    "primary_publication_visual": false
+  },
+  "rules": [
+    "Do not copy external artwork without a compatible license or permission.",
+    "Link-only references remain links and citations.",
+    "Do not present a conceptual diagram as a runtime screenshot.",
+    "Record provenance before publishing any runtime image."
+  ]
+}

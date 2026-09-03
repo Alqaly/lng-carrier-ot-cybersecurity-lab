@@ -1,5 +1,5 @@
 [Unit]
-Description=LNG Carrier OT Cybersecurity Lab
+Description=LNG Carrier Virtual Engineering Lab
 Requires=docker.service
 After=docker.service network-online.target
 Wants=network-online.target

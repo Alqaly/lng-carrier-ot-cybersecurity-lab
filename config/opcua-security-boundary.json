@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "implemented_observations": [
+    "live endpoint discovery",
+    "namespace, NodeId, DataType, Quality and timestamp capture",
+    "supervisory publication outage isolated from the Modbus control path",
+    "historian freshness loss"
+  ],
+  "not_yet_claimed": [
+    "production PKI commissioning",
+    "certificate lifecycle validation",
+    "all OPC UA security policies and modes tested",
+    "user authorization model validated",
+    "OPC UA conformance certification",
+    "resilience against protocol exploitation"
+  ],
+  "publication_rule": "Describe observed configuration and evidence only; do not infer security from endpoint reachability or protocol presence."
+}

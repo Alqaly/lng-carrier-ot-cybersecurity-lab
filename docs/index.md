@@ -1,4 +1,4 @@
-# LNG Carrier OT Cybersecurity Lab
+# LNG Carrier Virtual Engineering Lab
 
 > **Visual tour:** Begin with the real LNGC PMS-HIL architecture and network in Figures 3 and 10 of Lee (2024, CC BY 4.0): https://www.mdpi.com/2077-1312/12/7/1236
 >

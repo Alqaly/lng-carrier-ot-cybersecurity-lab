@@ -20,12 +20,17 @@ for name,(url,keys) in ENDPOINTS.items():
     try: d=get(url)
     except Exception as e:
         problems.append(f'{name}: unavailable: {e}'); continue
+    endpoint_problems=[]
     missing=[k for k in keys if k not in d]
-    if missing: problems.append(f'{name}: missing keys {missing}')
-    if d.get('ready') is False: problems.append(f'{name}: reports ready=false')
+    if missing: endpoint_problems.append(f'missing keys {missing}')
+    if d.get('ready') is not True: endpoint_problems.append('does not report ready=true')
     for k,v in d.items():
-        if isinstance(v,float) and not finite(v): problems.append(f'{name}: non-finite {k}={v}')
-    print(f'{name:10s} PASS  {url}')
+        if isinstance(v,float) and not finite(v): endpoint_problems.append(f'non-finite {k}={v}')
+    if endpoint_problems:
+        problems.extend(f'{name}: {problem}' for problem in endpoint_problems)
+        print(f'{name:10s} FAIL  {url}')
+    else:
+        print(f'{name:10s} PASS  {url}')
 
 # Broad physical sanity bounds; these are guard rails, not validation of fidelity.
 try:
