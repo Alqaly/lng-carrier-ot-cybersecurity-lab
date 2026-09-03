@@ -2,6 +2,7 @@ import asyncio, json, os, sqlite3, time
 from pathlib import Path
 import httpx
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 import uvicorn
 
 DB=os.getenv('ALARM_DB','/data/alarms.sqlite')
@@ -132,7 +133,9 @@ async def start():
 
 @app.get('/health')
 def health():
-    return {'ready':True,'poll':last_poll}
+    sources = last_poll.get('sources', {})
+    ready = bool(sources) and all(bool(item.get('ok')) for item in sources.values())
+    return JSONResponse({'ready': ready, 'poll': last_poll}, status_code=200 if ready else 503)
 
 @app.get('/catalog')
 def catalog():

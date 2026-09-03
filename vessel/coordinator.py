@@ -2,6 +2,7 @@ import asyncio, json, time
 from pathlib import Path
 import httpx
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 import uvicorn
 
 PROFILE=json.loads(Path('/config/profile.json').read_text())
@@ -70,6 +71,17 @@ async def startup():
 @app.get('/state')
 def state():
     return snapshot
+
+@app.get('/health')
+def health():
+    ready = bool(snapshot.get('ready'))
+    payload = {
+        'ready': ready,
+        'service': 'vessel-coordinator',
+        'last_update': snapshot.get('last_update'),
+        'error': snapshot.get('error'),
+    }
+    return JSONResponse(payload, status_code=200 if ready else 503)
 
 @app.get('/profile')
 def profile():

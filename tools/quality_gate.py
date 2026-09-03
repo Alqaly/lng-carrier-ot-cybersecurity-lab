@@ -32,7 +32,7 @@ required = [
     "docs/04-build/operator-alarm-workflow.md",
     "docs/09-research/research-to-model-matrix.md",
     "docs/06-scenarios/cross-layer-evidence-workbook.md",
-    "docs/06-scenarios/full-vessel-operational-event.md",
+    "docs/06-scenarios/cross-domain-operational-event.md",
     "docs/04-build/opcua-commissioning.md",
     "docs/04-build/fuxa-project-workflow.md",
     "docs/08-reference/endpoints-and-interfaces.md",
@@ -41,6 +41,18 @@ required = [
     "fuxa/project-unbound.fuxap",
     "docs/04-build/alarm-source-boundary.md",
     "historian/README.md",
+    "config/project-scope.json",
+    "config/architecture-contract.json",
+    "config/data-semantics-contract.json",
+    "config/timebase-contract.json",
+    "config/opcua-security-boundary.json",
+    "config/detection-claims.json",
+    "vessel/coverage-contract.json",
+    "docs/09-research/image-provenance.json",
+    "evidence/acceptance-dossier-contract.json",
+    "evidence/aggregate_runs.py",
+    "evidence/build_acceptance_dossier.py",
+    "docs/09-research/recovery-2026-09-03.md",
 ]
 
 for rel in required:
@@ -129,6 +141,8 @@ if "[[inputs.opcua]]" in historian_base or "nodes = [" in historian_base:
 labctl_text=(R/"labctl").read_text()
 if "cmd_hist_install" not in labctl_text:
     problems.append("verified historian install workflow missing from labctl")
+if "cmd_aggregate_runs" not in labctl_text or "cmd_acceptance_dossier" not in labctl_text:
+    problems.append("repeated-run aggregation or acceptance-dossier workflow missing from labctl")
 
 # Public source registry must include marine + software sources.
 sources=(R/"docs/09-research/source-registry.md").read_text()

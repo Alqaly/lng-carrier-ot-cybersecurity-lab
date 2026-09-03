@@ -1,4 +1,4 @@
-site_name: LNG Carrier OT Cybersecurity Lab
+site_name: LNG Carrier Virtual Engineering Lab
 site_description: A software-defined applied OT cybersecurity course based on LNG-carrier systems.
 theme:
   name: material
@@ -59,7 +59,7 @@ nav:
   - IEC 61162-450/460: 05-protocols/iec-61162-450-460.md
   - Packet Labs: 05-protocols/packet-labs.md
 - Scenarios:
-  - Full Vessel Event: 06-scenarios/full-vessel-operational-event.md
+  - Cross-Domain Event: 06-scenarios/cross-domain-operational-event.md
   - Evidence Workbook: 06-scenarios/cross-layer-evidence-workbook.md
   - Troubleshooting: 06-scenarios/troubleshooting-cases.md
 - Security:
@@ -67,7 +67,9 @@ nav:
   - Incident Walkthrough: 07-security/incident-walkthrough.md
 - Research:
   - Framework: 09-research/research-framework.md
+  - Experimental Claim Boundaries: 09-research/experimental-claim-boundaries.md
   - Reconciliation 2026-08-27: 09-research/reconciliation-2026-08-27.md
+  - Candidate Recovery 2026-09-03: 09-research/recovery-2026-09-03.md
   - Research-to-Model: 09-research/research-to-model-matrix.md
   - Standards Mapping: 09-research/standards-mapping.md
   - Visual Sources: 09-research/visual-source-registry.md

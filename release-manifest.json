@@ -1,8 +1,8 @@
 {
-  "project": "LNG Carrier OT Cybersecurity Lab",
-  "artifact_state": "release_candidate_for_target_server_commissioning",
+  "project": "LNG Carrier Virtual Engineering Lab",
+  "artifact_state": "recovered_release_candidate_for_target_server_commissioning",
   "static_validation": {
-    "pytest_expected": 68,
+    "pytest_expected": 91,
     "course_chapters": 10,
     "experiments": 7,
     "compose_services": 26,
@@ -16,5 +16,11 @@
   "canonical_repository": "https://github.com/Alqaly/lng-carrier-ot-cybersecurity-lab",
   "readiness_contract": "config/readiness-contract.json",
   "evidence_integrity": "artifact SHA-256 + experiment-specific semantic evaluation",
-  "resource_sizing": "target-server measurement required; no unmeasured fixed limits"
+  "resource_sizing": "target-server measurement required; no unmeasured fixed limits",
+  "scope_contract": "config/project-scope.json",
+  "architecture_contract": "config/architecture-contract.json",
+  "data_semantics_contract": "config/data-semantics-contract.json",
+  "timebase_contract": "config/timebase-contract.json",
+  "acceptance_dossier_contract": "evidence/acceptance-dossier-contract.json",
+  "recovery_basis_commit": "6ccdb0230fe3c025e13b5aac4348e4233813613b"
 }

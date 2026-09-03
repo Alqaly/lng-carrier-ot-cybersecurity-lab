@@ -20,6 +20,10 @@ checks={
     "research": ["docs/09-research/research-framework.md","experiments/manifest.json"],
     "deployment": ["docs/04-build/server-daemon-deployment.md","deploy/systemd/lng-ot-lab.service","compose.production.yml"],
     "pedagogy": ["docs/00-learning/memory-and-explain-back.md","docs/00-learning/chapter-contract.md"],
+    "scope and architecture claims": ["config/project-scope.json","config/architecture-contract.json","vessel/coverage-contract.json"],
+    "evidence semantics": ["config/data-semantics-contract.json","config/timebase-contract.json","docs/09-research/image-provenance.json"],
+    "claim boundaries": ["config/opcua-security-boundary.json","config/detection-claims.json","docs/09-research/experimental-claim-boundaries.md"],
+    "repeated evidence": ["evidence/aggregate_runs.py","evidence/build_acceptance_dossier.py","evidence/acceptance-dossier-contract.json"],
 }
 for topic,rels in checks.items():
     for rel in rels:

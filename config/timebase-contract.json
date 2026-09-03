@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "clocks": {
+    "observer_receive": "UTC wall-clock time when the observer receives a state",
+    "model_time": "FMU simulation time_s retained independently from wall clock",
+    "source_last_update": "source-provided last_update retained without reinterpretation",
+    "alarm_source": "alarm-engine transition timestamp",
+    "packet_capture": "capture-host timestamp subject to host synchronization",
+    "historian_sample": "Influx sample timestamp compared with observer wall clock"
+  },
+  "rules": [
+    "Never silently substitute one clock for another.",
+    "Record host synchronization status during server acceptance.",
+    "Latency metrics must declare their two timestamp sources.",
+    "Cross-host timing claims require documented synchronization evidence."
+  ]
+}

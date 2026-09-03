@@ -160,9 +160,10 @@ PY2
   printf '%s\n' "--- installed fragment ---"
   cat "$dst"
   if have docker && docker compose version >/dev/null 2>&1; then
-    say "Starting/restarting historian services"
+    say "Starting historian and recreating Telegraf with the verified binding"
     docker compose up -d influxdb telegraf
-    docker compose restart telegraf >/dev/null 2>&1 || true
+    docker compose up -d --force-recreate telegraf
+    docker compose ps telegraf
   else
     printf '\nDocker unavailable here; fragment installed but Telegraf was not restarted.\n'
   fi
@@ -231,6 +232,8 @@ cmd_observe(){
 }
 cmd_verify_run(){ python3 experiments/verify_run.py "${1:?run directory required}"; }
 cmd_profile_resources(){ python3 tools/resource_profile.py "$@"; }
+cmd_aggregate_runs(){ python3 evidence/aggregate_runs.py "$@"; }
+cmd_acceptance_dossier(){ python3 evidence/build_acceptance_dossier.py "$@"; }
 cmd_evaluate(){
   local first="${1:?run directory or experiment id required}" second="${2:-}"
   if [[ "$first" == EXP-* ]]; then
@@ -296,7 +299,7 @@ cmd_opcua_outage(){
 case "${1:-help}" in
  preflight) cmd_preflight;; secrets-check) cmd_secrets_check;; backup) shift; cmd_backup "${1:-}";; restore) shift; cmd_restore "$@";;
  doctor) cmd_doctor;; test) cmd_test;; config-check) cmd_config_check;;
- daemon) shift; cmd_daemon "$@";; quiz) shift; cmd_quiz "$@";; new-run) shift; cmd_new_run "$@";; observe) shift; cmd_observe "$@";; evaluate) shift; cmd_evaluate "$@";; verify-run) shift; cmd_verify_run "$@";; profile-resources) shift; cmd_profile_resources "$@";;
+ daemon) shift; cmd_daemon "$@";; quiz) shift; cmd_quiz "$@";; new-run) shift; cmd_new_run "$@";; observe) shift; cmd_observe "$@";; evaluate) shift; cmd_evaluate "$@";; verify-run) shift; cmd_verify_run "$@";; profile-resources) shift; cmd_profile_resources "$@";; aggregate-runs) shift; cmd_aggregate_runs "$@";; acceptance-dossier) shift; cmd_acceptance_dossier "$@";;
  conduit-check) shift; cmd_conduit_check "$@";; cargo-residual) shift; cmd_cargo_residual "$@";; hist-fresh) shift; cmd_hist_fresh "$@";; opcua-outage) shift; cmd_opcua_outage "$@";;
  smoke) cmd_smoke;; runtime-verify) cmd_runtime_verify;; acceptance) cmd_acceptance;;
  build) cmd_build;; up) cmd_up;; status) cmd_status;;
@@ -322,6 +325,8 @@ Usage: ./labctl <command>
   evaluate [experiment] <run-dir>  Evaluate concrete artifacts + experiment-specific checks
   verify-run <run-dir>    Verify evaluated evidence SHA-256 integrity
   profile-resources [--samples N --interval S]  Record Docker resource evidence without inventing limits
+  aggregate-runs <run-dir>... [--minimum-repeats N] [--out FILE]  Aggregate comparable repeated evaluations
+  acceptance-dossier <evidence-dir> [--out FILE]  Verify retained Gates A-G artifacts and hashes
   conduit-check <domain> [conn.log] [out.json]  Compare Zeek flow evidence with declared Modbus conduits
   cargo-residual <csv|jsonl> [out.json]  Compare measured Cargo flow with tank mass balance
   hist-fresh <domain> [--threshold SEC] [--out FILE]  Check latest commissioned historian sample age

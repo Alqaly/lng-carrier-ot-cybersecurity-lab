@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "profile": "mechanical-propulsion LNG carrier teaching profile",
+  "executable_domains": {
+    "cargo": "partial unloading hydraulics, instrumentation, permissives and control",
+    "power_management": "teaching-scale generation, bus, reserve, shedding and trip response",
+    "propulsion_machinery": "pre-lube, engine enable, shaft response, auxiliaries and protective conditions",
+    "cross_domain": "declared electrical demand, power availability and consequence paths"
+  },
+  "reference_or_optional_only": [
+    "NMEA 0183 recorded-data replay",
+    "NMEA 2000 and CAN/J1939 concepts",
+    "IEC 61162-450/460 architecture context",
+    "ship-shore ESD concepts"
+  ],
+  "outside_current_scope": [
+    "complete integrated automation system",
+    "Fire and Gas system",
+    "certified safety instrumented system",
+    "ballast and stability model",
+    "full navigation bridge",
+    "communications and GMDSS",
+    "vendor protection studies",
+    "class-approved vessel digital twin"
+  ]
+}

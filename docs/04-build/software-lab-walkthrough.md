@@ -350,7 +350,7 @@ Use Zeek logs for connection/protocol chronology and Wireshark for packet-level 
 
 ## 14 — Repeat the integrated event through the PLCs
 
-After Cargo, PMS and Propulsion PLC commissioning, repeat the generator-loss/full-vessel story through normal operator/controller paths.
+After Cargo, PMS and Propulsion PLC commissioning, repeat the generator-loss/cross-domain story through normal operator/controller paths.
 
 Collect:
 

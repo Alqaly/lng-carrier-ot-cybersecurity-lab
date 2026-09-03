@@ -37,9 +37,10 @@ def probe_http(name: str, url: str) -> tuple[bool, str]:
         req = urllib.request.Request(url, headers={"User-Agent": "lng-ot-lab-service-probe/1"})
         with urllib.request.urlopen(req, timeout=4) as r:
             body = r.read(2048)
-            return 200 <= r.status < 500, f"HTTP {r.status}, {len(body)} bytes"
+            return 200 <= r.status < 300, f"HTTP {r.status}, {len(body)} bytes"
     except urllib.error.HTTPError as e:
-        # Auth-protected UIs are reachable even if they answer 401/403.
+        # Auth-protected UIs are reachable only when they explicitly answer
+        # with an authentication/authorization status. A 404/5xx is a failure.
         return e.code in (401, 403), f"HTTP {e.code}"
     except Exception as e:
         return False, str(e)

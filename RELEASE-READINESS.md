@@ -22,6 +22,10 @@ This repository is a **release candidate for target-server commissioning**.
 - normalized runtime observer timestamp/provenance contract
 - expected-conduit, process-residual and historian-freshness evidence helpers
 - supervisory-only OPC UA operations-network outage/restore contract
+- machine-readable project scope, vessel coverage and architecture boundaries
+- data-semantics, timebase, image-provenance and detection-claim contracts
+- repeated-run aggregation that preserves unavailable metrics
+- checksum-indexed Gates A–G acceptance dossier tooling
 
 ## What is intentionally NOT claimed yet
 
@@ -62,8 +66,12 @@ sudo ./deploy/install-systemd.sh
 
 Finally run all experiments, preserve their required evidence, reboot-test the daemon and perform a restore test.
 
+Aggregate comparable repetitions with `./labctl aggregate-runs ...`. Build the final Gates A–G dossier with `./labctl acceptance-dossier ...`. Neither tool converts missing evidence into a pass.
+
 Only after the canonical runtime is healthy should the optional network-fidelity vertical slice be attempted; its NF-A–NF-G evidence is separate from the base Gates A–G.
 
 ## Publication rule
 
 Do not change this document to “fully tested” based on screenshots or service startup alone. Publication acceptance requires traceable process/protocol/controller/operator evidence.
+
+The repository may be published as a **release candidate for target-server commissioning** after its static CI gate passes. It must not be announced as a fully commissioned or experimentally validated platform until the retained dossier passes.

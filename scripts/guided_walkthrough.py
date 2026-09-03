@@ -21,7 +21,7 @@ def section(title, url, fields):
     except Exception as e:
         print('UNAVAILABLE:', e)
 
-print("LNG Carrier OT Cybersecurity Lab - Guided State Walkthrough")
+print("LNG Carrier Virtual Engineering Lab - Guided State Walkthrough")
 print("This script reads live lab services. It does not create process values.")
 section('Cargo','http://127.0.0.1:8100/state',[
  ('levelSource','Source level','m',1),('levelDestination','Destination level','m',1),('flowMeasured','Measured flow','L/min',60000),('pressureSource','Source pressure','kPa',1),('valvePosition','Valve position','%',100),('pumpSpeed','Pump speed','%',100),('valveFeedback','Valve feedback','',1),('pumpFeedback','Pump feedback','',1)])

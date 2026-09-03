@@ -1,9 +1,11 @@
-# LNG Carrier OT Cybersecurity Lab
+# LNG Carrier Virtual Engineering Lab
 
 [![quality](https://github.com/Alqaly/lng-carrier-ot-cybersecurity-lab/actions/workflows/quality.yml/badge.svg)](https://github.com/Alqaly/lng-carrier-ot-cybersecurity-lab/actions/workflows/quality.yml)
 
 
 A software-defined, research-backed OT cybersecurity laboratory for learning how an LNG carrier behaves as a cyber-physical system.
+
+> **Validation state:** source/static validation is distinct from target-server commissioning and repeated experimental validation. See [`RELEASE-READINESS.md`](RELEASE-READINESS.md) before making public claims.
 
 The project is designed for engineers who want more than a dashboard and a few containers. The learning path is:
 
@@ -90,6 +92,10 @@ Engineering / PLC / I/O conduit
       │
       └── PCAP / Wireshark / Zeek-style analysis
 ```
+
+### Critical path boundary
+
+The OpenPLC control path is `plant model ↔ software I/O ↔ Modbus TCP ↔ PLC`. The Vessel Coordinator is a separate cross-domain modelling service: it reads the Cargo, PMS and Propulsion process APIs and writes declared dependency inputs directly to those models. It does **not** send those dependencies through the PLC Modbus path. OPC UA remains the supervisory publication path. Keeping these paths explicit prevents packet evidence from being assigned to a coupling that never traversed that protocol.
 
 
 ## Target-server fast path
@@ -226,7 +232,10 @@ Kubernetes/k3s is intentionally optional; see `docs/03-architecture/deployment-d
 ./labctl new-run EXP-CARGO-BLOCKED-FLOW
 # collect required artifacts
 ./labctl evaluate evidence/runs/<run-dir>
+./labctl aggregate-runs evidence/runs/<run-a> evidence/runs/<run-b> evidence/runs/<run-c>
 ```
+
+An experimental claim requires comparable repeated runs tied to one clean Git commit. A single successful demonstration is evidence of that run, not evidence of general performance.
 
 ## Canonical GitHub
 

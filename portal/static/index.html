@@ -18,7 +18,7 @@
 </div></section>
 
 <section id="integrated" class="page"><div class="grid">
-<div class="panel span12"><h2>Full-vessel dependency walkthrough</h2><img class="diagram" src="/static/diagrams/full-vessel-event.svg"><p class="caption">The training profile uses mechanical main propulsion: the electrical bus supplies Cargo and machinery auxiliaries, not the main shaft.</p></div>
+<div class="panel span12"><h2>Cross-domain dependency walkthrough</h2><img class="diagram" src="/static/diagrams/cross-domain-event.svg"><p class="caption">The training profile uses mechanical main propulsion: the electrical bus supplies Cargo and machinery auxiliaries, not the main shaft.</p></div>
 <div class="panel span6"><h2>Live dependency state</h2><div class="kv"><span>Bus</span><span class="v" id="iv_bus">—</span></div><div class="kv"><span>Cargo pump load</span><span class="v" id="iv_cargo">—</span></div><div class="kv"><span>Propulsion auxiliary load</span><span class="v" id="iv_aux">—</span></div><div class="kv"><span>Cargo power</span><span class="v" id="iv_cp">—</span></div><div class="kv"><span>Propulsion aux power</span><span class="v" id="iv_pp">—</span></div></div>
 <div class="panel span6"><h2>Run the commissioning event</h2><div class="code">./labctl build
 ./labctl demo vessel</div><p class="note">This first proof deliberately bypasses the PLC and validates the model, Modbus I/O and cross-system coupling. After OpenPLC commissioning, repeat the same operational story through the controllers.</p></div>
@@ -64,7 +64,7 @@ OPC UA node (verify NodeId after deployment)</div></div>
 <div class="panel span6"><h2>OPC UA / Historian</h2><img class="diagram" src="/static/diagrams/opcua-historian.svg"></div>
 <div class="panel span6"><h2>Alarm lifecycle</h2><img class="diagram" src="/static/diagrams/alarm-lifecycle.svg"></div>
 <div class="panel span6"><h2>Integrated generator-trip event</h2><img class="diagram" src="/static/diagrams/integrated-power-cargo-event.svg"></div>
-<div class="panel span6"><h2>Integrated full-vessel event</h2><img class="diagram" src="/static/diagrams/full-vessel-event.svg"></div>
+<div class="panel span6"><h2>Integrated cross-domain event</h2><img class="diagram" src="/static/diagrams/cross-domain-event.svg"></div>
 <div class="panel span6"><h2>OPC UA commissioning</h2><img class="diagram" src="/static/diagrams/opcua-commissioning.svg"></div>
 <div class="panel span6"><h2>FUXA project lifecycle</h2><img class="diagram" src="/static/diagrams/fuxa-project-lifecycle.svg"></div>
 

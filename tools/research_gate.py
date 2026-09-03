@@ -8,7 +8,11 @@ required=[
  'docs/05-protocols/can-j1939.md','docs/05-protocols/ethernet-ip-stack.md',
  'docs/09-research/research-framework.md','docs/09-research/standards-mapping.md',
  'docs/09-research/visual-source-registry.md','docs/08-reference/technology-selection.md',
- 'experiments/manifest.json','security/conduits.json','historian/freshness_check.py']
+ 'experiments/manifest.json','security/conduits.json','historian/freshness_check.py',
+ 'config/project-scope.json','config/architecture-contract.json','config/data-semantics-contract.json',
+ 'config/timebase-contract.json','config/opcua-security-boundary.json','config/detection-claims.json',
+ 'vessel/coverage-contract.json','docs/09-research/image-provenance.json',
+ 'evidence/acceptance-dossier-contract.json','evidence/aggregate_runs.py','evidence/build_acceptance_dossier.py']
 for x in required:
     if not (R/x).exists(): problems.append('missing '+x)
 for p in (R/'docs/05-protocols').glob('*.md'):
@@ -37,6 +41,12 @@ clab=net.get('selected_extension',{}).get('topology_orchestrator',{})
 if clab.get('name')!='Containerlab' or clab.get('reviewed_version')!='0.77.0': problems.append('network fidelity Containerlab decision drift')
 if net.get('selected_extension',{}).get('routing',{}).get('dynamic_routing_suite')!='not selected': problems.append('dynamic routing was introduced without a recorded admission decision')
 if len(net.get('runtime_acceptance_gates',[]))!=7: problems.append('network fidelity NF-A through NF-G contract incomplete')
+scope=json.loads((R/'config/project-scope.json').read_text())
+if scope.get('current_validation_state')!='static_validated_pending_target_server_commissioning': problems.append('project scope validation state overclaims runtime readiness')
+claims=json.loads((R/'config/detection-claims.json').read_text())
+if len(claims.get('required_comparators',[]))!=3: problems.append('detection comparison contract incomplete')
+opc=json.loads((R/'config/opcua-security-boundary.json').read_text())
+if not opc.get('not_yet_claimed'): problems.append('OPC UA security claim boundary missing')
 print('RESEARCH/PUBLICATION GATE')
 if problems:
     print('FAIL'); [print(' -',x) for x in problems]; raise SystemExit(1)

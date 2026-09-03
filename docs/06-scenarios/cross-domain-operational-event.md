@@ -1,4 +1,4 @@
-# Full-Vessel Operational Event — Power, Cargo and Propulsion Auxiliaries
+# Cross-Domain Operational Event — Power, Cargo and Propulsion Auxiliaries
 
 ## Primary visual
 
