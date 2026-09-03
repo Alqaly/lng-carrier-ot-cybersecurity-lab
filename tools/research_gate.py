@@ -12,7 +12,8 @@ required=[
  'config/project-scope.json','config/architecture-contract.json','config/data-semantics-contract.json',
  'config/timebase-contract.json','config/opcua-security-boundary.json','config/detection-claims.json',
  'vessel/coverage-contract.json','docs/09-research/image-provenance.json',
- 'evidence/acceptance-dossier-contract.json','evidence/aggregate_runs.py','evidence/build_acceptance_dossier.py']
+ 'evidence/acceptance-dossier-contract.json','evidence/aggregate_runs.py','evidence/build_acceptance_dossier.py',
+ 'commissioning/acceptance_orchestrator.py','commissioning/commissioning-plan.json','docs/04-build/commissioning-orchestrator.md']
 for x in required:
     if not (R/x).exists(): problems.append('missing '+x)
 for p in (R/'docs/05-protocols').glob('*.md'):

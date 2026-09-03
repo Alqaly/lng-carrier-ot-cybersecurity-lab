@@ -26,6 +26,7 @@ This repository is a **release candidate for target-server commissioning**.
 - data-semantics, timebase, image-provenance and detection-claim contracts
 - repeated-run aggregation that preserves unavailable metrics
 - checksum-indexed Gates A–G acceptance dossier tooling
+- resumable commissioning orchestration with commit pinning, run-scoped outputs and hashed manual evidence
 
 ## What is intentionally NOT claimed yet
 
@@ -48,14 +49,11 @@ Those claims become valid only after `docs/04-build/server-acceptance-test.md` G
 ```bash
 cp .env.example .env
 # replace every placeholder credential/token
-./labctl preflight
-./labctl test
-./labctl config-check
-./labctl build
-./labctl smoke
+chmod 600 .env
+./labctl commission start
 ```
 
-Then follow the OpenPLC → OPC UA discovery → historian → FUXA commissioning gates.
+Preserve the printed run directory and use `./labctl commission resume <run-dir>`. The orchestrator completes the automatable gates and prints the exact evidence labels required for OpenPLC, HMI, reboot and restore checkpoints. It refuses source drift, dirty runs, unverified experiment indexes and evidence hash mismatches.
 
 After full commissioning:
 
@@ -66,7 +64,7 @@ sudo ./deploy/install-systemd.sh
 
 Finally run all experiments, preserve their required evidence, reboot-test the daemon and perform a restore test.
 
-Aggregate comparable repetitions with `./labctl aggregate-runs ...`. Build the final Gates A–G dossier with `./labctl acceptance-dossier ...`. Neither tool converts missing evidence into a pass.
+Gate F aggregates comparable repetitions from the same clean commit. Finish with `./labctl commission finalize <run-dir>`. Neither the orchestrator nor the dossier builder converts missing evidence into a pass.
 
 Only after the canonical runtime is healthy should the optional network-fidelity vertical slice be attempted; its NF-A–NF-G evidence is separate from the base Gates A–G.
 

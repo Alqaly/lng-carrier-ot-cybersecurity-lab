@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "status": "pending_target_server",
   "gates": {
     "A": ["static-review.json", "rendered-compose.txt"],
@@ -10,5 +10,5 @@
     "F": ["experiment-run-index.json", "repeated-run-aggregation.json"],
     "G": ["reboot-persistence.json", "backup-restore.json", "resource-profile.json"]
   },
-  "rule": "Every artifact must be retained and tied to the tested Git commit; a checklist assertion alone is not evidence."
+  "rule": "Every JSON artifact must record semantic pass=true, match its Gate and filename, bind to the frozen Git commit, and reference retained SHA-256-verified evidence; a checklist assertion alone is not evidence."
 }

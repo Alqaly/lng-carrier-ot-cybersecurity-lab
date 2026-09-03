@@ -24,8 +24,8 @@ def test_public_identity_is_canonical():
 
 def test_release_manifest_records_recovered_candidate_and_test_count():
     manifest = json.loads((R / "release-manifest.json").read_text())
-    assert manifest["artifact_state"] == "recovered_release_candidate_for_target_server_commissioning"
-    assert manifest["static_validation"]["pytest_expected"] == 91
+    assert manifest["artifact_state"] == "source_validated_commissioning_automation_ready"
+    assert manifest["static_validation"]["pytest_expected"] == 103
     assert manifest["runtime_validation_in_build_environment"] is False
 
 
@@ -163,13 +163,30 @@ def test_acceptance_dossier_contract_has_exactly_gates_a_through_g():
 
 def test_acceptance_dossier_hashes_present_artifacts_and_rejects_missing(tmp_path):
     module = load_module("acceptance_dossier", "evidence/build_acceptance_dossier.py")
+    orchestrator = load_module("acceptance_orchestrator", "commissioning/acceptance_orchestrator.py")
     contract_path = R / "evidence/acceptance-dossier-contract.json"
     contract = json.loads(contract_path.read_text())
     partial = module.build(tmp_path, contract_path)
     assert partial["pass"] is False
-    for names in contract["gates"].values():
+    project = {"git_commit": "abc", "tree_dirty": False}
+    (tmp_path / "commissioning-state.json").write_text(json.dumps({"project": project}))
+    for gate, names in contract["gates"].items():
         for name in names:
-            (tmp_path / name).write_text("retained evidence\n")
+            if name == "rendered-compose.txt":
+                (tmp_path / name).write_text("services: {}\n")
+                continue
+            evidence = tmp_path / "attachments" / name / "proof.txt"
+            evidence.parent.mkdir(parents=True)
+            evidence.write_text("retained evidence\n")
+            payload = orchestrator.artifact_payload(
+                tmp_path,
+                {"project": project},
+                gate,
+                name,
+                True,
+                [orchestrator.evidence_entry(tmp_path, evidence, "proof")],
+            )
+            orchestrator.write_json(tmp_path / name, payload)
     complete = module.build(tmp_path, contract_path)
     assert complete["pass"] is True
     assert all(item["sha256"] for gate in complete["gates"].values() for item in gate["artifacts"])

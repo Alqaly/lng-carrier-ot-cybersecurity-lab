@@ -41,6 +41,7 @@ nav:
   - Network Fidelity Decision: 03-architecture/network-fidelity-decision.md
 - Build:
   - Full Walkthrough: 04-build/software-lab-walkthrough.md
+  - Commissioning Orchestrator: 04-build/commissioning-orchestrator.md
   - Server Daemon: 04-build/server-daemon-deployment.md
   - OpenPLC Commissioning: 04-build/openplc-editor-commissioning.md
   - OPC UA Commissioning: 04-build/opcua-commissioning.md

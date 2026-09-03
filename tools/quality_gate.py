@@ -52,6 +52,9 @@ required = [
     "evidence/acceptance-dossier-contract.json",
     "evidence/aggregate_runs.py",
     "evidence/build_acceptance_dossier.py",
+    "commissioning/acceptance_orchestrator.py",
+    "commissioning/commissioning-plan.json",
+    "docs/04-build/commissioning-orchestrator.md",
     "docs/09-research/recovery-2026-09-03.md",
 ]
 
@@ -143,6 +146,8 @@ if "cmd_hist_install" not in labctl_text:
     problems.append("verified historian install workflow missing from labctl")
 if "cmd_aggregate_runs" not in labctl_text or "cmd_acceptance_dossier" not in labctl_text:
     problems.append("repeated-run aggregation or acceptance-dossier workflow missing from labctl")
+if "cmd_commission" not in labctl_text or "acceptance_orchestrator.py" not in labctl_text:
+    problems.append("resumable commissioning orchestrator missing from labctl")
 
 # Public source registry must include marine + software sources.
 sources=(R/"docs/09-research/source-registry.md").read_text()

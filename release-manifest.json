@@ -1,8 +1,8 @@
 {
   "project": "LNG Carrier Virtual Engineering Lab",
-  "artifact_state": "recovered_release_candidate_for_target_server_commissioning",
+  "artifact_state": "source_validated_commissioning_automation_ready",
   "static_validation": {
-    "pytest_expected": 91,
+    "pytest_expected": 103,
     "course_chapters": 10,
     "experiments": 7,
     "compose_services": 26,
@@ -22,5 +22,8 @@
   "data_semantics_contract": "config/data-semantics-contract.json",
   "timebase_contract": "config/timebase-contract.json",
   "acceptance_dossier_contract": "evidence/acceptance-dossier-contract.json",
+  "commissioning_plan": "commissioning/commissioning-plan.json",
+  "commissioning_entrypoint": "./labctl commission start",
+  "commissioning_automation_boundary": "Gates A, B, D, F and resource profiling are automated; PLC/HMI/reboot/restore observations require hashed target-host evidence",
   "recovery_basis_commit": "6ccdb0230fe3c025e13b5aac4348e4233813613b"
 }

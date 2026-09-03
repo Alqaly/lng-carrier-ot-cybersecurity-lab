@@ -8,6 +8,8 @@ This is the main practical build path.
 
 Do not jump from `docker compose up` directly to cybersecurity scenarios. Commission one layer at a time.
 
+For a publication acceptance run, start with `./labctl commission start` and keep the printed run directory. The orchestrator executes the commands in this walkthrough while retaining logs, provenance and hashes; this chapter explains what each stage means. See `commissioning-orchestrator.md`.
+
 ## 0 — Prerequisites
 
 Install:
