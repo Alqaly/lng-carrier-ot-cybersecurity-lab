@@ -3,7 +3,7 @@ from pathlib import Path
 import json, yaml, ast
 R=Path(__file__).resolve().parents[1]
 problems=[]
-for f in ['RELEASE-READINESS.md','release-manifest.json','docs/08-reference/component-inventory.md','docs/04-build/server-acceptance-test.md','tools/service_probe.py','config/readiness-contract.json','docs/09-research/github-publication-control.md','.github/workflows/quality.yml']:
+for f in ['RELEASE-READINESS.md','release-manifest.json','docs/08-reference/component-inventory.md','docs/04-build/server-acceptance-test.md','docs/04-build/commissioning-orchestrator.md','commissioning/acceptance_orchestrator.py','commissioning/commissioning-plan.json','tools/service_probe.py','config/readiness-contract.json','docs/09-research/github-publication-control.md','.github/workflows/quality.yml']:
     if not (R/f).exists(): problems.append('missing '+f)
 m=json.loads((R/'release-manifest.json').read_text())
 c=yaml.safe_load((R/'docker-compose.yml').read_text())

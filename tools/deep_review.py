@@ -24,6 +24,7 @@ checks={
     "evidence semantics": ["config/data-semantics-contract.json","config/timebase-contract.json","docs/09-research/image-provenance.json"],
     "claim boundaries": ["config/opcua-security-boundary.json","config/detection-claims.json","docs/09-research/experimental-claim-boundaries.md"],
     "repeated evidence": ["evidence/aggregate_runs.py","evidence/build_acceptance_dossier.py","evidence/acceptance-dossier-contract.json"],
+    "target commissioning": ["commissioning/acceptance_orchestrator.py","commissioning/commissioning-plan.json","docs/04-build/commissioning-orchestrator.md"],
 }
 for topic,rels in checks.items():
     for rel in rels:

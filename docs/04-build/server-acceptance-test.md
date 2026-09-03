@@ -2,6 +2,15 @@
 
 This is the sequence to run on the server before calling the lab commissioned.
 
+The canonical execution interface is the resumable orchestrator:
+
+```bash
+./labctl commission start
+./labctl commission resume evidence/commissioning/<run>
+```
+
+It executes the machine-verifiable work below, stops at live engineering checkpoints, and packages supplied evidence with commit provenance and SHA-256 hashes. The detailed gates remain here so the acceptance meaning stays reviewable. See `commissioning-orchestrator.md` for recording examples and recovery after interruption.
+
 ## Gate A — host and source
 
 ```bash
@@ -106,3 +115,9 @@ Restore the backup on a clean test host before claiming recovery readiness.
 ## Final acceptance statement
 
 Do not write “fully tested” until Gates A–G are completed on the target server and the evidence is stored with the release/experiment record.
+
+```bash
+./labctl commission finalize evidence/commissioning/<run>
+```
+
+Finalization exits nonzero if an artifact merely exists but lacks semantic PASS, has the wrong Gate/filename identity, references another Git commit, points outside the run, or has a mismatched evidence hash.

@@ -22,10 +22,10 @@ Replace every placeholder, then `chmod 600 .env`. The preflight and systemd inst
 ## 3. Validate before daemon install
 
 ```bash
-./labctl doctor
-./labctl test
-./labctl config-check
+./labctl commission start
 ```
+
+Keep the printed commissioning run directory. `commission start` runs the prerequisite, static and pre-PLC layers while preserving logs and source provenance. Use `./labctl commission resume <run-dir>` after the live PLC/HMI steps.
 
 ## 4. Install service
 
@@ -60,6 +60,8 @@ Do not turn a laptop/server guess into a published requirement. After commission
 ```
 
 The profiler records Docker CPU/memory/network/block-I/O/PID observations with the Git commit and release-manifest hash. It deliberately does **not** synthesize limits. Resource limits are admitted only after repeated baseline and experiment measurements on the target server.
+
+Inside a Gates A–G run, use `./labctl commission run <run-dir> --gate G --samples 24 --interval 5` so the resource data is retained and indexed by the final dossier.
 
 ## Readiness levels
 

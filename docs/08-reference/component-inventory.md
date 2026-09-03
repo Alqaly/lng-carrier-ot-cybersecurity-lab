@@ -39,6 +39,7 @@ The Vessel Coordinator exchanges dependency values through the three process HTT
 | Historian freshness checker | supervisory data-loss evidence | real analysis tool | tests PASS | prove OPC UA/historian outage separately from process-source loss |
 | Process residual analyzer | cyber-physical integrity evidence | real analysis tool | tests PASS | compare measured vs inferred Cargo flow |
 | Conduit classifier | expected/unexpected network source evidence | real analysis tool | tests PASS | classify Zeek flows against fixed conduit ground truth |
+| Commissioning orchestrator | resumable Gates A–G execution and evidence integrity | real host-side state machine | unit/static PASS | execute on the clean target commit; finalize the hashed dossier |
 
 ## Navigation and maritime-reference layer
 

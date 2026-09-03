@@ -105,14 +105,13 @@ The reference runtime is a continuously running Linux server, not a one-shot lap
 ```bash
 cp .env.example .env
 # replace every placeholder credential/token first
-./labctl preflight
-./labctl test
-./labctl config-check
-./labctl build
-./labctl smoke
+chmod 600 .env
+./labctl commission start
 ```
 
-Then commission the three OpenPLC projects, discover live OPC UA nodes, install verified historian bindings, bind/validate FUXA, and complete `docs/04-build/server-acceptance-test.md`.
+The command creates a commit-bound Gates A–G evidence run and completes the automatic host/static and process/I/O gates. Continue with `./labctl commission resume <run-dir>`: it runs the next safe automatic gate or prints the exact live PLC/HMI/reboot evidence still required. See [`Commissioning Orchestrator`](docs/04-build/commissioning-orchestrator.md).
+
+Then commission the three OpenPLC projects, discover live OPC UA nodes, install verified historian bindings, bind/validate FUXA, execute the repeated experiments, and finalize the retained dossier.
 
 After full commissioning:
 

@@ -23,10 +23,10 @@ Do not debug all four at once.
 ### Phase 1 — server
 
 ```bash
-./labctl preflight
-./labctl test
-./labctl config-check
+./labctl commission start
 ```
+
+This freezes source provenance, preserves logs and executes the server plus pre-PLC gates as one resumable acceptance run.
 
 ### Phase 2 — prove model + I/O before PLC
 
@@ -52,12 +52,10 @@ For each domain:
 ### Phase 4 — OPC UA binding gate
 
 ```bash
-./labctl opcua cargo
-./labctl bind-plan cargo
-./labctl hist-install cargo
+./labctl commission resume evidence/commissioning/<run>
 ```
 
-The historian is not allowed to trust guessed NodeIds.
+After the required live PLC evidence is recorded, `resume` performs run-scoped discovery, binding and historian freshness checks for all three domains. The historian is not allowed to trust guessed NodeIds.
 
 ### Phase 5 — HMI
 
@@ -75,6 +73,12 @@ sudo ./deploy/install-systemd.sh
 systemctl status lng-ot-lab
 ```
 
+Retain the reboot, restore and resource evidence, then require:
+
+```bash
+./labctl commission finalize evidence/commissioning/<run>
+```
+
 ## What you should see
 
 If a layer fails, stop and fix it. Do not hide the gap with substitute data.
@@ -86,6 +90,7 @@ Why is pre-PLC commissioning useful, and why does it *not* prove the final contr
 ## Go deeper
 
 - [Full walkthrough](../04-build/software-lab-walkthrough.md)
+- [Commissioning orchestrator](../04-build/commissioning-orchestrator.md)
 - [OpenPLC commissioning](../04-build/openplc-editor-commissioning.md)
 - [OPC UA commissioning](../04-build/opcua-commissioning.md)
 - [Server daemon](../04-build/server-daemon-deployment.md)

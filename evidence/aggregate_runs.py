@@ -20,12 +20,13 @@ def aggregate(run_dirs: list[Path], minimum_repeats: int = 3) -> dict[str, Any]:
             continue
         evaluation = json.loads(evaluation_path.read_text())
         run = json.loads(run_path.read_text())
+        git = run.get("git") if isinstance(run.get("git"), dict) else {}
         records.append({
             "run": str(run_dir),
             "usable": bool(evaluation.get("pass")),
             "experiment_id": run.get("experiment_id"),
-            "git_commit": run.get("git_commit"),
-            "tree_dirty": run.get("tree_dirty"),
+            "git_commit": git.get("commit") or run.get("git_commit"),
+            "tree_dirty": git.get("tree_dirty") if "tree_dirty" in git else run.get("tree_dirty"),
             "metrics": evaluation.get("metrics", {}),
         })
 

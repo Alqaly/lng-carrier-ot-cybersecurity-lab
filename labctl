@@ -121,26 +121,34 @@ cmd_demo(){
   docker compose --profile tools run --rm commissioning-client "$domain"
 }
 
+commissioning_outdir(){
+  local host_dir="${1:-evidence/opcua}"
+  [[ "$host_dir" == evidence/* ]] || fail "commissioning output directory must be inside evidence/"
+  mkdir -p "$host_dir"
+  printf '/evidence/%s' "${host_dir#evidence/}"
+}
+
 cmd_opcua(){
-  local domain="${1:-cargo}"
+  local domain="${1:-cargo}" host_out="${2:-evidence/opcua}" container_out
   case "$domain" in cargo|pms|propulsion);; *) fail "opcua domain must be cargo|pms|propulsion";; esac
-  mkdir -p evidence/opcua
+  container_out="$(commissioning_outdir "$host_out")"
   say "Browsing live ${domain} OPC UA address space"
-  docker compose --profile tools run --rm commissioning-tools opcua_tool.py "$domain" --outdir /evidence/opcua
+  docker compose --profile tools run --rm commissioning-tools opcua_tool.py "$domain" --outdir "$container_out"
 }
 cmd_bind_plan(){
-  local domain="${1:-cargo}"
+  local domain="${1:-cargo}" host_out="${2:-evidence/opcua}" container_out
   case "$domain" in cargo|pms|propulsion);; *) fail "bind-plan domain must be cargo|pms|propulsion";; esac
-  mkdir -p evidence/opcua
-  test -f "evidence/opcua/${domain}-opcua-discovery.json" || fail "Run ./labctl opcua ${domain} first."
+  container_out="$(commissioning_outdir "$host_out")"
+  test -f "${host_out}/${domain}-opcua-discovery.json" || fail "Run ./labctl opcua ${domain} ${host_out} first."
   say "Generating verified ${domain} binding plan from discovery evidence"
-  docker compose --profile tools run --rm commissioning-tools binding_plan.py "$domain" --outdir /evidence/opcua
+  docker compose --profile tools run --rm commissioning-tools binding_plan.py "$domain" --outdir "$container_out"
 }
 cmd_hist_install(){
-  local domain="${1:-cargo}" src dst plan
+  local domain="${1:-cargo}" host_out="${2:-evidence/opcua}" src dst plan
   case "$domain" in cargo|pms|propulsion);; *) fail "hist-install domain must be cargo|pms|propulsion";; esac
-  src="evidence/opcua/${domain}-telegraf-fragment.conf"
-  plan="evidence/opcua/${domain}-binding-plan.json"
+  commissioning_outdir "$host_out" >/dev/null
+  src="${host_out}/${domain}-telegraf-fragment.conf"
+  plan="${host_out}/${domain}-binding-plan.json"
   dst="historian/generated/${domain}.conf"
   test -f "$src" || fail "Missing $src — run ./labctl opcua ${domain} && ./labctl bind-plan ${domain} first."
   test -f "$plan" || fail "Missing $plan — run ./labctl bind-plan ${domain} first."
@@ -234,6 +242,7 @@ cmd_verify_run(){ python3 experiments/verify_run.py "${1:?run directory required
 cmd_profile_resources(){ python3 tools/resource_profile.py "$@"; }
 cmd_aggregate_runs(){ python3 evidence/aggregate_runs.py "$@"; }
 cmd_acceptance_dossier(){ python3 evidence/build_acceptance_dossier.py "$@"; }
+cmd_commission(){ python3 commissioning/acceptance_orchestrator.py "$@"; }
 cmd_evaluate(){
   local first="${1:?run directory or experiment id required}" second="${2:-}"
   if [[ "$first" == EXP-* ]]; then
@@ -299,12 +308,12 @@ cmd_opcua_outage(){
 case "${1:-help}" in
  preflight) cmd_preflight;; secrets-check) cmd_secrets_check;; backup) shift; cmd_backup "${1:-}";; restore) shift; cmd_restore "$@";;
  doctor) cmd_doctor;; test) cmd_test;; config-check) cmd_config_check;;
- daemon) shift; cmd_daemon "$@";; quiz) shift; cmd_quiz "$@";; new-run) shift; cmd_new_run "$@";; observe) shift; cmd_observe "$@";; evaluate) shift; cmd_evaluate "$@";; verify-run) shift; cmd_verify_run "$@";; profile-resources) shift; cmd_profile_resources "$@";; aggregate-runs) shift; cmd_aggregate_runs "$@";; acceptance-dossier) shift; cmd_acceptance_dossier "$@";;
+ daemon) shift; cmd_daemon "$@";; quiz) shift; cmd_quiz "$@";; new-run) shift; cmd_new_run "$@";; observe) shift; cmd_observe "$@";; evaluate) shift; cmd_evaluate "$@";; verify-run) shift; cmd_verify_run "$@";; profile-resources) shift; cmd_profile_resources "$@";; aggregate-runs) shift; cmd_aggregate_runs "$@";; acceptance-dossier) shift; cmd_acceptance_dossier "$@";; commission) shift; cmd_commission "$@";;
  conduit-check) shift; cmd_conduit_check "$@";; cargo-residual) shift; cmd_cargo_residual "$@";; hist-fresh) shift; cmd_hist_fresh "$@";; opcua-outage) shift; cmd_opcua_outage "$@";;
  smoke) cmd_smoke;; runtime-verify) cmd_runtime_verify;; acceptance) cmd_acceptance;;
  build) cmd_build;; up) cmd_up;; status) cmd_status;;
  capture) shift; cmd_capture "$@";; zeek) shift; cmd_zeek "$@";; demo) shift; cmd_demo "${1:-cargo}";;
- opcua) shift; cmd_opcua "${1:-cargo}";; bind-plan) shift; cmd_bind_plan "${1:-cargo}";; hist-install) shift; cmd_hist_install "${1:-cargo}";; fuxa) shift; cmd_fuxa "${1:-export}" "${2:-/evidence/fuxa/fuxa-project.json}";;
+ opcua) shift; cmd_opcua "$@";; bind-plan) shift; cmd_bind_plan "$@";; hist-install) shift; cmd_hist_install "$@";; fuxa) shift; cmd_fuxa "${1:-export}" "${2:-/evidence/fuxa/fuxa-project.json}";;
  walk) cmd_walk;; review) cmd_review;;
  down) docker compose down;; logs) docker compose logs -f;;
  help|-h|--help)
@@ -327,6 +336,7 @@ Usage: ./labctl <command>
   profile-resources [--samples N --interval S]  Record Docker resource evidence without inventing limits
   aggregate-runs <run-dir>... [--minimum-repeats N] [--out FILE]  Aggregate comparable repeated evaluations
   acceptance-dossier <evidence-dir> [--out FILE]  Verify retained Gates A-G artifacts and hashes
+  commission start|resume|status|record|run|finalize  Resumable Gates A-G target-server acceptance
   conduit-check <domain> [conn.log] [out.json]  Compare Zeek flow evidence with declared Modbus conduits
   cargo-residual <csv|jsonl> [out.json]  Compare measured Cargo flow with tank mass balance
   hist-fresh <domain> [--threshold SEC] [--out FILE]  Check latest commissioned historian sample age
@@ -342,9 +352,9 @@ Usage: ./labctl <command>
   demo <scenario>        Controlled commissioning/fault lab
                          cargo | pms | propulsion | vessel
                          cargo-fault | pms-trip | propulsion-lube
-  opcua <domain>         Browse live OPC UA nodes and save JSON/Markdown evidence
-  bind-plan <domain>     Resolve teaching tags from live OPC UA discovery evidence
-  hist-install <domain>  Install only a verified OPC UA binding into Telegraf
+  opcua <domain> [evidence/outdir]  Browse live OPC UA nodes and retain run-scoped evidence
+  bind-plan <domain> [evidence/outdir]  Resolve teaching tags from run-scoped live discovery
+  hist-install <domain> [evidence/outdir]  Install only a verified run-scoped binding into Telegraf
   fuxa bootstrap|export|import|validate [file]  Round-trip the commissioned FUXA project
   walk                   Run narrated live-state walkthrough
   review                 Run quality, deep review and tests

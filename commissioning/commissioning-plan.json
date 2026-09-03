@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "minimum_experiment_repeats": 3,
+  "gates": {
+    "A": {
+      "title": "Host and source",
+      "mode": "automatic",
+      "artifacts": {
+        "static-review.json": {"mode": "automatic"},
+        "rendered-compose.txt": {"mode": "automatic"}
+      }
+    },
+    "B": {
+      "title": "Physics and software I/O",
+      "mode": "automatic",
+      "artifacts": {
+        "process-io-commissioning.json": {"mode": "automatic"}
+      }
+    },
+    "C": {
+      "title": "OpenPLC controller commissioning",
+      "mode": "recorded",
+      "artifacts": {
+        "plc-commissioning.json": {
+          "mode": "recorded",
+          "required_evidence_labels": ["cargo-online", "pms-online", "propulsion-online", "normal-modbus-pcap"]
+        },
+        "plc-io-map-review.json": {
+          "mode": "recorded",
+          "required_evidence_labels": ["cargo-map", "pms-map", "propulsion-map"]
+        }
+      }
+    },
+    "D": {
+      "title": "OPC UA and historian",
+      "mode": "automatic_after_C",
+      "artifacts": {
+        "opcua-discovery-index.json": {"mode": "automatic"},
+        "historian-binding-review.json": {"mode": "automatic"}
+      }
+    },
+    "E": {
+      "title": "Operator HMI and normal baseline",
+      "mode": "recorded",
+      "artifacts": {
+        "hmi-alarm-review.json": {
+          "mode": "recorded",
+          "required_evidence_labels": ["cargo-screen", "pms-screen", "propulsion-screen", "alarm-screen", "fuxa-export"]
+        },
+        "normal-baseline-run.json": {
+          "mode": "recorded",
+          "required_evidence_labels": ["run-metadata", "evaluation", "evidence-index"]
+        }
+      }
+    },
+    "F": {
+      "title": "Repeated research experiments",
+      "mode": "automatic_after_runs",
+      "artifacts": {
+        "experiment-run-index.json": {"mode": "automatic"},
+        "repeated-run-aggregation.json": {"mode": "automatic"}
+      }
+    },
+    "G": {
+      "title": "Persistence, recovery and resource measurement",
+      "mode": "hybrid",
+      "artifacts": {
+        "reboot-persistence.json": {
+          "mode": "recorded",
+          "required_evidence_labels": ["before-reboot", "after-reboot", "service-status", "runtime-verify"]
+        },
+        "backup-restore.json": {
+          "mode": "recorded",
+          "required_evidence_labels": ["backup-checksums", "restore-verification", "restored-runtime"]
+        },
+        "resource-profile.json": {"mode": "automatic"}
+      }
+    }
+  }
+}

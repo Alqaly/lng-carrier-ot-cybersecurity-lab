@@ -12,4 +12,4 @@ A GitHub commit is publication-ready only when:
 4. `release-manifest.json` matches the current source tree;
 5. runtime claims remain `pending_target_server` until Gates A–G are preserved as evidence.
 
-Every experiment run should record the repository commit so evidence can be traced back to exact source.
+Every experiment run should record the repository commit so evidence can be traced back to exact source. `./labctl commission start` freezes that source identity for a Gates A–G run; `commission record` copies and hashes live evidence; and `commission finalize` refuses mixed commits, missing semantic PASS fields or mismatched retained hashes.
