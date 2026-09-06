@@ -2,6 +2,10 @@
 
 This repository is a **release candidate for target-server commissioning**.
 
+The [evidence-first upgrade audit](docs/09-research/upgrade-audit-2026-09-05.md)
+records the learning journey, verification repairs, evidence compatibility and
+standalone course delivery. A course-container healthcheck is not OT acceptance.
+
 ## What has been validated in the current build environment
 
 - Python/test source imports and syntax
@@ -47,9 +51,7 @@ Those claims become valid only after `docs/04-build/server-acceptance-test.md` G
 ## First target-server sequence
 
 ```bash
-cp .env.example .env
-# replace every placeholder credential/token
-chmod 600 .env
+./labctl setup
 ./labctl commission start
 ```
 

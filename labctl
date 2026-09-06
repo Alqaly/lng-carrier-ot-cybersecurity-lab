@@ -7,6 +7,17 @@ fail(){ printf 'ERROR: %s\n' "$*" >&2; exit 1; }
 have(){ command -v "$1" >/dev/null 2>&1; }
 cmd_preflight(){ exec "$ROOT/deploy/preflight.sh"; }
 cmd_secrets_check(){ exec "$ROOT/deploy/check-secrets.sh" "$ROOT/.env"; }
+cmd_setup(){ python3 deploy/init_env.py; "$ROOT/deploy/check-secrets.sh" "$ROOT/.env"; }
+cmd_learn(){ python3 tools/learning_path.py "$@"; }
+cmd_docs(){
+  local action="${1:-help}"
+  case "$action" in
+    build) python3 -m mkdocs build --strict;;
+    up) docker compose --env-file /dev/null -p lng-course -f compose.docs.yml up -d --build --wait;;
+    down) docker compose --env-file /dev/null -p lng-course -f compose.docs.yml down;;
+    *) printf 'Usage: ./labctl docs build|up|down\n'; return 2;;
+  esac
+}
 cmd_backup(){ exec "$ROOT/deploy/backup.sh" "${1:-}" --cold; }
 cmd_restore(){ exec "$ROOT/deploy/restore.sh" "${1:?backup directory required}" "${2:-}" "${3:-}"; }
 cmd_doctor(){
@@ -195,7 +206,7 @@ cmd_smoke(){ python3 tools/runtime_smoke.py; }
 cmd_runtime_verify(){ python3 tools/runtime_smoke.py; python3 tools/service_probe.py; }
 cmd_acceptance(){ cmd_preflight; cmd_test; cmd_config_check; cmd_build; cmd_smoke; printf "\nPRE-PLC ACCEPTANCE PASS. Next: commission OpenPLC/OPC UA/HMI using docs/04-build/server-acceptance-test.md\n"; }
 cmd_walk(){ python3 scripts/guided_walkthrough.py; }
-cmd_review(){ python3 tools/generate_io_reference.py --check; python3 tools/traceability_check.py; python3 tools/quality_gate.py; python3 tools/deep_review.py; python3 tools/research_gate.py; python3 tools/pedagogy_gate.py; python3 tools/release_gate.py; pytest -q tests; }
+cmd_review(){ python3 tools/generate_io_reference.py --check; python3 tools/traceability_check.py; python3 tools/quality_gate.py; python3 tools/deep_review.py; python3 tools/research_gate.py; python3 tools/pedagogy_gate.py; python3 tools/learning_path.py check; python3 tools/release_gate.py; python3 -m pytest -q tests; }
 cmd_test(){
   say "Running recursive static/research gates"
   python3 -m pytest -q
@@ -306,6 +317,7 @@ cmd_opcua_outage(){
 }
 
 case "${1:-help}" in
+ setup) cmd_setup;; learn) shift; cmd_learn "$@";; docs) shift; cmd_docs "$@";;
  preflight) cmd_preflight;; secrets-check) cmd_secrets_check;; backup) shift; cmd_backup "${1:-}";; restore) shift; cmd_restore "$@";;
  doctor) cmd_doctor;; test) cmd_test;; config-check) cmd_config_check;;
  daemon) shift; cmd_daemon "$@";; quiz) shift; cmd_quiz "$@";; new-run) shift; cmd_new_run "$@";; observe) shift; cmd_observe "$@";; evaluate) shift; cmd_evaluate "$@";; verify-run) shift; cmd_verify_run "$@";; profile-resources) shift; cmd_profile_resources "$@";; aggregate-runs) shift; cmd_aggregate_runs "$@";; acceptance-dossier) shift; cmd_acceptance_dossier "$@";; commission) shift; cmd_commission "$@";;
@@ -320,6 +332,9 @@ case "${1:-help}" in
  cat <<'TXT'
 Usage: ./labctl <command>
   preflight              Validate target server prerequisites/ports/time
+  setup                  Create private first-run credentials; preserve existing .env
+  learn [check|show ID]   Explore the canonical evidence-first learning journey
+  docs build|up|down     Build the website or run its isolated course container
   secrets-check          Fail closed if .env secrets/permissions are unsafe
   backup [directory]     Create a cold backup with SHA-256 manifest
   restore <dir> --verify  Verify backup hashes without changing state

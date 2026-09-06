@@ -1,15 +1,25 @@
 site_name: LNG Carrier Virtual Engineering Lab
 site_description: A software-defined applied OT cybersecurity course based on LNG-carrier systems.
+repo_url: https://github.com/Alqaly/lng-carrier-ot-cybersecurity-lab
+repo_name: Alqaly/lng-carrier-ot-cybersecurity-lab
 theme:
   name: material
+  font: false
   features:
   - navigation.tabs
   - navigation.sections
   - content.code.copy
   - toc.follow
+  - navigation.footer
+extra_css:
+  - assets/course.css
+extra_javascript:
+  - assets/learning-journey.js
 nav:
 - Start:
   - Home: index.md
+  - Learning Journey: 00-learning/learning-journey.md
+  - Investigation Capstone: 00-learning/investigation-capstone.md
   - Start Here: start-here.md
   - How to Learn: 00-learning/how-to-use-this-course.md
   - Remember & Explain: 00-learning/memory-and-explain-back.md
@@ -40,6 +50,8 @@ nav:
   - Deployment Decision: 03-architecture/deployment-decision.md
   - Network Fidelity Decision: 03-architecture/network-fidelity-decision.md
 - Build:
+  - Safe First Run: 04-build/first-run.md
+  - Website & Docker Delivery: 04-build/website-and-docker.md
   - Full Walkthrough: 04-build/software-lab-walkthrough.md
   - Commissioning Orchestrator: 04-build/commissioning-orchestrator.md
   - Server Daemon: 04-build/server-daemon-deployment.md
@@ -69,6 +81,7 @@ nav:
 - Research:
   - Framework: 09-research/research-framework.md
   - Experimental Claim Boundaries: 09-research/experimental-claim-boundaries.md
+  - Upgrade Audit 2026-09-05: 09-research/upgrade-audit-2026-09-05.md
   - Reconciliation 2026-08-27: 09-research/reconciliation-2026-08-27.md
   - Candidate Recovery 2026-09-03: 09-research/recovery-2026-09-03.md
   - Research-to-Model: 09-research/research-to-model-matrix.md

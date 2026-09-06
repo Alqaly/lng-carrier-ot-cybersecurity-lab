@@ -5,25 +5,50 @@ from __future__ import annotations
 import argparse
 import json
 import statistics
+import math
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from experiments.verify_run import verify
+
 
 def aggregate(run_dirs: list[Path], minimum_repeats: int = 3) -> dict[str, Any]:
+    if minimum_repeats < 1:
+        raise ValueError("minimum_repeats must be positive")
     records = []
+    seen = set()
+    seen_metadata = set()
     for run_dir in run_dirs:
+        resolved = run_dir.resolve()
+        if resolved in seen:
+            records.append({"run": str(run_dir), "usable": False, "reason": "duplicate run directory"})
+            continue
+        seen.add(resolved)
         evaluation_path = run_dir / "evaluation.json"
         run_path = run_dir / "run.json"
         if not evaluation_path.exists() or not run_path.exists():
             records.append({"run": str(run_dir), "usable": False, "reason": "missing run.json or evaluation.json"})
             continue
+        verification = verify(run_dir)
+        if not verification["pass"]:
+            records.append({"run": str(run_dir), "usable": False, "reason": "; ".join(verification["problems"])})
+            continue
         evaluation = json.loads(evaluation_path.read_text())
+        identity = evaluation["run_metadata_sha256"]
+        if identity in seen_metadata:
+            records.append({"run": str(run_dir), "usable": False, "reason": "duplicate run metadata (copied run)"})
+            continue
+        seen_metadata.add(identity)
         run = json.loads(run_path.read_text())
         git = run.get("git") if isinstance(run.get("git"), dict) else {}
         records.append({
             "run": str(run_dir),
-            "usable": bool(evaluation.get("pass")),
+            "usable": evaluation.get("pass") is True,
             "experiment_id": run.get("experiment_id"),
             "git_commit": git.get("commit") or run.get("git_commit"),
             "tree_dirty": git.get("tree_dirty") if "tree_dirty" in git else run.get("tree_dirty"),
@@ -33,14 +58,15 @@ def aggregate(run_dirs: list[Path], minimum_repeats: int = 3) -> dict[str, Any]:
     usable = [record for record in records if record.get("usable")]
     experiments = Counter(record.get("experiment_id") for record in usable)
     commits = sorted({record.get("git_commit") for record in usable if record.get("git_commit")})
-    dirty = any(bool(record.get("tree_dirty")) for record in usable)
+    dirty = any(record.get("tree_dirty") is not False for record in usable)
+    provenance_complete = all(record.get("git_commit") for record in usable)
     metrics: dict[str, Any] = {}
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for record in usable:
         for name, value in record.get("metrics", {}).items():
             grouped[name].append(value)
     for name, values in grouped.items():
-        measured = [value for value in values if value.get("status") == "measured" and isinstance(value.get("value"), (int, float))]
+        measured = [value for value in values if value.get("status") == "measured" and type(value.get("value")) in (int, float) and math.isfinite(value["value"])]
         unavailable = [value.get("reason", "unspecified") for value in values if value.get("status") == "unavailable"]
         item: dict[str, Any] = {
             "measured_count": len(measured),
@@ -54,7 +80,7 @@ def aggregate(run_dirs: list[Path], minimum_repeats: int = 3) -> dict[str, Any]:
         metrics[name] = item
 
     same_experiment = len(experiments) == 1
-    same_commit = len(commits) == 1
+    same_commit = len(commits) == 1 and provenance_complete
     repeat_count = len(usable)
     return {
         "schema_version": 1,

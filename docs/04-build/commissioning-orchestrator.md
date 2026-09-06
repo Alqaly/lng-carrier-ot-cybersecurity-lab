@@ -83,14 +83,16 @@ Bind FUXA to the same discovered live nodes, export the project, and retain task
   --note "Operator views showed the commissioned tags and the alarm view preserved the observed live chronology."
 
 ./labctl commission record "$RUN" normal-baseline-run.json \
-  --evidence run-metadata=evidence/runs/<normal-run>/run.json \
-  --evidence evaluation=evidence/runs/<normal-run>/evaluation.json \
-  --evidence evidence-index=evidence/runs/<normal-run>/evidence-index.json \
+  --evidence baseline-run=evidence/runs/<normal-run> \
   --operator "$USER" \
   --note "EXP-CARGO-NORMAL completed with file-backed evidence and passed semantic evaluation."
 ```
 
-The normal-baseline recorder checks that the metadata names `EXP-CARGO-NORMAL` and that its evaluation passed.
+The normal-baseline recorder verifies the complete `EXP-CARGO-NORMAL` run,
+checks that it came from this commissioning run's clean commit, and retains a
+hashed copy of the entire directory. Three metadata files without their raw
+evidence are not an accepted baseline. The repeated-run gate likewise retains
+full verified run directories; allow disk space for these acceptance copies.
 
 ## Gate F — index repeated experiments
 

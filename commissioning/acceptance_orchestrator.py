@@ -50,6 +50,8 @@ def sha256_file(path: Path) -> str:
 
 
 def sha256_path(path: Path) -> str:
+    if path.is_symlink() or (path.is_dir() and any(item.is_symlink() for item in path.rglob("*"))):
+        raise ValueError(f"Evidence must not contain symbolic links: {path}")
     if path.is_file():
         return sha256_file(path)
     digest = hashlib.sha256()
@@ -153,7 +155,7 @@ def assert_source_matches(state: dict[str, Any], current: dict[str, Any] | None 
     expected = state["project"]
     if current.get("tree_dirty"):
         raise ValueError("Git tree became dirty during commissioning; refusing to mix evidence with changed source.")
-    for key in ("git_commit", "git_tree", "release_manifest_sha256", "commissioning_plan_sha256"):
+    for key in ("git_commit", "git_tree", "release_manifest_sha256", "commissioning_plan_sha256", "dossier_contract_sha256"):
         if current.get(key) != expected.get(key):
             raise ValueError(f"Source drift for {key}: {current.get(key)} != {expected.get(key)}")
 
@@ -271,13 +273,14 @@ def validate_record_semantics(artifact: str, sources: dict[str, Path]) -> None:
             if sources[label].suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
                 raise ValueError(f"{label} must be an image captured from the live HMI.")
     if artifact == "normal-baseline-run.json":
-        metadata = read_json(sources["run-metadata"])
-        evaluation = read_json(sources["evaluation"])
+        from experiments.verify_run import verify
+        baseline = sources["baseline-run"]
+        metadata = read_json(baseline / "run.json")
         if metadata.get("experiment_id") != "EXP-CARGO-NORMAL":
             raise ValueError("normal-baseline-run requires EXP-CARGO-NORMAL metadata.")
-        if evaluation.get("pass") is not True:
-            raise ValueError("normal-baseline-run evaluation did not pass.")
-        read_json(sources["evidence-index"])
+        result = verify(baseline)
+        if not result["pass"]:
+            raise ValueError("normal-baseline-run verification failed: " + "; ".join(result["problems"]))
     if artifact == "plc-commissioning.json" and sources["normal-modbus-pcap"].suffix.lower() not in {".pcap", ".pcapng"}:
         raise ValueError("normal-modbus-pcap must be a PCAP/PCAPNG file.")
 
@@ -299,7 +302,12 @@ def record_artifact(run: Path, artifact: str, sources: dict[str, Path], note: st
     for label, source in sources.items():
         if not source.exists() or path_size(source) == 0:
             raise ValueError(f"Evidence is missing or empty for {label}: {source}")
+        sha256_path(source)  # Reject symlinks before copytree can dereference them.
     validate_record_semantics(artifact, sources)
+    if artifact == "normal-baseline-run.json":
+        commit, dirty = run_git_metadata(read_json(sources["baseline-run"] / "run.json"))
+        if commit != state["project"]["git_commit"] or dirty is not False:
+            raise ValueError("Normal baseline must come from this commissioning run's clean source commit.")
     destination_root = run / "attachments" / Path(artifact).stem
     if destination_root.exists():
         if not replace:
@@ -433,6 +441,22 @@ def run_gate_f(run: Path, experiment_root: Path, runner: CommandRunner = run_com
         verified: list[Path] = []
         for candidate in candidates:
             code, output = runner(["./labctl", "verify-run", str(candidate)])
+            retained_run = None
+            if code == 0:
+                from experiments.verify_run import verify
+                actual = verify(candidate)
+                if not actual["pass"]:
+                    code, output = 2, json.dumps(actual)
+                else:
+                    retained_run = run / "experiments" / "retained" / experiment.lower() / (candidate.name + "-" + sha256_path(candidate)[:16])
+                    if not retained_run.exists():
+                        retained_run.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copytree(candidate, retained_run)
+                    retained_result = verify(retained_run)
+                    if not retained_result["pass"]:
+                        code, output = 2, json.dumps(retained_result)
+                    else:
+                        verification_evidence.append(evidence_entry(run, retained_run, f"retained-{experiment}-{candidate.name}"))
             verification = verified_dir / experiment.lower() / f"{candidate.name}.json"
             verification.parent.mkdir(parents=True, exist_ok=True)
             record = {
@@ -447,8 +471,8 @@ def run_gate_f(run: Path, experiment_root: Path, runner: CommandRunner = run_com
             }
             write_json(verification, record)
             verification_evidence.append(evidence_entry(run, verification, f"{experiment}-{candidate.name}"))
-            if code == 0:
-                verified.append(candidate)
+            if code == 0 and retained_run is not None:
+                verified.append(retained_run)
         result = aggregate(verified, minimum)
         aggregate_path = aggregation_dir / f"{experiment.lower()}-aggregation.json"
         write_json(aggregate_path, result)

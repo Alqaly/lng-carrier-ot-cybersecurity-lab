@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "minimum_experiment_repeats": 3,
   "gates": {
     "A": {
@@ -49,7 +49,7 @@
         },
         "normal-baseline-run.json": {
           "mode": "recorded",
-          "required_evidence_labels": ["run-metadata", "evaluation", "evidence-index"]
+          "required_evidence_labels": ["baseline-run"]
         }
       }
     },

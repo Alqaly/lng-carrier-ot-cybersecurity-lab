@@ -1,0 +1,16 @@
+:root { --md-primary-fg-color: #102d42; --md-accent-fg-color: #007e87; }
+.journey-controls { display: grid; gap: .5rem; margin-block: 1rem; }
+.journey-controls label { font-weight: 700; }
+.journey-controls select { font: inherit; padding: .7rem; max-width: 100%; background: var(--md-default-bg-color); color: var(--md-default-fg-color); border: 1px solid currentColor; border-radius: .25rem; }
+.journey-cards { display: grid; gap: 1rem; margin-block: 1rem; }
+.journey-card { padding: 1rem 1.2rem; border: 1px solid var(--md-default-fg-color--lighter); border-left: .25rem solid #007e87; border-radius: .3rem; }
+.md-typeset .journey-card h3 { margin-top: .3rem; }
+.journey-phase { color: var(--md-accent-fg-color); font-weight: 700; margin: 0; }
+.journey-check { display: flex; align-items: flex-start; gap: .6rem; margin-top: 1rem; cursor: pointer; }
+.journey-check input { flex-shrink: 0; width: 1.1rem; height: 1.1rem; margin-top: .1rem; accent-color: #007e87; }
+#learning-journey progress { width: 100%; height: .7rem; accent-color: #007e87; }
+#learning-journey button { border: 1px solid currentColor; padding: .6rem .9rem; border-radius: .25rem; font: inherit; cursor: pointer; }
+#learning-journey :focus-visible { outline: 3px solid var(--md-accent-fg-color); outline-offset: 3px; }
+.journey-notice, .journey-prerequisites { font-size: .8rem; }
+.journey-next { font-weight: 700; }
+@media print { .journey-controls, #learning-journey button, #learning-journey progress { display: none; } .journey-card { break-inside: avoid; } }

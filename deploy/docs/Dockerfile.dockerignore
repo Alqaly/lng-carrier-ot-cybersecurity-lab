@@ -1,0 +1,19 @@
+# Allow only public course build inputs, never the full research/runtime tree.
+**
+!requirements-docs.txt
+!mkdocs.yml
+!docs
+!docs/**
+!deploy
+!deploy/docs
+!deploy/docs/Dockerfile
+!deploy/docs/nginx.conf
+# Guard against mistakenly placing private artifacts inside the documentation.
+**/.env*
+**/*.pcap
+**/*.pcapng
+**/*.pem
+**/*.key
+**/*.bundle
+**/evidence/**
+**/backups/**
