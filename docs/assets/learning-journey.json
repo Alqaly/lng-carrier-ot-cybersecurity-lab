@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "id": "lng-evidence-first-v1",
+  "claim_boundary": "Self-reported learning progress is not verified evidence, certification or runtime acceptance.",
+  "tracks": {
+    "reader": "Understand the vessel — no Docker required",
+    "builder": "Commission the software lab — Docker-capable Linux host",
+    "investigator": "Reconstruct an incident — commissioned lab or reviewed evidence"
+  },
+  "review_days": [1, 7, 21],
+  "modules": [
+    {
+      "id": "01", "title": "Define the lab's promise and limits", "phase": "Orient",
+      "chapter": "course/01-project-orientation.md", "prerequisites": [], "tracks": ["reader", "builder", "investigator"],
+      "objective": "Separate simulated process, real software protocol and marine reference claims.",
+      "practice": "Make a three-column scope map. Place Cargo physics, Modbus TCP and ship-shore ESD in the correct columns.",
+      "evidence": "A scope map with one limitation per layer; no runtime evidence needed.",
+      "explain": "Why does a realistic dashboard not prove a working controller?",
+      "checkpoint": "I can name what is implemented and what the lab cannot prove without looking at notes."
+    },
+    {
+      "id": "02", "title": "Read the vessel as a connected system", "phase": "Orient",
+      "chapter": "course/02-lng-carrier-system.md", "prerequisites": ["01"], "tracks": ["reader", "builder", "investigator"],
+      "objective": "Trace cargo electrical demand through PMS and machinery dependencies.",
+      "practice": "Annotate one official vessel-system figure: source, pump, electrical supply, operator and safety boundary.",
+      "evidence": "An attributed figure reference and a written Cargo → PMS → machinery trace.",
+      "explain": "Which consequences of losing power would you expect before seeing any packets?",
+      "checkpoint": "I can explain one cross-domain dependency and distinguish it from a safety-system claim."
+    },
+    {
+      "id": "03", "title": "Separate command, feedback and consequence", "phase": "Trace",
+      "chapter": "course/03-ot-foundations.md", "prerequisites": ["02"], "tracks": ["reader", "builder", "investigator"],
+      "objective": "Distinguish an output command, equipment feedback and a measured process result.",
+      "practice": "Predict pump behavior when the start request is true but valve-open feedback is false. Trace the actual permissive in CargoControl.st.",
+      "evidence": "A command/feedback/process table with the PLC symbol and its I/O-map row.",
+      "explain": "Why can pump feedback be true while measured flow is zero?",
+      "checkpoint": "I can trace a permissive and explain why command success is not process success."
+    },
+    {
+      "id": "04", "title": "Trace the real paths through the lab", "phase": "Trace",
+      "chapter": "course/04-architecture.md", "prerequisites": ["03"], "tracks": ["reader", "builder", "investigator"],
+      "objective": "Separate the Modbus control conduit, OPC UA supervision and coordinator process APIs.",
+      "practice": "Trace Cargo flow from its equation to I/O, PLC, publication and evidence. Mark every clock and every protocol change.",
+      "evidence": "A source-linked trace using the generated I/O map and the architecture contract.",
+      "explain": "Why must a coordinator API change not be described as a Modbus write?",
+      "checkpoint": "I can identify where a packet capture can and cannot establish causality."
+    },
+    {
+      "id": "05", "title": "Commission without confusing health with readiness", "phase": "Build",
+      "chapter": "course/05-build-and-commission.md", "prerequisites": ["04"], "tracks": ["builder", "investigator"],
+      "objective": "Produce a commit-bound commissioning run and stop honestly at manual gates.",
+      "practice": "On an isolated Linux host, run setup, review and commission start. Keep the printed run path. Commission the PLCs and discover live NodeIds before binding.",
+      "evidence": "A real commissioning directory and retained Gate A–E observations; never fabricated PASS files.",
+      "explain": "What is the difference between a running container and a commissioned signal?",
+      "checkpoint": "I can explain my first blocked gate and the exact evidence needed to move forward."
+    },
+    {
+      "id": "06", "title": "Explain cargo behavior with physics", "phase": "Practice",
+      "chapter": "course/06-cargo.md", "prerequisites": ["04"], "tracks": ["reader", "builder", "investigator"],
+      "objective": "Distinguish blockage, pump failure and sensor bias using independent process evidence.",
+      "practice": "Read the worked blocked-flow case. On a commissioned lab, record a normal baseline before a controlled blocked-flow experiment. Predict the consequence first.",
+      "evidence": "A normal-versus-fault explanation; live investigators also retain PCAP, state and alarm timelines.",
+      "explain": "What evidence would falsify your blockage explanation?",
+      "checkpoint": "I can separate a physical contradiction from a suspicious network event."
+    },
+    {
+      "id": "07", "title": "Read a message all the way to meaning", "phase": "Practice",
+      "chapter": "course/07-protocol-academy.md", "prerequisites": ["06"], "tracks": ["reader", "builder", "investigator"],
+      "objective": "Map a Modbus message to its address, engineering unit and consequence; explain OPC UA quality and clocks.",
+      "practice": "Follow the packet-lab example, then annotate a different captured transaction without its walkthrough. Never infer authorization from port number alone.",
+      "evidence": "A decoded message, matching I/O-map entry, and expected-conduit classification.",
+      "explain": "Can a valid Modbus packet still represent an unsafe or unauthorized action?",
+      "checkpoint": "I can explain the request, source, address, scaling and process meaning of one transaction."
+    },
+    {
+      "id": "08", "title": "Reason from alarms to operator decisions", "phase": "Investigate",
+      "chapter": "course/08-safety-hmi-alarms.md", "prerequisites": ["06", "07"], "tracks": ["reader", "builder", "investigator"],
+      "objective": "Distinguish FUXA operator alarms, the Teaching Alarm Chronicle and certified safety systems.",
+      "practice": "Rationalize one alarm: trigger, persistence, consequence, operator response, clear and acknowledgement. Compare the actual chronology after a controlled fault.",
+      "evidence": "An alarm-response card; live builders also retain HMI screenshots and commissioned FUXA export.",
+      "explain": "Why does acknowledging an alarm not remove its cause?",
+      "checkpoint": "I can explain the operator response and name the alarm source without conflating systems."
+    },
+    {
+      "id": "09", "title": "Keep navigation claims inside the evidence", "phase": "Investigate",
+      "chapter": "course/09-navigation.md", "prerequisites": ["07"], "tracks": ["reader", "investigator"],
+      "objective": "Distinguish recorded NMEA 0183 replay from a live GNSS receiver and optional CAN references.",
+      "practice": "Annotate one recorded sentence and its timestamp provenance. List what the replay cannot prove about vessel position, authenticity or NMEA 2000 compatibility.",
+      "evidence": "A replay provenance note and a parsed sentence; label every replay artifact.",
+      "explain": "Why does a plausible position not establish trustworthy navigation data?",
+      "checkpoint": "I can state the replay and licensing boundaries without claiming marine conformance."
+    },
+    {
+      "id": "10", "title": "Defend a cross-layer incident reconstruction", "phase": "Defend",
+      "chapter": "course/10-detection-reconstruction.md", "prerequisites": ["05", "08", "09"], "tracks": ["investigator"],
+      "objective": "Compare network-only, process-only and cross-layer explanations with falsifiable conclusions.",
+      "practice": "Complete the investigation capstone. Reveal the layers in stages, revise the hypothesis, and have another reader score the final explanation.",
+      "evidence": "A scored case report with source paths, hashes, clock limitations, alternative explanations and verified experiment indexes.",
+      "explain": "Which conclusion changed when process evidence was revealed, and which remains unknown?",
+      "checkpoint": "I can defend a causal sequence and a limitation without calling an unmeasured benefit proven."
+    }
+  ]
+}

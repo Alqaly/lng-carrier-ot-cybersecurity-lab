@@ -2,7 +2,7 @@
   "project": "LNG Carrier Virtual Engineering Lab",
   "artifact_state": "source_validated_commissioning_automation_ready",
   "static_validation": {
-    "pytest_expected": 103,
+    "pytest_expected": 129,
     "course_chapters": 10,
     "experiments": 7,
     "compose_services": 26,
@@ -25,5 +25,12 @@
   "commissioning_plan": "commissioning/commissioning-plan.json",
   "commissioning_entrypoint": "./labctl commission start",
   "commissioning_automation_boundary": "Gates A, B, D, F and resource profiling are automated; PLC/HMI/reboot/restore observations require hashed target-host evidence",
-  "recovery_basis_commit": "6ccdb0230fe3c025e13b5aac4348e4233813613b"
+  "recovery_basis_commit": "6ccdb0230fe3c025e13b5aac4348e4233813613b",
+  "learning_contract": "docs/assets/learning-journey.json",
+  "learning_progress_boundary": "self-reported device-local practice; not verified evidence or certification",
+  "course_container": "compose.docs.yml",
+  "course_container_boundary": "static website only; separate from private OT runtime",
+  "evidence_index_schema": 2,
+  "javascript_unit_tests": 6,
+  "upgrade_audit": "docs/09-research/upgrade-audit-2026-09-05.md"
 }

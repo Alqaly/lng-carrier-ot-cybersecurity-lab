@@ -128,7 +128,7 @@ def test_dossier_rejects_json_presence_without_semantic_pass(tmp_path):
     assert "artifact identity" in " ".join(result["gates"]["A"]["artifacts"][0]["semantic_errors"])
 
 
-def test_dossier_accepts_only_hashed_commit_bound_artifacts(tmp_path):
+def test_dossier_rejects_generic_proofs_even_with_matching_hashes(tmp_path):
     orchestrator = load("commission_complete_setup", "commissioning/acceptance_orchestrator.py")
     dossier_module = load("commission_complete", "evidence/build_acceptance_dossier.py")
     current = project(orchestrator)
@@ -152,7 +152,8 @@ def test_dossier_accepts_only_hashed_commit_bound_artifacts(tmp_path):
             )
             orchestrator.write_json(run / name, payload)
     result = dossier_module.build(run, R / "evidence/acceptance-dossier-contract.json")
-    assert result["pass"] is True
+    assert result["pass"] is False
+    assert result["gates"]["C"]["pass"] is False
     retained = run / "attachments/static-review.json/proof.txt"
     retained.write_text("tampered\n")
     tampered = dossier_module.build(run, R / "evidence/acceptance-dossier-contract.json")
@@ -160,22 +161,16 @@ def test_dossier_accepts_only_hashed_commit_bound_artifacts(tmp_path):
     assert "hash mismatch" in " ".join(tampered["gates"]["A"]["artifacts"][0]["semantic_errors"])
 
 
-def test_aggregate_reads_current_nested_git_provenance(tmp_path):
+def test_aggregate_reads_current_nested_git_provenance(evaluated_run):
     module = load("aggregate_nested", "evidence/aggregate_runs.py")
-    runs = []
-    for index in range(3):
-        run = tmp_path / str(index)
-        run.mkdir()
-        (run / "run.json").write_text(json.dumps({"experiment_id": "EXP-X", "git": {"commit": "abc", "tree_dirty": False}}))
-        (run / "evaluation.json").write_text(json.dumps({"pass": True, "metrics": {}}))
-        runs.append(run)
+    runs = [evaluated_run(str(index)) for index in range(3)]
     result = module.aggregate(runs)
     assert result["claim_ready"] is True
     assert result["git_commits"] == ["abc"]
     assert result["contains_dirty_run"] is False
 
 
-def test_gate_f_indexes_all_repeated_experiments(tmp_path):
+def test_gate_f_rejects_placeholder_runs_even_if_command_runner_reports_success(tmp_path):
     module = load("commission_gate_f", "commissioning/acceptance_orchestrator.py")
     current = project(module)
     run = module.initialise(tmp_path / "acceptance", current, "20260101-000000Z")
@@ -189,11 +184,11 @@ def test_gate_f_indexes_all_repeated_experiments(tmp_path):
             (item / "evaluation.json").write_text(json.dumps({"pass": True, "metrics": {}}))
             (item / "evidence-index.json").write_text(json.dumps({"verified": True}))
 
-    assert module.run_gate_f(run, experiment_root, runner=lambda command: (0, "verified"), current=current) is True
+    assert module.run_gate_f(run, experiment_root, runner=lambda command: (0, "verified"), current=current) is False
     index = json.loads((run / "experiment-run-index.json").read_text())
     aggregation = json.loads((run / "repeated-run-aggregation.json").read_text())
-    assert index["pass"] is True
-    assert aggregation["pass"] is True
+    assert index["pass"] is False
+    assert aggregation["pass"] is False
     assert set(aggregation["aggregations"]) == set(ids)
 
 
@@ -207,7 +202,7 @@ def test_normal_baseline_record_rejects_wrong_experiment(tmp_path):
     metadata.write_text(json.dumps({"experiment_id": "EXP-PMS-GEN-TRIP"}))
     evaluation.write_text(json.dumps({"pass": True}))
     index.write_text(json.dumps({"verified": True}))
-    sources = {"run-metadata": metadata, "evaluation": evaluation, "evidence-index": index}
+    sources = {"baseline-run": tmp_path}
     try:
         module.record_artifact(run, "normal-baseline-run.json", sources, "This is the retained normal baseline run.", "engineer", current=current)
     except ValueError as error:

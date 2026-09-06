@@ -1,5 +1,20 @@
 # LNG Carrier Virtual Engineering Lab
 
+Learn to follow a vessel event from **process equation to controller, packet,
+operator response and defensible evidence**.
+
+Start the [learning journey](00-learning/learning-journey.md): choose a reader,
+builder or investigator path, follow the prerequisites, and retain an
+explanation at each checkpoint. No Docker is required to start reading.
+
+Ready for hands-on work? Use [safe first run](04-build/first-run.md).
+Already collecting evidence? Take the
+[investigation capstone](00-learning/investigation-capstone.md).
+
+> **Publication boundary:** this website teaches the lab. It does not operate
+> PLCs or certify a vessel system. Source validation, learning progress and live
+> Gates A–G acceptance are separate claims.
+
 > **Visual tour:** Begin with the real LNGC PMS-HIL architecture and network in Figures 3 and 10 of Lee (2024, CC BY 4.0): https://www.mdpi.com/2077-1312/12/7/1236
 >
 > Then compare that real test-bed concept with the executable topology described below.

@@ -27,5 +27,32 @@ jobs:
       - run: python3 tools/research_gate.py
       - run: python3 tools/pedagogy_gate.py
       - run: python3 tools/release_gate.py
+      - run: python3 tools/learning_path.py check
+      - run: node --check docs/assets/learning-journey.js
+      - run: node --test tests/learning_journey.test.cjs
       - run: bash -n labctl deploy/preflight.sh deploy/check-secrets.sh deploy/backup.sh deploy/restore.sh deploy/install-systemd.sh
       - run: mkdocs build --strict
+  course-container:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - name: Build and start the isolated static course
+        run: docker compose --env-file /dev/null -p lng-course-ci -f compose.docs.yml up -d --build --wait --wait-timeout 90
+      - name: Verify course routes and private-runtime boundary
+        run: |
+          curl --fail --silent http://127.0.0.1:8088/healthz
+          curl --fail --silent --output /dev/null http://127.0.0.1:8088/00-learning/learning-journey/
+          curl --fail --silent --output /dev/null http://127.0.0.1:8088/00-learning/investigation-capstone/
+          curl --fail --silent --output /dev/null http://127.0.0.1:8088/assets/learning-journey.json
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8088/api/state)" = 404
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8088/.env)" != 200
+          test "$(docker compose --env-file /dev/null -p lng-course-ci -f compose.docs.yml exec -T course id -u)" = 101
+      - name: Course logs on failure
+        if: failure()
+        run: docker compose --env-file /dev/null -p lng-course-ci -f compose.docs.yml logs --no-color
+      - name: Stop only the isolated course project
+        if: always()
+        run: docker compose --env-file /dev/null -p lng-course-ci -f compose.docs.yml down

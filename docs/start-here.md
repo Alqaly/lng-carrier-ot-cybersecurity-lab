@@ -2,6 +2,10 @@
 
 This project is a **course, lab, research notebook and reproducible engineering build**.
 
+Use the [learning journey](00-learning/learning-journey.md) for prerequisites,
+practice checkpoints and a recommended next step. Use
+[safe first run](04-build/first-run.md) when you are ready to commission Docker.
+
 Do not begin with packet captures.
 
 Begin by understanding what the process is supposed to do.
@@ -78,7 +82,7 @@ Write control logic and map I/O.
 Inspect Modbus, OPC UA and navigation data at message level.
 
 ### 7. Operations
-Verify a normal loading sequence.
+Verify the model's normal ship-unloading sequence.
 
 ### 8. Cybersecurity
 Investigate inconsistencies and unauthorized control-path behavior.

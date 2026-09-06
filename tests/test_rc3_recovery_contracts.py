@@ -25,7 +25,7 @@ def test_public_identity_is_canonical():
 def test_release_manifest_records_recovered_candidate_and_test_count():
     manifest = json.loads((R / "release-manifest.json").read_text())
     assert manifest["artifact_state"] == "source_validated_commissioning_automation_ready"
-    assert manifest["static_validation"]["pytest_expected"] == 103
+    assert manifest["static_validation"]["pytest_expected"] == 129
     assert manifest["runtime_validation_in_build_environment"] is False
 
 
@@ -112,33 +112,22 @@ def test_repeated_run_aggregation_preserves_missing_evidence(tmp_path):
     assert result["runs"][0]["usable"] is False
 
 
-def test_repeated_run_aggregation_computes_measured_metrics(tmp_path):
+def test_repeated_run_aggregation_computes_measured_metrics(evaluated_run):
     module = load_module("aggregate_measured", "evidence/aggregate_runs.py")
-    runs = []
-    for index, value in enumerate([1.0, 2.0, 3.0]):
-        run = tmp_path / str(index)
-        run.mkdir()
-        (run / "run.json").write_text(json.dumps({"experiment_id": "EXP-X", "git_commit": "abc", "tree_dirty": False}))
-        (run / "evaluation.json").write_text(json.dumps({"pass": True, "metrics": {"latency": {"status": "measured", "value": value, "unit": "s"}}}))
-        runs.append(run)
+    runs = [evaluated_run(str(i), response=float(i + 1), nested=False) for i in range(3)]
     result = module.aggregate(runs)
     assert result["claim_ready"] is True
-    assert result["metrics"]["latency"]["mean"] == 2.0
-    assert result["metrics"]["latency"]["units"] == ["s"]
+    assert result["metrics"]["process_response_time_s"]["mean"] == 2.0
+    assert result["metrics"]["process_response_time_s"]["units"] == ["s"]
 
 
-def test_repeated_run_aggregation_rejects_mixed_or_dirty_provenance(tmp_path):
+def test_repeated_run_aggregation_rejects_mixed_or_dirty_provenance(evaluated_run):
     module = load_module("aggregate_provenance", "evidence/aggregate_runs.py")
-    runs = []
-    for index, commit in enumerate(["a", "a", "b"]):
-        run = tmp_path / str(index)
-        run.mkdir()
-        (run / "run.json").write_text(json.dumps({"experiment_id": "EXP-X", "git_commit": commit, "tree_dirty": index == 1}))
-        (run / "evaluation.json").write_text(json.dumps({"pass": True, "metrics": {}}))
-        runs.append(run)
+    runs = [evaluated_run(str(index), commit=commit, dirty=index == 1, nested=False) for index, commit in enumerate(["a", "a", "b"])]
     result = module.aggregate(runs)
     assert result["comparable"] is False
     assert result["claim_ready"] is False
+    assert result["contains_dirty_run"] is True
 
 
 def test_detection_contract_keeps_conclusion_prospective():
@@ -188,7 +177,7 @@ def test_acceptance_dossier_hashes_present_artifacts_and_rejects_missing(tmp_pat
             )
             orchestrator.write_json(tmp_path / name, payload)
     complete = module.build(tmp_path, contract_path)
-    assert complete["pass"] is True
+    assert complete["pass"] is False  # Generic proof.txt is not the required manual evidence.
     assert all(item["sha256"] for gate in complete["gates"].values() for item in gate["artifacts"])
 
 

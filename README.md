@@ -7,6 +7,12 @@ A software-defined, research-backed OT cybersecurity laboratory for learning how
 
 > **Validation state:** source/static validation is distinct from target-server commissioning and repeated experimental validation. See [`RELEASE-READINESS.md`](RELEASE-READINESS.md) before making public claims.
 
+**Choose your next step:** [Learning journey](docs/00-learning/learning-journey.md)
+→ [Safe first run](docs/04-build/first-run.md)
+→ [Investigation capstone](docs/00-learning/investigation-capstone.md).
+The [standalone course container](docs/04-build/website-and-docker.md) serves the
+website without starting or exposing the private OT lab.
+
 The project is designed for engineers who want more than a dashboard and a few containers. The learning path is:
 
 ```text
@@ -103,9 +109,7 @@ The OpenPLC control path is `plant model ↔ software I/O ↔ Modbus TCP ↔ PLC
 The reference runtime is a continuously running Linux server, not a one-shot laptop demo.
 
 ```bash
-cp .env.example .env
-# replace every placeholder credential/token first
-chmod 600 .env
+./labctl setup
 ./labctl commission start
 ```
 
@@ -163,6 +167,10 @@ python3 tools/quality_gate.py
 The publication gates check documentation structure, broken local links, executable↔documentation traceability, real visual-source coverage, research/experiment contracts, pedagogy coverage and the absence of stale internal release language.
 
 ## Documentation site
+
+With Docker: `./labctl docs up`, then open `http://127.0.0.1:8088`.
+No lab credentials are required. Stop only the course with `./labctl docs down`.
+For a native Python documentation preview:
 
 ```bash
 pip install -r requirements-docs.txt

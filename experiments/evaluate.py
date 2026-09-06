@@ -254,7 +254,7 @@ def semantic_and_metrics(exp: dict[str, Any], run: Path, meta: dict[str, Any]) -
 
     elif exp_id == "EXP-CARGO-BLOCKED-FLOW":
         rows = state_records(resolve(run, "cargo_state_timeline", meta))
-        contradiction = first(rows, lambda r: bool(r["state"].get("pumpFeedback")) and bool(r["state"].get("valveFeedback")) and abs(float(r["state"].get("flowMeasured", 999) or 999)) <= 0.05)
+        contradiction = first(rows, lambda r: bool(r["state"].get("pumpFeedback")) and bool(r["state"].get("valveFeedback")) and r["state"].get("flowMeasured") is not None and abs(float(r["state"]["flowMeasured"])) <= 0.05)
         add("blocked-flow process contradiction observed", contradiction is not None, "healthy pump/valve feedback with near-zero measured flow")
         alarms = alarm_records(resolve(run, "alarm_timeline", meta))
         alarm = first(alarms, lambda x: active_alarm(x, {"CARGO_NO_FLOW", "CARGO_FLOW_MISMATCH"}))
@@ -475,7 +475,7 @@ def semantic_and_metrics(exp: dict[str, Any], run: Path, meta: dict[str, Any]) -
     return checks, metrics
 
 
-def evaluate(run: Path) -> dict[str, Any]:
+def evaluate(run: Path, *, write: bool = True) -> dict[str, Any]:
     meta = json.loads((run / "run.json").read_text(encoding="utf-8"))
     experiments = json.loads((ROOT / "experiments/manifest.json").read_text(encoding="utf-8"))["experiments"]
     exp = next(x for x in experiments if x["id"] == meta["experiment_id"])
@@ -487,6 +487,7 @@ def evaluate(run: Path) -> dict[str, Any]:
         path = resolve(run, key, meta)
         try:
             artifacts[key] = validate_artifact(key, path)
+            artifacts[key]["path"] = str(path.relative_to(run.resolve()))
         except Exception as exc:
             issue = {
                 "key": key,
@@ -518,6 +519,7 @@ def evaluate(run: Path) -> dict[str, Any]:
         "experiment_id": exp["id"],
         "run_git": meta.get("git"),
         "release_manifest_sha256": meta.get("release_manifest_sha256"),
+        "run_metadata_sha256": sha256(run / "run.json"),
         "evidence_completeness": valid / required if required else 1.0,
         "artifacts": artifacts,
         "missing_evidence": missing,
@@ -527,11 +529,12 @@ def evaluate(run: Path) -> dict[str, Any]:
         "metrics": metrics,
         "pass": passed,
     }
-    (run / "evidence-index.json").write_text(
-        json.dumps({"schema_version": 1, "experiment_id": exp["id"], "artifacts": artifacts}, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    (run / "evaluation.json").write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
+    if write:
+        (run / "evidence-index.json").write_text(
+            json.dumps({"schema_version": 2, "experiment_id": exp["id"], "run_metadata_sha256": out["run_metadata_sha256"], "artifacts": artifacts}, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        (run / "evaluation.json").write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
     return out
 
 
