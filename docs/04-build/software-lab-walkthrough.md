@@ -6,6 +6,10 @@ At each stage, capture the **actual running evidence**: process state → Modbus
 
 This is the main practical build path.
 
+First complete [setup](first-run.md), including source checkout and credentials.
+The [first Cargo investigation](../06-scenarios/first-cargo-investigation.md)
+provides the register-by-register explanation and packet example for stages 3–4.
+
 Do not jump from `docker compose up` directly to cybersecurity scenarios. Commission one layer at a time.
 
 For a publication acceptance run, start with `./labctl commission start` and keep the printed run directory. The orchestrator executes the commands in this walkthrough while retaining logs, provenance and hashes; this chapter explains what each stage means. See `commissioning-orchestrator.md`.
@@ -79,12 +83,16 @@ The PLC loop is not yet commissioned.
 Run each direct commissioning exercise:
 
 ```bash
-./labctl demo cargo
 ./labctl demo pms
+./labctl demo cargo
 ./labctl demo propulsion
 ```
 
 These exercises intentionally bypass OpenPLC.
+
+Run PMS first: the default Vessel Coordinator supplies Cargo pump power from
+the PMS bus. Verify `links.cargoPowerAvailable=true` at the coordinator `/state`
+endpoint before expecting Cargo flow.
 
 Then run the cross-system exercise:
 

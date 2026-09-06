@@ -6,6 +6,13 @@ A cyber range can be impressive while teaching very little. This project has a s
 
 ## Visual tour — start from a real test-bed concept
 
+![The lab's Cargo process, electrical supply and independent control signals](../assets/visuals/cargo-system.svg)
+
+This original schematic shows the model you will operate: ship inventory, pump,
+valve and shore receiving boundary. Follow the liquid path, then ask what changes
+if PMS stops supplying pump power. Read the [visual guide](../00-learning/visual-guide.md)
+to trace the same process into a signal and packet before installing anything.
+
 Open Lee (2024), *Development of Hardware-in-the-Loop Simulation Test Bed to Verify and Validate Power Management System for LNG Carriers*: https://www.mdpi.com/2077-1312/12/7/1236
 
 Study **Figure 3** and **Figure 10**.
@@ -39,9 +46,13 @@ If one of those five layers is missing, the lab is incomplete.
 
 ## Worked example
 
-Suppose a Cargo flow value is `742 L/min`.
+Suppose the model API shows `flowMeasured = 0.5 m³/s`, while the PLC shows
+`Flow_m3h = 1800`. These agree: 0.5 × 3600 = 1800. Input register 2 stores whole
+m³/h, so the PLC must not apply that conversion again.
 
-A weak lab says: “The dashboard shows 742.”
+The [signals lesson](../02-ot-foundations/signals-and-io.md) works through the
+encoding and the [first Cargo investigation](../06-scenarios/first-cargo-investigation.md)
+shows where to find the register in a real capture.
 
 This project asks:
 

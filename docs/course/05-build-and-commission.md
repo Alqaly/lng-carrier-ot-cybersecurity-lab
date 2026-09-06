@@ -20,6 +20,12 @@ Do not debug all four at once.
 
 ## Lab action — staged commissioning
 
+New to the repository? Complete [safe first run](../04-build/first-run.md) first.
+It includes cloning, prerequisites, credentials, expected pages and troubleshooting.
+For one guided learning session, use the [first Cargo investigation](../06-scenarios/first-cargo-investigation.md).
+For retained acceptance, the orchestrator below already runs the build/demo stages;
+the later phases explain those layers rather than requiring a duplicate run.
+
 ### Phase 1 — server
 
 ```bash
@@ -32,8 +38,8 @@ This freezes source provenance, preserves logs and executes the server plus pre-
 
 ```bash
 ./labctl build
-./labctl demo cargo
 ./labctl demo pms
+./labctl demo cargo
 ./labctl demo propulsion
 ```
 

@@ -27,8 +27,8 @@ Do not migrate merely to make the architecture look more sophisticated.
 ## Daemon operation
 
 ```bash
-cp .env.example .env
-# change every credential/token
+./labctl setup
+./labctl preflight
 sudo ./deploy/install-systemd.sh
 ```
 

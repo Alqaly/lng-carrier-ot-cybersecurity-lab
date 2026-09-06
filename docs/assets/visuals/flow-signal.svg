@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 830" role="img" aria-labelledby="title desc">
+<title id="title">Trace one Cargo flow signal from the model to the historian</title>
+<desc id="desc">Worked arithmetic example, not a live sample. A model flowMeasured value of 0.5 cubic metres per second becomes raw input register 2 equal to 1800. A Modbus function 04 read carries the register to AI_Flow_m3h. The PLC converts the integer to real Flow_m3h without multiplying by 3600 again. Live OPC UA discovery binds that symbol to the HMI and historian.</desc>
+<defs><marker id="a" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#246b77" stroke-width="2"/></marker><style>text{font-family:Arial,sans-serif;fill:#153440}.h{font-size:28px;font-weight:bold}.b{font-size:21px;font-weight:bold}.s{font-size:18px}.code{font-family:monospace;font-size:19px}.muted{fill:#526b75}.box{fill:#fff;stroke:#b7ccd2;stroke-width:1.5}.arrow{fill:none;stroke:#246b77;stroke-width:3;marker-end:url(#a)}</style></defs>
+<rect width="1000" height="830" rx="16" fill="#f3f7f8"/>
+<text x="34" y="47" class="h">What does “1800” actually mean?</text>
+<text x="34" y="79" class="s muted">One signal • exact repository mapping • worked values, not a captured run</text>
+<rect x="35" y="111" width="930" height="114" rx="10" class="box"/>
+<text x="55" y="143" class="b">1  Model / FMU</text><text x="55" y="177" class="code">flowMeasured = 0.5 m³/s</text>
+<text x="55" y="205" class="s">The process API uses cubic metres per second.</text>
+<path d="M85 227V263" class="arrow"/>
+<rect x="35" y="267" width="930" height="124" rx="10" class="box"/>
+<text x="55" y="299" class="b">2  Cargo software I/O</text>
+<text x="55" y="333" class="code">raw = round(0.5 / (1/3600)) = 1800</text>
+<text x="55" y="364" class="s">Input register 2 • zero-based address • Unit ID 1 • cargo-io:5020</text>
+<path d="M85 393V429" class="arrow"/><text x="112" y="421" class="s muted">Modbus FC04 reads input registers</text>
+<rect x="35" y="433" width="930" height="120" rx="10" class="box"/>
+<text x="55" y="465" class="b">3  Commissioned Cargo PLC</text>
+<text x="55" y="499" class="code">AI_Flow_m3h = 1800 → Flow_m3h = 1800.0 m³/h</text>
+<text x="55" y="529" class="s">INT_TO_REAL changes the type. The I/O layer already converted the units.</text>
+<path d="M85 555V591" class="arrow"/><text x="112" y="583" class="s muted">Browse the running OPC UA server; record its actual NodeId</text>
+<rect x="35" y="595" width="930" height="111" rx="10" fill="#e4f3ee" stroke="#91c7b5"/>
+<text x="55" y="627" class="b">4  FUXA / Telegraf → InfluxDB → Grafana</text>
+<text x="55" y="661" class="s">Value + unit + Quality + timestamp must agree with the source.</text>
+<text x="55" y="688" class="s">A plausible value with bad Quality or an old timestamp is not a fresh measurement.</text>
+<text x="35" y="748" class="b">Check your reasoning</text>
+<text x="35" y="778" class="s">If the process API shows 0.5 and the PLC shows 1800, are they disagreeing?</text>
+<text x="35" y="809" class="s muted">No: 0.5 m³/s × 3600 s/h = 1800 m³/h. Always compare units first.</text>
+</svg>

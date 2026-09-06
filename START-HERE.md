@@ -1,5 +1,10 @@
 # Start Here
 
+Start with the [visual process/signal/packet guide](docs/00-learning/visual-guide.md).
+Then use [setup](docs/04-build/first-run.md) and the
+[first Cargo investigation](docs/06-scenarios/first-cargo-investigation.md).
+Those pages give you the initial state, commands, observations and recovery steps.
+
 This project is a **course, lab, research notebook and reproducible engineering build**.
 
 Do not begin with packet captures.

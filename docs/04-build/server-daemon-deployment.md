@@ -14,10 +14,13 @@ The reference target is a Linux server that runs the lab continuously under syst
 ## 2. Configure secrets
 
 ```bash
-cp .env.example .env
+./labctl setup
 ```
 
-Replace every placeholder, then `chmod 600 .env`. The preflight and systemd installer fail closed when secrets are missing, placeholder-valued or too broadly readable. Never publish `.env`.
+Setup creates private credentials for a new checkout and preserves existing
+credentials. It validates placeholders and file permissions. Follow
+[safe first run](first-run.md) for an existing deployment; do not overwrite
+initialized service credentials with the example file. Never publish `.env`.
 
 ## 3. Validate before daemon install
 

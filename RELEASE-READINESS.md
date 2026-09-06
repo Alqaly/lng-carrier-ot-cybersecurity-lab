@@ -2,6 +2,12 @@
 
 This repository is a **release candidate for target-server commissioning**.
 
+**Learner-experience correction:** source gates do not establish that the course
+is complete or easy to follow. The [teaching backlog](docs/00-learning/learner-experience-backlog.md)
+tracks missing runtime illustrations, commissioned screen walkthroughs, full
+chapter reviews and independent learner testing. The illustrated introduction
+and first Cargo exercise are improvements under review, not a finished-course claim.
+
 The [evidence-first upgrade audit](docs/09-research/upgrade-audit-2026-09-05.md)
 records the learning journey, verification repairs, evidence compatibility and
 standalone course delivery. A course-container healthcheck is not OT acceptance.
