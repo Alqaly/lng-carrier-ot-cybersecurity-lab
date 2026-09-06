@@ -18,6 +18,9 @@ extra_javascript:
 nav:
 - Start:
   - Home: index.md
+  - Visual Guide: 00-learning/visual-guide.md
+  - First Cargo Investigation: 06-scenarios/first-cargo-investigation.md
+  - Learning Experience Backlog: 00-learning/learner-experience-backlog.md
   - Learning Journey: 00-learning/learning-journey.md
   - Investigation Capstone: 00-learning/investigation-capstone.md
   - Start Here: start-here.md

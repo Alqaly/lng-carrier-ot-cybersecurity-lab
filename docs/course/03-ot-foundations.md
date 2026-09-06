@@ -21,6 +21,12 @@ MEASURE = what the process actually looks like
 
 ## Worked example — pump
 
+![Cargo signal mapping from physical-model units to register value and PLC engineering units](../assets/visuals/flow-signal.svg)
+
+The figure uses worked values, not a captured sample. Before comparing two
+screens, compare their units: 0.5 m³/s and 1800 m³/h are the same flow. Follow
+the [signals lesson](../02-ot-foundations/signals-and-io.md) for the exact register mapping.
+
 Assume:
 
 ```text

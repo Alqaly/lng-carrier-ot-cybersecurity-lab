@@ -10,12 +10,13 @@ Use a clean clone of the intended Git commit. Configure `.env`, set its mode to 
 
 ```bash
 git status --short
-cp .env.example .env
-# replace every placeholder value
-chmod 600 .env
+./labctl setup
 ```
 
 The orchestrator refuses a dirty Git tree. Each run snapshots the Git commit/tree, release manifest, commissioning plan and dossier contract. Later commands stop if any of those inputs change.
+
+Setup preserves existing credentials and validates the private file. For a new
+host or a checkout with local edits, complete [safe first run](first-run.md) first.
 
 ## Start Gates A and B
 

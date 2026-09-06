@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 590" role="img" aria-labelledby="title desc">
+<title id="title">Decode a Modbus TCP read of Cargo input register two</title>
+<desc id="desc">Constructed protocol example, not captured traffic. Request 00 01 00 00 00 06 01 04 00 02 00 01 reads one input register at zero-based address 2 from Unit ID 1. Response 00 01 00 00 00 05 01 04 02 07 08 returns hexadecimal 0708, decimal 1800. The Cargo map gives that value the meaning cubic metres per hour.</desc>
+<style>text{font-family:Arial,sans-serif;fill:#153440}.h{font-size:28px;font-weight:bold}.b{font-size:21px;font-weight:bold}.s{font-size:18px}.hex{font-family:monospace;font-size:28px}.muted{fill:#526b75}</style>
+<rect width="1000" height="590" rx="16" fill="#f3f7f8"/>
+<text x="34" y="47" class="h">A packet carries a number. The I/O map gives it meaning.</text>
+<text x="34" y="79" class="s muted">Constructed FC04 example • Unit ID 1 • one input register • not runtime evidence</text>
+<text x="35" y="126" class="b">REQUEST → read address 2, quantity 1</text>
+<rect x="35" y="146" width="425" height="70" rx="8" fill="#e8eefc"/>
+<rect x="475" y="146" width="490" height="70" rx="8" fill="#dff0ec"/>
+<text x="53" y="190" class="hex">00 01 00 00 00 06 01</text>
+<text x="495" y="190" class="hex">04 00 02 00 01</text>
+<text x="35" y="246" class="s">Transaction 1 • protocol 0 • length 6 • unit 1</text>
+<text x="493" y="246" class="s">FC04 • address 2 • count 1</text>
+<text x="35" y="301" class="b">RESPONSE ← two data bytes, value 0x0708</text>
+<rect x="35" y="321" width="425" height="70" rx="8" fill="#e8eefc"/>
+<rect x="475" y="321" width="490" height="70" rx="8" fill="#dff0ec"/>
+<text x="53" y="365" class="hex">00 01 00 00 00 05 01</text>
+<text x="495" y="365" class="hex">04 02 07 08</text>
+<text x="35" y="421" class="s">Same transaction • length 5 • unit 1</text>
+<text x="493" y="421" class="s">FC04 • 2 bytes • register value</text>
+<text x="35" y="475" class="b">0x0708 = 7 × 256 + 8 = 1800</text>
+<text x="35" y="510" class="s">Cargo input register 2 → flowMeasured → 1800 m³/h = 0.5 m³/s</text>
+<text x="35" y="541" class="s">FC03 would read holding registers: the same address is a different data object.</text>
+<text x="35" y="573" class="s muted">Use this to interpret your capture; transaction IDs and grouped reads can differ.</text>
+</svg>

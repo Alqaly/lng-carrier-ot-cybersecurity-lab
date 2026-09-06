@@ -1,5 +1,10 @@
 # Scenario — Normal Cargo Transfer
 
+For your first direct-I/O learning session, use the
+[guided Cargo investigation](first-cargo-investigation.md): it includes power
+setup, exact commands, register decoding and expected observations. This page
+describes the later commissioned PLC sequence and its evidence requirements.
+
 ## Objective
 
 Prove the expected state transition.
