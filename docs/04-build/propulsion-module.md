@@ -129,9 +129,15 @@ Then compare packet values with `docs/08-reference/generated-io-map.md`.
 
 ## Fault investigation
 
-The instructor fault `faultLubePumpFail` does not randomly appear.
+The instructor faults `faultLubePumpFail` and `faultCoolingFail` do not randomly
+appear. Run either pre-PLC reachability exercise deliberately:
 
-When deliberately asserted, investigate:
+```bash
+./labctl demo propulsion-lube
+./labctl demo propulsion-cooling
+```
+
+For lube loss, investigate:
 
 ```text
 fault command
@@ -143,6 +149,22 @@ fault command
 ```
 
 The lesson is not merely “an alarm appeared”; it is to explain every transition on one timeline.
+
+For cooling impairment, investigate:
+
+```text
+sustained load
+→ faultCoolingFail at instructor coil 21
+→ coolant-temperature rise
+→ highCoolantTemp
+→ PLC trip on the commissioned control path
+```
+
+The cooling demo writes `evidence/live/propulsion/pre-plc-cooling-timeline.jsonl`
+and fails if the threshold is not reached. It intentionally bypasses OpenPLC,
+so it proves process/I/O reachability but not the final `engineEnable=false`
+protective action. The registered `EXP-PROP-COOLING-FAULT` run must repeat the
+intervention through the commissioned PLC path and retain the full evaluator evidence.
 
 ## Explicit limitations
 

@@ -126,7 +126,7 @@ cmd_zeek(){
 }
 cmd_demo(){
   local domain="${1:-cargo}"
-  case "$domain" in cargo|pms|propulsion|cargo-fault|pms-trip|propulsion-lube|vessel);; *) fail "demo must be cargo|pms|propulsion|cargo-fault|pms-trip|propulsion-lube|vessel";; esac
+  case "$domain" in cargo|pms|propulsion|cargo-fault|pms-trip|propulsion-lube|propulsion-cooling|vessel);; *) fail "demo must be cargo|pms|propulsion|cargo-fault|pms-trip|propulsion-lube|propulsion-cooling|vessel";; esac
   say "Running ${domain} pre-PLC commissioning scenario"
   printf 'NOTE: this intentionally bypasses OpenPLC and drives the Modbus I/O endpoint directly.\n'
   docker compose --profile tools run --rm commissioning-client "$domain"
@@ -366,7 +366,7 @@ Usage: ./labctl <command>
   zeek <domain> [pcap] [output-dir]  Analyze a saved Modbus PCAP with Zeek
   demo <scenario>        Controlled commissioning/fault lab
                          cargo | pms | propulsion | vessel
-                         cargo-fault | pms-trip | propulsion-lube
+                         cargo-fault | pms-trip | propulsion-lube | propulsion-cooling
   opcua <domain> [evidence/outdir]  Browse live OPC UA nodes and retain run-scoped evidence
   bind-plan <domain> [evidence/outdir]  Resolve teaching tags from run-scoped live discovery
   hist-install <domain> [evidence/outdir]  Install only a verified run-scoped binding into Telegraf

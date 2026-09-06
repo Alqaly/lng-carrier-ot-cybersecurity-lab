@@ -56,7 +56,13 @@ The propulsion model includes:
 - lube-oil pressure,
 - coolant temperature,
 - vessel-speed response,
-- deterministic lube-pump failure.
+- deterministic lube-pump failure,
+- deterministic cooling impairment with a statically checked reachable trip.
+
+The cooling-fault coefficient is a transparent teaching calibration, not a
+manufacturer or vessel measurement. The [reachability record](../09-research/propulsion-cooling-reachability.md)
+derives the healthy and impaired steady-state bounds and states what the demo
+does and does not prove.
 
 It does not reproduce a specific MAN, WinGD or Wärtsilä engine controller and does not model cylinder combustion, turbocharger dynamics, gas admission, shaft torsional vibration, detailed CPP servo dynamics or a validated hull-resistance curve.
 
@@ -66,10 +72,12 @@ Fault inputs are explicit instructor commands and are never random:
 
 ```text
 faultPumpFail
+faultFlowPathBlocked
 faultValveStuck
 faultGen1Trip
 faultGen2Trip
 faultLubePumpFail
+faultCoolingFail
 ```
 
 The lab must never activate a fault simply because an uninitialized register has a non-neutral interpretation.

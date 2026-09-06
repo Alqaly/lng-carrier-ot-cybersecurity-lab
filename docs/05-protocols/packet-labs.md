@@ -178,6 +178,30 @@ generator trip
 
 Pre-PLC commissioning proves the plant state transition. After OpenPLC commissioning, repeat through the PLC and identify the protective output transition.
 
+## Lab 7 — Propulsion cooling impairment
+
+Terminal A:
+
+```bash
+./labctl capture propulsion modbus
+```
+
+Terminal B:
+
+```bash
+./labctl demo propulsion-cooling
+```
+
+The deterministic pre-PLC scenario establishes sustained load, asserts
+instructor-only coil 21 and fails unless discrete input 2 (`highCoolantTemp`)
+becomes true. Correlate the coil write, register trend and threshold transition
+with `evidence/live/propulsion/pre-plc-cooling-timeline.jsonl`.
+
+This direct-I/O demonstration does not prove protective shutdown. After OpenPLC
+commissioning, repeat the registered `EXP-PROP-COOLING-FAULT` intervention while
+the PLC owns `engineEnable`; the accepted causal chain ends only when the later
+PLC-visible enable state becomes false.
+
 ## Zeek offline analysis
 
 After a Modbus PCAP exists:
