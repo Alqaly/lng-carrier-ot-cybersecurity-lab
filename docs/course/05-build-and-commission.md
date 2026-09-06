@@ -39,6 +39,17 @@ This freezes source provenance, preserves logs and executes the server plus pre-
 
 These commissioning demos intentionally drive the software I/O directly. They answer: *does process + I/O + Modbus work before PLC logic is introduced?*
 
+Then prove that the propulsion cooling alarm is physically reachable rather
+than merely declared in code:
+
+```bash
+./labctl demo propulsion-cooling
+```
+
+The command fails if the deterministic temperature threshold is not reached and
+saves a named pre-PLC timeline. It does not claim the PLC protective shutdown;
+that requires the later commissioned experiment.
+
 ### Phase 3 — commission OpenPLC
 
 For each domain:

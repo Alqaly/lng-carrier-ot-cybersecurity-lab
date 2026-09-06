@@ -176,6 +176,80 @@ def propulsion_lube():
     finally:
         c.close()
 
+
+def propulsion_cooling():
+    c=connect("propulsion")
+    evidence=Path('/evidence/live/propulsion')
+    evidence.mkdir(parents=True,exist_ok=True)
+    timeline=evidence/'pre-plc-cooling-timeline.jsonl'
+
+    def record(phase,note):
+        ir=read_ir(c,7); di=read_di(c,4)
+        state={
+            'engineRPM': ir[0]*0.1 if len(ir)>0 else None,
+            'lubeOilPressureBar': ir[1]*0.01 if len(ir)>1 else None,
+            'coolantTempC': ir[2]*0.1 if len(ir)>2 else None,
+            'engineLoadPct': ir[4]*0.1 if len(ir)>4 else None,
+            'engineRunning': bool(di[0]) if len(di)>0 else None,
+            'lowLubePressure': bool(di[1]) if len(di)>1 else None,
+            'highCoolantTemp': bool(di[2]) if len(di)>2 else None,
+            'overspeed': bool(di[3]) if len(di)>3 else None,
+        }
+        item={
+            'event_epoch':time.time(),
+            'phase':phase,
+            'note':note,
+            'evidence_scope':'pre_plc_commissioning_not_experiment_evidence',
+            'state':state,
+            'raw_input_registers':ir,
+            'raw_discrete_inputs':di,
+        }
+        with timeline.open('a') as f: f.write(json.dumps(item)+'\n')
+        print(f"{phase.upper()}:",state)
+        return state
+
+    try:
+        print("CONTROLLED COOLING FAULT LAB — direct I/O commissioning path; OpenPLC is bypassed.")
+        print("This proves plant/I/O reachability only. Repeat through OpenPLC for protective shutdown evidence.")
+        if timeline.exists(): timeline.unlink()
+
+        # Begin from a known neutral state, then establish the sustained maximum
+        # teaching load used by the reachability regression test.
+        c.write_coil(20,False,device_id=1)
+        c.write_coil(21,False,device_id=1)
+        c.write_register(0,0,device_id=1); c.write_register(1,0,device_id=1)
+        c.write_coil(1,False,device_id=1); c.write_coil(0,True,device_id=1)
+        wait("Pre-lube",4)
+        c.write_coil(1,True,device_id=1)
+        c.write_register(0,1000,device_id=1)
+        c.write_register(1,1000,device_id=1)
+        wait("Establish sustained maximum teaching load",20)
+        baseline=record('baseline','Healthy cooling at sustained load')
+        if baseline['highCoolantTemp']:
+            raise RuntimeError('High-coolant input was already active before fault injection')
+
+        c.write_coil(21,True,device_id=1)
+        record('intervention','faultCoolingFail asserted at instructor-only coil 21')
+        deadline=time.monotonic()+75
+        while time.monotonic()<deadline:
+            time.sleep(1)
+            state=record('response','Waiting for deterministic coolant threshold crossing')
+            if state['highCoolantTemp']:
+                print("PASS: highCoolantTemp became true after cooling impairment.")
+                print("OpenPLC is bypassed here, so engineEnable remains a direct command rather than a PLC trip output.")
+                print(f"Pre-PLC teaching timeline: {timeline}")
+                break
+        else:
+            raise RuntimeError('Cooling impairment did not reach highCoolantTemp within 75 seconds')
+    finally:
+        try:
+            c.write_coil(20,False,device_id=1)
+            c.write_coil(21,False,device_id=1)
+            c.write_register(0,0,device_id=1); c.write_register(1,0,device_id=1)
+            c.write_coil(1,False,device_id=1); c.write_coil(0,False,device_id=1)
+        finally:
+            c.close()
+
 def vessel():
     """Three-domain integrated commissioning event.
 
@@ -293,6 +367,7 @@ SCENARIOS={
     "cargo-fault": cargo_fault,
     "pms-trip": pms_trip,
     "propulsion-lube": propulsion_lube,
+    "propulsion-cooling": propulsion_cooling,
     "vessel": vessel,
 }
 

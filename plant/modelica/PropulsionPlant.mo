@@ -7,7 +7,8 @@ model PropulsionPlant
   parameter Real tauLube = 1.2;
   parameter Real tauCool = 25.0;
   parameter Real normalTempGain = 0.48;
-  parameter Real coolingFaultTempGain = 0.90;
+  parameter Real coolingFaultTempGain = 1.20
+    "Teaching calibration: sustained maximum command crosses the coolant trip";
   parameter Real highCoolantTripC = 92.0;
   parameter Real vesselMassScale = 200.0 "Teaching vessel response inertia";
 

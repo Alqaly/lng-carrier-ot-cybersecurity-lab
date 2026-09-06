@@ -41,6 +41,33 @@ def test_propulsion_torque_register_has_headroom():
     raw=torque/float(spec['scale'])
     assert raw < 65535
 
+def test_propulsion_cooling_fault_is_reachable_but_healthy_state_is_not_tripped():
+    maxrpm=param('plant/modelica/PropulsionPlant.mo','maxRPM')
+    max_torque=param('plant/modelica/PropulsionPlant.mo','maxTorqueNm')
+    coeff=param('plant/modelica/PropulsionPlant.mo','propLoadCoeff')
+    friction=param('plant/modelica/PropulsionPlant.mo','friction')
+    normal_gain=param('plant/modelica/PropulsionPlant.mo','normalTempGain')
+    fault_gain=param('plant/modelica/PropulsionPlant.mo','coolingFaultTempGain')
+    tau=param('plant/modelica/PropulsionPlant.mo','tauCool')
+    trip=param('plant/modelica/PropulsionPlant.mo','highCoolantTripC')
+
+    # Solve the full-fuel/full-pitch steady-state shaft equation. This protects
+    # the experiment contract from a threshold that the executable model can
+    # never reach while also keeping healthy maximum operation below the trip.
+    rad_s_per_rpm=2*math.pi/60
+    a=coeff*rad_s_per_rpm**2
+    b=friction*rad_s_per_rpm + max_torque/(maxrpm*1.15)
+    rpm=(-b+math.sqrt(b*b+4*a*max_torque))/(2*a)
+    load_pct=100*coeff*(rpm*rad_s_per_rpm)**2/max_torque
+    healthy_target=35+normal_gain*load_pct
+    impaired_target=35+fault_gain*load_pct
+
+    assert 40 < load_pct < 100
+    assert healthy_target < trip
+    assert impaired_target > trip+5
+    first_order_crossing=-tau*math.log((impaired_target-trip)/(impaired_target-healthy_target))
+    assert 0 < first_order_crossing < 60
+
 def test_propulsion_command_addresses_match_reference():
     io=json.loads(Path('io_emulator/configs/propulsion.json').read_text())
     assert io['commands']['fuelCommand']['address']==0
