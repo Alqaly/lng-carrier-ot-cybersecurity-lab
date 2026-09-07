@@ -13,6 +13,24 @@ This lab lets you connect electrical supply, equipment feedback, measurement int
 *Original explanatory schematic of the aggregate teaching model, not a vessel P&ID or a screenshot.*
 The shore receiver is a mass-balance boundary. The lab does not model a complete cryogenic terminal.
 
+## What the research changed—not just what we cited
+
+The papers did not provide a ready-made LNG-carrier model. They changed concrete
+engineering choices in this repository:
+
+| Published work | Decision implemented here | Where you can test it |
+|---|---|---|
+| Cyber-SHIP | Treat Cargo, PMS and machinery as a connected system and label simulation/emulation/live-software fidelity | `vessel/coordinator.py` and `EXP-PMS-GEN-TRIP` |
+| Cyber-MAR | Build the integrated scenario from an operational dependency—electrical supply—before inventing an attack story | PMS → Cargo/machinery power propagation |
+| Lee's LNG-carrier PMS HIL study | Expose load sharing, reserve-based generator start, blackout state and staged load shedding | `PowerManagementPlant.mo`, `PowerManagement.st` and the generator-trip evaluator |
+| Mueller, Ziras & Heussen | Compare network-only, process-only and cross-layer investigations before claiming improvement | investigation capstone and `config/detection-claims.json` |
+| Ghaeini et al. | Check a reported sensor value against expected physical behavior | Cargo tank-mass-balance residual and `EXP-CARGO-SENSOR-BIAS` |
+
+Read [What the Research Changed](docs/09-research/research-to-model-matrix.md)
+for the source → decision → code → learner action → evidence → limitation chain.
+The machine-readable contract is checked in CI. Published results from those
+papers are **not** presented as results of this project.
+
 ## Choose one starting point
 
 | What you want | Start here | First useful result |

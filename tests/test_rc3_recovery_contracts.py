@@ -25,7 +25,7 @@ def test_public_identity_is_canonical():
 def test_release_manifest_records_recovered_candidate_and_test_count():
     manifest = json.loads((R / "release-manifest.json").read_text())
     assert manifest["artifact_state"] == "source_validated_commissioning_automation_ready"
-    assert manifest["static_validation"]["pytest_expected"] == 130
+    assert manifest["static_validation"]["pytest_expected"] == 134
     assert manifest["runtime_validation_in_build_environment"] is False
 
 
