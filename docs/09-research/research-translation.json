@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "purpose": "Record the exact chain from a published research result to a project decision, implementation, learner action, retained evidence and claim boundary.",
+  "translations": [
+    {
+      "id": "RT-CYBERSHIP-2019",
+      "source_type": "research_paper",
+      "source": {
+        "title": "Cyber-SHIP: Developing Next Generation Maritime Cyber Research Capabilities",
+        "authors": "Kimberly Tam, Kevin Forshaw and Kevin Jones",
+        "year": 2019,
+        "doi": "10.24868/icmet.oman.2019.005",
+        "url": "https://pearl.plymouth.ac.uk/secam-research/1531/"
+      },
+      "finding_used": "Maritime cyber research needs configurable, connected ship systems and an explicit choice among simulation, emulation and live equipment; system-of-systems behavior matters.",
+      "engineering_decision": "Model the Cargo, power-management and propulsion-auxiliary domains as a coupled vessel system, and label the fidelity of every major layer instead of calling the software stack a ship digital twin.",
+      "implementation_paths": [
+        "config/architecture-contract.json",
+        "docs/03-architecture/software-realism.md",
+        "vessel/coordinator.py",
+        "experiments/manifest.json"
+      ],
+      "learner_action": "Run the generator-trip scenario and trace the event from the PMS state through vessel power availability to Cargo or machinery consequence, while identifying which parts are simulated, emulated or real software.",
+      "experiment_ids": [
+        "EXP-PMS-GEN-TRIP"
+      ],
+      "expected_evidence": [
+        "pms_state_timeline",
+        "vessel_state_timeline",
+        "pms_modbus_pcap",
+        "alarm_timeline"
+      ],
+      "falsification_condition": "The translation fails if the domains remain independent, if only a dashboard value changes, or if the retained timeline cannot establish a cross-system consequence after the generator trip.",
+      "excluded_claims": [
+        "No bridge hardware is reproduced.",
+        "The project is not a physical twin of a vessel.",
+        "Software emulation is not claimed to have Cyber-SHIP's live-equipment realism."
+      ]
+    },
+    {
+      "id": "RT-CYBERMAR-2021",
+      "source_type": "research_paper",
+      "source": {
+        "title": "The Cyber-MAR Project: First Results and Perspectives on the Use of Hybrid Cyber Ranges for Port Risk Assessment",
+        "authors": "Olivier Jacq et al.",
+        "year": 2021,
+        "doi": "10.1109/CSR51186.2021.9527968",
+        "url": "https://www.cyber-mar.eu/wp-content/uploads/2021/09/Hybrid_cyber_range_use_for_port_risk_assessment.pdf"
+      },
+      "finding_used": "Cyber-MAR builds scenarios by examining incidents, operational assets, functions and dependencies; its port example makes electrical supply a scenario driver because other operations depend on it.",
+      "engineering_decision": "Start the integrated vessel scenario with an operational dependency rather than a random cyberattack: the PMS supplies Cargo pump power and propulsion auxiliary power through the Vessel Coordinator.",
+      "implementation_paths": [
+        "vessel/profile.json",
+        "vessel/coordinator.py",
+        "plant/modelica/PowerManagementPlant.mo",
+        "experiments/manifest.json"
+      ],
+      "learner_action": "Before assigning an attack label, test whether a reported Cargo or machinery failure is the downstream result of a power-system event.",
+      "experiment_ids": [
+        "EXP-PMS-GEN-TRIP"
+      ],
+      "expected_evidence": [
+        "pms_state_timeline",
+        "vessel_state_timeline",
+        "alarm_timeline"
+      ],
+      "falsification_condition": "The translation fails if loss of the teaching bus cannot change dependent power availability, or if event order cannot distinguish the initiating power event from its downstream effect.",
+      "excluded_claims": [
+        "The project does not reproduce a port topology.",
+        "The project does not implement Cyber-MAR's risk or econometric layers.",
+        "The project does not claim equivalence to a hybrid range with physical assets."
+      ]
+    },
+    {
+      "id": "RT-MACYSTE-2023",
+      "source_type": "research_paper",
+      "source": {
+        "title": "MaCySTe: A virtual testbed for maritime cybersecurity",
+        "authors": "Giacomo Longo, Alessandro Orlich, Stefano Musante, Alessio Merlo and Enrico Russo",
+        "year": 2023,
+        "doi": "10.1016/j.softx.2023.101426",
+        "url": "https://crack-mcr.github.io/MaCySTe/"
+      },
+      "finding_used": "MaCySTe demonstrates a modular virtual maritime testbed with ship-network components, scenarios, software PLCs, a Modbus bridge, attack tooling and monitoring add-ons.",
+      "engineering_decision": "Use replaceable open-source services with real protocol traffic, but add explicit LNG Cargo, PMS and propulsion process dynamics plus evidence contracts instead of copying a navigation-focused topology.",
+      "implementation_paths": [
+        "docker-compose.yml",
+        "io_emulator/",
+        "openplc/",
+        "security/zeek/local.zeek"
+      ],
+      "learner_action": "Follow one value across the process model, I/O mapping, Modbus response, PLC variable and network analysis rather than treating the testbed as a collection of containers.",
+      "experiment_ids": [
+        "EXP-CARGO-NORMAL",
+        "EXP-UNEXPECTED-MODBUS-SOURCE"
+      ],
+      "expected_evidence": [
+        "cargo_modbus_pcap",
+        "cargo_state_timeline",
+        "modbus_conn_log",
+        "conduit_classification_json"
+      ],
+      "falsification_condition": "The translation fails if the components cannot exchange the declared protocol data or if an experiment produces no independently inspectable process and network artifacts.",
+      "excluded_claims": [
+        "The project is not a fork or reproduction of MaCySTe.",
+        "The project does not claim MaCySTe's navigation, RADAR or NMEA coverage.",
+        "Containerization alone is not treated as a research contribution."
+      ]
+    },
+    {
+      "id": "RT-LEE-PMS-2024",
+      "source_type": "research_paper",
+      "source": {
+        "title": "Development of Hardware-in-the-Loop Simulation Test Bed to Verify and Validate Power Management System for LNG Carriers",
+        "authors": "Kwangkook Lee",
+        "year": 2024,
+        "doi": "10.3390/jmse12071236",
+        "url": "https://www.mdpi.com/2077-1312/12/7/1236"
+      },
+      "finding_used": "The LNG-carrier PMS HIL study evaluates load sharing, load-dependent generator start, blackout prevention and preferential load behavior through scenario-based tests.",
+      "engineering_decision": "Make those PMS functions observable teaching behaviors: equalized generator loading, reserve-based second-generator start, an explicit blackout state and staged Cargo/hotel load shedding.",
+      "implementation_paths": [
+        "plant/modelica/PowerManagementPlant.mo",
+        "openplc/pms/PowerManagement.st",
+        "experiments/manifest.json",
+        "experiments/evaluate.py"
+      ],
+      "learner_action": "Establish the bus, apply demand, trip a generator and explain the order of breaker loss, frequency excursion, load shedding and downstream vessel effect.",
+      "experiment_ids": [
+        "EXP-PMS-GEN-TRIP"
+      ],
+      "expected_evidence": [
+        "pms_modbus_pcap",
+        "pms_state_timeline",
+        "vessel_state_timeline",
+        "alarm_timeline"
+      ],
+      "falsification_condition": "The translation fails if the trip does not produce the declared causal sequence or if the evaluator passes without observing the intervention, breaker loss, excursion and vessel consequence.",
+      "excluded_claims": [
+        "This is software-in-the-loop, not the paper's hardware-in-the-loop apparatus.",
+        "Generator ratings and thresholds are teaching assumptions, not values taken from the paper.",
+        "The project does not claim to replace factory acceptance testing."
+      ]
+    },
+    {
+      "id": "RT-MULLER-2022",
+      "source_type": "research_paper",
+      "source": {
+        "title": "Assessment of Cyber-Physical Intrusion Detection and Classification for Industrial Control Systems",
+        "authors": "Nils Mueller, Charalampos Ziras and Kai Heussen",
+        "year": 2022,
+        "doi": "10.1109/SmartGridComm52983.2022.9961010",
+        "url": "https://arxiv.org/abs/2202.09352"
+      },
+      "finding_used": "On the paper's dataset, combining physical-process and network features improved classification over a network-only counterpart and helped analyze attacks and faults together.",
+      "engineering_decision": "Require three separate explanations—network-only, process-only and cross-layer—and prohibit any superiority claim until repeated project runs support it.",
+      "implementation_paths": [
+        "config/detection-claims.json",
+        "docs/00-learning/investigation-capstone.md",
+        "experiments/evaluate.py",
+        "evidence/aggregate_runs.py"
+      ],
+      "learner_action": "Investigate the same event three times using network evidence alone, process evidence alone and both together; score event order, supported claims and unresolved uncertainty.",
+      "experiment_ids": [
+        "EXP-CARGO-BLOCKED-FLOW",
+        "EXP-PMS-GEN-TRIP"
+      ],
+      "expected_evidence": [
+        "cargo_modbus_pcap",
+        "cargo_state_timeline",
+        "pms_modbus_pcap",
+        "pms_state_timeline",
+        "vessel_state_timeline",
+        "alarm_timeline"
+      ],
+      "falsification_condition": "The project's prospective benefit is not supported if the cross-layer condition does not improve the predeclared reconstruction measures over the network-only condition across repeated runs.",
+      "excluded_claims": [
+        "The paper's performance result is not transferred to this project.",
+        "No machine-learning detector from the paper is implemented here.",
+        "The project currently makes no evidence-backed claim that cross-layer analysis outperforms network-only analysis."
+      ]
+    },
+    {
+      "id": "RT-GHAEINI-2018",
+      "source_type": "research_paper",
+      "source": {
+        "title": "State-Aware Anomaly Detection for Industrial Control Systems",
+        "authors": "Hamid Reza Ghaeini, Daniele Antonioli, Ferdinand Brasser, Ahmad-Reza Sadeghi and Nils Ole Tippenhauer",
+        "year": 2018,
+        "doi": "10.1145/3167132.3167305",
+        "url": "https://tippenhauer.de/publication/ghaeini-18-stateaware/ghaeini-18-stateaware.pdf"
+      },
+      "finding_used": "The paper shows why anomaly detection can use expected physical-process behavior and state-dependent residuals instead of relying only on traffic or a single fixed sensor value.",
+      "engineering_decision": "Add an independent Cargo mass-balance check that compares measured flow with flow inferred from tank-level change, and retain the residual as evidence separate from the Modbus capture.",
+      "implementation_paths": [
+        "security/process_residual.py",
+        "plant/modelica/CargoTransferPlant.mo",
+        "experiments/manifest.json",
+        "experiments/evaluate.py"
+      ],
+      "learner_action": "Inject a deterministic flow-sensor bias, calculate tank-derived flow and decide whether command, equipment feedback and physical consequence still agree.",
+      "experiment_ids": [
+        "EXP-CARGO-SENSOR-BIAS"
+      ],
+      "expected_evidence": [
+        "cargo_state_csv",
+        "process_residual_json",
+        "cargo_modbus_pcap"
+      ],
+      "falsification_condition": "The implementation is not useful for this scenario if a declared sensor bias does not create a repeatable residual, or if healthy runs cross the declared threshold without an explained cause.",
+      "excluded_claims": [
+        "The analyzer is not the paper's state-aware CUSUM detector.",
+        "It uses no trained model or 120 GB historical dataset.",
+        "Its fixed teaching threshold has not yet been validated as an operational alarm limit."
+      ]
+    }
+  ]
+}
