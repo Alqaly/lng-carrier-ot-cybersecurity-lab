@@ -5,7 +5,8 @@ Then use [setup](docs/04-build/first-run.md) and the
 [first Cargo investigation](docs/06-scenarios/first-cargo-investigation.md).
 Those pages give you the initial state, commands, observations and recovery steps.
 
-This project is a **course, lab, research notebook and reproducible engineering build**.
+This is a software-only lab for learning how a physical process, controller and
+network explain the same event. Read the notes directly on GitHub; no website is required.
 
 Do not begin with packet captures.
 
@@ -83,7 +84,7 @@ Write control logic and map I/O.
 Inspect Modbus, OPC UA and navigation data at message level.
 
 ### 7. Operations
-Verify a normal loading sequence.
+Verify a normal ship-unloading sequence: liquid leaves the source inventory.
 
 ### 8. Cybersecurity
 Investigate inconsistencies and unauthorized control-path behavior.
@@ -100,10 +101,14 @@ You should be able to explain the chapter to another engineer **without reading 
 
 Continue in this order:
 
-1. commission the operator HMI and alarm philosophy,
-2. run the packet labs,
-3. build the Power Management module,
-4. build the Propulsion & Machinery module,
-5. run troubleshooting cases that require cross-layer evidence.
+1. establish PMS power and complete the pre-PLC Cargo exercise,
+2. commission the three OpenPLC controllers and their I/O maps,
+3. discover OPC UA values and commission historian/HMI bindings,
+4. collect the normal baseline and run registered experiments,
+5. retain recovery evidence and finalize Gates A–G.
+
+The [commissioning guide](docs/04-build/commissioning-orchestrator.md) is the
+execution authority. A gate is a checkpoint with required evidence, not an
+extra software component. Starting containers is only an early step.
 
 The target skill is not “Docker started.” It is the ability to explain a state transition from model equation to packet to operator consequence.

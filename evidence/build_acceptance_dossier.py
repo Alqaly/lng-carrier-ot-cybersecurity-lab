@@ -71,7 +71,7 @@ def build(root: Path, contract_path: Path) -> dict[str, Any]:
                     problems.append("artifact records semantic errors")
                 required_commands = {
                     "static-review.json": ["preflight", "test", "config-check", "render-compose"],
-                    "process-io-commissioning.json": ["build", "smoke", "cargo", "pms", "propulsion", "vessel"],
+                    "process-io-commissioning.json": ["build", "smoke", "pms", "cargo", "propulsion", "vessel"],
                     "opcua-discovery-index.json": [f"{domain}-{action}" for domain in ("cargo", "pms", "propulsion") for action in ("opcua", "bind", "historian", "freshness")],
                     "historian-binding-review.json": [f"{domain}-{action}" for domain in ("cargo", "pms", "propulsion") for action in ("opcua", "bind", "historian", "freshness")],
                     "resource-profile.json": ["resource-profile"],

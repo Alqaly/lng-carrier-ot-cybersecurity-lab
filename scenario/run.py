@@ -17,20 +17,41 @@ def wait(msg,seconds):
         time.sleep(1)
     print("     ")
 
+class CheckedClient:
+    """Do not turn a Modbus exception response into a successful demonstration."""
+    def __init__(self, client):
+        self.client = client
+
+    def __getattr__(self, name):
+        method = getattr(self.client, name)
+        if not name.startswith(('write_', 'read_')):
+            return method
+        def checked(*args, **kwargs):
+            response = method(*args, **kwargs)
+            if response is None or response.isError():
+                raise RuntimeError(f'Modbus {name} failed; inspect connectivity, address map and PLC ownership')
+            return response
+        return checked
+
+
 def connect(domain):
     host,port=DOMAINS[domain]
     c=ModbusTcpClient(host,port=port,timeout=3)
     if not c.connect():
         raise SystemExit(f"Cannot connect to {host}:{port}")
-    return c
+    return CheckedClient(c)
 
 def read_ir(c,count):
     r=c.read_input_registers(0,count=count,device_id=1)
-    return [] if r.isError() else r.registers
+    if r.isError() or len(r.registers) != count:
+        raise RuntimeError('Incomplete Modbus input-register read')
+    return r.registers
 
 def read_di(c,count):
     r=c.read_discrete_inputs(0,count=count,device_id=1)
-    return [] if r.isError() else list(r.bits[:count])
+    if r.isError() or len(r.bits) < count:
+        raise RuntimeError('Incomplete Modbus discrete-input read')
+    return list(r.bits[:count])
 
 def cargo():
     c=connect("cargo")
@@ -40,13 +61,23 @@ def cargo():
         c.write_register(0,1000,device_id=1)
         wait("Valve travel",4)
         c.write_coil(0,True,device_id=1)
+        observed_transfer = False
         for _ in range(8):
-            print("IR:",read_ir(c,7),"DI:",read_di(c,4))
+            ir, di = read_ir(c,7), read_di(c,4)
+            print("IR:",ir,"DI:",di)
+            observed_transfer = observed_transfer or (ir[2] > 0 and di[0] and di[1])
             time.sleep(1)
-        c.write_coil(0,False,device_id=1)
-        c.write_register(0,0,device_id=1)
+        if not observed_transfer:
+            raise RuntimeError('Cargo transfer not observed: check PMS power, valve/pump feedback and active faults')
     finally:
-        c.close()
+        # Attempt neutral commands even after a failed observation/read.
+        try:
+            c.write_coil(0,False,device_id=1)
+        finally:
+            try:
+                c.write_register(0,0,device_id=1)
+            finally:
+                c.close()
 
 def pms():
     c=connect("pms")
@@ -71,6 +102,8 @@ def pms():
         c.write_coil(3,True,device_id=1)
         wait("Second generator connected",3)
         print("IR:",read_ir(c,10),"DI:",read_di(c,9))
+        if not read_di(c,9)[8]:
+            raise RuntimeError('PMS bus is not energized; do not proceed to Cargo or machinery')
     finally:
         c.close()
 
@@ -371,7 +404,8 @@ SCENARIOS={
     "vessel": vessel,
 }
 
-ap=argparse.ArgumentParser(description="Controlled process / Modbus commissioning scenarios")
-ap.add_argument("scenario",choices=sorted(SCENARIOS))
-args=ap.parse_args()
-SCENARIOS[args.scenario]()
+if __name__ == '__main__':
+    ap=argparse.ArgumentParser(description="Controlled process / Modbus commissioning scenarios")
+    ap.add_argument("scenario",choices=sorted(SCENARIOS))
+    args=ap.parse_args()
+    SCENARIOS[args.scenario]()

@@ -20,6 +20,7 @@ import socket
 import subprocess
 import sys
 import time
+import tempfile
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Callable
@@ -146,6 +147,20 @@ def load_state(run: Path) -> dict[str, Any]:
     return read_json(path)
 
 
+def preserve_run(run: Path) -> Path:
+    """Retain the complete pre-mutation run, outside it to avoid recursive copies.
+
+    Copy failure aborts before any gate can overwrite its previous artifacts.
+    No hard links: a later rewrite must not alter the retained earlier attempt.
+    """
+    sha256_path(run)  # Refuse symlinked evidence rather than following it.
+    history = run.parent / "history" / run.name
+    history.mkdir(parents=True, exist_ok=True, mode=0o700)
+    destination = Path(tempfile.mkdtemp(prefix="before-", dir=history))
+    shutil.copytree(run, destination / "run", symlinks=True)
+    return destination / "run"
+
+
 def load_plan() -> dict[str, Any]:
     return read_json(PLAN_PATH)
 
@@ -179,7 +194,7 @@ def evidence_entry(run: Path, path: Path, label: str) -> dict[str, Any]:
     }
 
 
-def command_batch(run: Path, gate: str, commands: list[tuple[str, list[str]]], runner: CommandRunner = run_command) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def command_batch(run: Path, gate: str, commands: list[tuple[str, list[str]]], runner: CommandRunner = run_command, stop_on_failure: bool = False) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     records: list[dict[str, Any]] = []
     evidence: list[dict[str, Any]] = []
     for index, (label, command) in enumerate(commands, start=1):
@@ -198,6 +213,8 @@ def command_batch(run: Path, gate: str, commands: list[tuple[str, list[str]]], r
             "exit_code": code,
             "log": str(log.relative_to(run)),
         })
+        if code != 0 and stop_on_failure:
+            break
     return records, evidence
 
 
@@ -248,12 +265,12 @@ def run_gate_b(run: Path, runner: CommandRunner = run_command, current: dict[str
     commands = [
         ("build", ["./labctl", "build"]),
         ("smoke", ["./labctl", "smoke"]),
-        ("cargo", ["./labctl", "demo", "cargo"]),
         ("pms", ["./labctl", "demo", "pms"]),
+        ("cargo", ["./labctl", "demo", "cargo"]),
         ("propulsion", ["./labctl", "demo", "propulsion"]),
         ("vessel", ["./labctl", "demo", "vessel"]),
     ]
-    records, evidence = command_batch(run, "B", commands, runner)
+    records, evidence = command_batch(run, "B", commands, runner, stop_on_failure=True)
     passed = all(item["exit_code"] == 0 for item in records)
     write_json(run / "process-io-commissioning.json", artifact_payload(run, state, "B", "process-io-commissioning.json", passed, evidence, commands=records))
     update_gate_state(run, "B", passed)
@@ -527,15 +544,20 @@ def print_status(run: Path) -> dict[str, Any]:
 
 def print_record_guidance(run: Path, gate: str) -> None:
     plan = load_plan()["gates"][gate]
+    checked = {item["path"]: item for item in dossier(run)["gates"][gate]["artifacts"]}
     print(f"Gate {gate} requires retained live-system evidence: {plan['title']}")
     for artifact, spec in plan["artifacts"].items():
-        if spec.get("mode") != "recorded" or (run / artifact).is_file():
+        if spec.get("mode") != "recorded" or checked[artifact]["pass"]:
             continue
+        if (run / artifact).exists():
+            print(f"  INVALID {artifact}: " + "; ".join(checked[artifact]["semantic_errors"]))
+            print("  Inspect retained evidence before deliberately replacing it with --replace.")
         labels = " ".join(f"--evidence {label}=PATH" for label in spec["required_evidence_labels"])
         print(f"  ./labctl commission record {run} {artifact} {labels} --operator NAME --note 'Describe the observed causal result' ")
 
 
 def resume(run: Path, experiment_root: Path, samples: int, interval: float) -> int:
+    assert_source_matches(load_state(run))
     result = dossier(run)
     for gate in "ABCDEFG":
         if result["gates"][gate]["pass"]:
@@ -552,7 +574,8 @@ def resume(run: Path, experiment_root: Path, samples: int, interval: float) -> i
         if gate == "F":
             return 0 if run_gate_f(run, experiment_root) else 3
         if gate == "G":
-            if not (run / "resource-profile.json").is_file():
+            resource = next(item for item in result["gates"]["G"]["artifacts"] if item["path"] == "resource-profile.json")
+            if not resource["pass"]:
                 return 0 if run_gate_g_resources(run, samples, interval) else 2
             print_record_guidance(run, gate)
             return 3
@@ -560,6 +583,7 @@ def resume(run: Path, experiment_root: Path, samples: int, interval: float) -> i
 
 
 def finalize(run: Path) -> int:
+    assert_source_matches(load_state(run))
     result = dossier(run)
     write_json(run / "acceptance-dossier.json", result)
     state = load_state(run)
@@ -631,6 +655,10 @@ def main() -> None:
         if args.command == "status":
             print_status(args.run)
             return
+        if args.command in {"run", "resume", "record", "finalize"}:
+            assert_source_matches(load_state(args.run))
+            retained = preserve_run(args.run)
+            print(f"Previous run preserved: {retained}")
         if args.command == "record":
             print(record_artifact(args.run, args.artifact, parse_evidence(args.evidence), args.note, args.operator, args.replace))
             return

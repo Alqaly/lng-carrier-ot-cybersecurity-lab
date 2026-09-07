@@ -2,7 +2,7 @@
   "project": "LNG Carrier Virtual Engineering Lab",
   "artifact_state": "source_validated_commissioning_automation_ready",
   "static_validation": {
-    "pytest_expected": 134,
+    "pytest_expected": 144,
     "course_chapters": 10,
     "experiments": 7,
     "compose_services": 26,

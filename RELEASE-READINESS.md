@@ -63,7 +63,7 @@ Those claims become valid only after `docs/04-build/server-acceptance-test.md` G
 
 Preserve the printed run directory and use `./labctl commission resume <run-dir>`. The orchestrator completes the automatable gates and prints the exact evidence labels required for OpenPLC, HMI, reboot and restore checkpoints. It refuses source drift, dirty runs, unverified experiment indexes and evidence hash mismatches.
 
-After full commissioning:
+After the controller/supervisory runtime is healthy, and **before Gate G's reboot test**:
 
 ```bash
 ./labctl runtime-verify
@@ -71,6 +71,10 @@ sudo ./deploy/install-systemd.sh
 ```
 
 Finally run all experiments, preserve their required evidence, reboot-test the daemon and perform a restore test.
+
+The [reader-first audit](docs/09-research/reader-first-audit-2026-09-07.md)
+records source defects, fixes, coverage and remaining runtime/learning work.
+GitHub is the publication target; a separate website is optional, not a release gate.
 
 Gate F aggregates comparable repetitions from the same clean commit. Finish with `./labctl commission finalize <run-dir>`. Neither the orchestrator nor the dossier builder converts missing evidence into a pass.
 

@@ -3,6 +3,19 @@
 Your first goal is concrete: **open the right interface and observe one Cargo
 signal change for an explainable reason**. Complete one route at a time.
 
+You can read this entire guide on GitHub. The two course-preview sections are
+optional; to run the lab, go from **Get a checkout** to **Prepare the lab host**.
+
+There are two different milestones:
+
+| Milestone | What works | What does not follow from that |
+|---|---|---|
+| First process exercise | Models and software I/O run; a teaching client commands the pump directly | The PLC, operator HMI and historian are not yet commissioned |
+| Full commissioning | Controllers, displays, history, experiments and recovery have retained passing evidence | The simulation is still not a real vessel or certified safety system |
+
+Do not run all command blocks on this page blindly. Choose a fresh or existing
+checkout, prepare the host, then choose a learning session or formal acceptance.
+
 ## Get a checkout
 
 For a new installation, run this from the directory where you keep projects:
@@ -108,8 +121,9 @@ python -m pip install -r requirements-ci.txt -r requirements-docs.txt
 docker info
 ```
 
-**Continue when:** review passes, doctor finds the tools, and `docker info`
-returns server information. Doctor checks tool availability; it does not prove daemon access.
+**Continue when:** review passes, doctor finds the tools and reaches the Docker
+daemon, and `docker info` returns server information. If it fails, fix the daemon
+or your access before building; a Docker version string alone is not enough.
 
 Initialize private credentials:
 
@@ -133,6 +147,10 @@ For a learning session, run:
 ```
 
 Build compiles the three FMUs and starts the process, I/O, coordinator, alarm and portal services.
+An FMU is the compiled process model that the Python runtime executes. Build now
+waits up to 180 seconds for started services to become running/healthy; this is
+a readiness timeout, not a promised total download/compilation duration. If it
+times out, retain the output and inspect service logs. Do not delete volumes.
 **Continue when:** smoke reports Cargo, PMS, Propulsion and Vessel PASS.
 Open the Learning Portal at **http://127.0.0.1:8500**, then follow the
 [first Cargo investigation](../06-scenarios/first-cargo-investigation.md).
@@ -143,6 +161,9 @@ individual build/demo route. It runs Gates A/B with retained logs, then requires
 live PLC evidence. Preserve its printed run directory and use
 [status/resume/record](commissioning-orchestrator.md).
 A manual-evidence pause is expected; it is not a complete commissioning result.
+Gate B establishes PMS power before testing Cargo and stops at the first failed
+step. A successful Cargo demo requires positive measured flow together with
+valve-open and pump-running feedback; a printed empty register list is not success.
 
 ## Which page should open?
 
