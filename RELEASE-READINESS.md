@@ -3,10 +3,12 @@
 This repository is a **release candidate for target-server commissioning**.
 
 **Learner-experience correction:** source gates do not establish that the course
-is complete or easy to follow. The [teaching backlog](docs/00-learning/learner-experience-backlog.md)
-tracks missing runtime illustrations, commissioned screen walkthroughs, full
-chapter reviews and independent learner testing. The illustrated introduction
-and first Cargo exercise are improvements under review, not a finished-course claim.
+is complete or easy to follow. The executable Learning Portal now opens on a
+seven-step Guided start instead of the reference dashboard, and missing live
+values remain visibly unknown. The [teaching backlog](docs/00-learning/learner-experience-backlog.md)
+still tracks commissioned screen walkthroughs, full chapter reviews and
+independent learner testing. This is a tested first-session path, not a claim
+that the complete course is finished.
 
 The [evidence-first upgrade audit](docs/09-research/upgrade-audit-2026-09-05.md)
 records the learning journey, verification repairs, evidence compatibility and
@@ -37,6 +39,7 @@ standalone course delivery. A course-container healthcheck is not OT acceptance.
 - repeated-run aggregation that preserves unavailable metrics
 - checksum-indexed Gates A–G acceptance dossier tooling
 - resumable commissioning orchestration with commit pinning, run-scoped outputs and hashed manual evidence
+- guided first-session structure, navigation, offline fallback and unavailable-data semantics
 
 ## What is intentionally NOT claimed yet
 

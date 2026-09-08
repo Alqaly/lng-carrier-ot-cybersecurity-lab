@@ -41,19 +41,34 @@ that liquid moved. Learning to separate those claims is the first objective.
 
 Read everything directly here on GitHub. A separate website is not required.
 
-## Choose one starting point
+## Start here
 
-| What you want | Start here | First useful result |
+Follow one path on your first visit:
+
+1. Read the [visual guide](docs/00-learning/visual-guide.md) before installing
+   anything. Leave when you can explain command, feedback and process result.
+2. Use [setup from a fresh or existing checkout](docs/04-build/first-run.md),
+   start the lab and complete **Guided start** in the Learning Portal.
+3. Complete the [first Cargo investigation](docs/06-scenarios/first-cargo-investigation.md),
+   then continue through the [learning journey](docs/00-learning/learning-journey.md).
+
+<details>
+<summary><strong>I already know which route I need</strong></summary>
+
+| Goal | Go directly to | Result |
 |---|---|---|
-| Understand the project without installing anything | [Visual guide](docs/00-learning/visual-guide.md) | Explain a pump command, feedback and flow measurement |
-| Run your first process exercise | [Setup from a fresh or existing checkout](docs/04-build/first-run.md) | Observe Cargo flow and decode its raw I/O values |
-| Investigate a running lab | [First Cargo investigation](docs/06-scenarios/first-cargo-investigation.md) | Distinguish a sensor bias from a pump failure |
-| Commission and validate the complete stack | [Gates A–G](docs/04-build/commissioning-orchestrator.md) | Retain evidence for PLC, HMI, historian, experiments and recovery |
+| Read without installing | [Visual guide](docs/00-learning/visual-guide.md) | Explain one Cargo signal chain |
+| Run the first exercise | [Setup](docs/04-build/first-run.md) | Complete the seven-step guided session |
+| Investigate a running lab | [Cargo investigation](docs/06-scenarios/first-cargo-investigation.md) | Separate bias from equipment failure |
+| Commission the complete stack | [Gates A–G](docs/04-build/commissioning-orchestrator.md) | Retain PLC, HMI, historian, experiment and recovery evidence |
 
-## Optional: view the same notes locally
+</details>
 
-Skip this section if you are reading on GitHub. This is a documentation preview,
-not the lab setup and not a requirement for any experiment.
+<details>
+<summary><strong>Optional: render the same notes locally</strong></summary>
+
+Skip this if you are reading on GitHub. This is a documentation preview, not
+the lab setup and not a requirement for any experiment.
 
 With Git, Docker and Docker Compose v2 already installed, run these commands **in a new directory**:
 
@@ -69,6 +84,8 @@ Stop it with `./labctl docs down`.
 Already have a checkout with local edits? Use the [existing-checkout instructions](docs/04-build/first-run.md#existing-checkout-with-local-changes) before updating.
 No Docker? The [native Python route](docs/04-build/first-run.md#read-the-course-without-docker) serves the same course.
 
+</details>
+
 ## Run the lab
 
 The reference target is a private Linux host with Docker Engine and Compose v2.
@@ -82,8 +99,18 @@ After completing its prerequisite steps:
 ./labctl smoke
 ```
 
-Open **http://127.0.0.1:8500** for the Learning Portal, then follow the
-[first Cargo exercise](docs/06-scenarios/first-cargo-investigation.md).
+Open **http://127.0.0.1:8500**. The Learning Portal now opens on **Guided
+start**, a seven-step first session that connects the process, electrical
+power, commands, feedback, Modbus, sensor bias and evidence. Every step tells
+you why it matters, what to do, what result to expect, what to inspect if it is
+different, and what you should be able to explain afterward. The portal is
+read-only; it displays model observations but does not issue process commands.
+
+![First-session teaching schematic separating the liquid, electrical and information paths](portal/static/diagrams/first-session.svg)
+
+After the guided session, use the detailed
+[first Cargo investigation](docs/06-scenarios/first-cargo-investigation.md) and
+then the [ten-module learning journey](docs/00-learning/learning-journey.md).
 The first build downloads images and compiles three FMUs; there is no measured universal installation time or minimum hardware size yet.
 
 At this stage, direct Modbus exercises let you study the process before configuring the PLCs.

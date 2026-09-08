@@ -132,3 +132,19 @@ def test_build_requests_bounded_health_wait():
     text = (ROOT / 'labctl').read_text()
     build = text.split('cmd_build(){', 1)[1].split('cmd_up(){', 1)[0]
     assert '--wait --wait-timeout 180' in build
+
+
+def test_learning_portal_is_portable_concurrent_and_fails_closed():
+    source = (ROOT / 'portal/app.py').read_text()
+    assert 'Path(__file__).with_name("static")' in source
+    assert 'asyncio.gather' in source
+    assert '"error": "upstream unavailable"' in source
+    assert '"scope": "portal-content-only"' in source
+    assert 'str(e)' not in source
+
+
+def test_learning_portal_container_runs_as_an_unprivileged_user():
+    dockerfile = (ROOT / 'portal/Dockerfile').read_text()
+    assert 'USER 10001:10001' in dockerfile
+    assert 'EXPOSE 8500' in dockerfile
+    assert 'pip install --no-cache-dir' in dockerfile

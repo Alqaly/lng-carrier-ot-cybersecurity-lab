@@ -21,6 +21,8 @@ No target dossier or runtime screenshots were supplied for this pass.
 | Finding | Consequence | Repair / regression coverage |
 |---|---|---|
 | README leads with research and optional course hosting | Reader meets unfamiliar names before understanding the process | Introduce unloading, power dependency, five terms and command/feedback/flow first; mark hosting optional |
+| Learning Portal opens as nine equally weighted reference panels | A first-time learner sees data but no connected task, sequence or stopping point | Open on a seven-step Guided start; move reference panels behind progressive disclosure; test default route, navigation and offline fallback |
+| Missing model telemetry is formatted as zero or OFF | A transport/service failure can look like a real process state | Preserve `UNKNOWN`, `unavailable` and em-dash states; clear stale live-dashboard values after a failed snapshot |
 | Competing start documents say loading/unloading and give different build orders | Reader cannot tell which physical direction or dependency is intended | Correct root START-HERE to unloading and align acceptance order |
 | Doctor/preflight check Docker installation but not daemon access | Setup appears valid although build cannot contact Docker | Check `docker info`; test unreachable daemon with a fake CLI |
 | Build starts services without a bounded health wait | Immediate smoke can race startup | Request Compose health wait with a 180-second timeout |
@@ -35,10 +37,10 @@ No target dossier or runtime screenshots were supplied for this pass.
 Regression fixtures live in `tests/test_reader_first_audit.py`. They simulate
 failures; they are not collected evidence from a PLC or vessel.
 
-Local verification after repairs: **146 Python test cases passed**, all
-`./labctl review` source gates passed, strict MkDocs build passed, six JavaScript
+Local verification after repairs: **148 Python test cases passed**, all
+`./labctl review` source gates passed, strict MkDocs build passed, fifteen JavaScript
 behavior tests passed, changed shell scripts passed `bash -n`, and
-`git diff --check` passed. The manifest counts **144 test functions**; two
+`git diff --check` passed. The manifest counts **146 test functions**; two
 parameterized functions produce the additional cases. The manifest regression
 now derives that count rather than asserting a stale hard-coded total.
 
@@ -46,7 +48,7 @@ now derives that count rather than asserting a stale hard-coded total.
 
 | Area | Coverage in this pass | Still required |
 |---|---|---|
-| Reader entry/setup | README, START-HERE, first-run, Cargo exercise, gate guide, acceptance checklist | Author follows revised path and explains the first observation without help |
+| Reader entry/setup | README, START-HERE, first-run, seven-step portal guide, Cargo exercise, gate guide, acceptance checklist | Independent learner follows the revised path and explains the first observation without help |
 | Runtime launch | labctl, preflight, secrets entry, Compose process health/dependency definitions | Fresh Docker-host build, FMU execution and state sanity |
 | Protocol demos | Connection/read/write error handling, Cargo observation, PMS prerequisite, Gate B sequencing | Actual device behavior, timing and all fault cleanup paths |
 | Acceptance evidence | Resume/finalize, prior-attempt retention, resource retry, dossier command order | Complete Gates A–G; independent verification of manual observations |

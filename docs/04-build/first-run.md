@@ -152,9 +152,18 @@ waits up to 180 seconds for started services to become running/healthy; this is
 a readiness timeout, not a promised total download/compilation duration. If it
 times out, retain the output and inspect service logs. Do not delete volumes.
 **Continue when:** smoke reports Cargo, PMS, Propulsion and Vessel PASS.
-Open the Learning Portal at **http://127.0.0.1:8500**, then follow the
+Open the Learning Portal at **http://127.0.0.1:8500**. It starts on **Guided
+start**, not on a wall of dashboards. Follow all seven steps in order. Each
+step explains the current layer, gives one safe learning action, names the
+expected observation and provides a troubleshooting branch. The portal does
+not send control commands; commands shown there must be run deliberately in a
+repository terminal on the isolated lab.
+
+The guided session establishes PMS power before requesting Cargo flow and then
+links the result to the detailed
 [first Cargo investigation](../06-scenarios/first-cargo-investigation.md).
-That exercise establishes PMS power before requesting Cargo flow.
+Unavailable live values remain labelled unavailable rather than being rendered
+as zero or OFF.
 
 For formal acceptance, choose `./labctl commission start` instead of the
 individual build/demo route. It runs Gates A/B with retained logs, then requires

@@ -1,16 +1,20 @@
 # Start Here
 
-Start with the [visual process/signal/packet guide](docs/00-learning/visual-guide.md).
-Then use [setup](docs/04-build/first-run.md) and the
-[first Cargo investigation](docs/06-scenarios/first-cargo-investigation.md).
-Those pages give you the initial state, commands, observations and recovery steps.
-
 This is a software-only lab for learning how a physical process, controller and
 network explain the same event. Read the notes directly on GitHub; no website is required.
 
-Do not begin with packet captures.
+Your first session has one route:
 
-Begin by understanding what the process is supposed to do.
+1. Read the [visual process/signal/packet guide](docs/00-learning/visual-guide.md).
+2. Follow [setup](docs/04-build/first-run.md) and run `./labctl build`.
+3. Open **http://127.0.0.1:8500** and complete the seven-step **Guided start**.
+4. Use the [first Cargo investigation](docs/06-scenarios/first-cargo-investigation.md)
+   to collect and interpret your own observations.
+
+Each step tells you what to do, what should happen and what to inspect if it
+does not. Do not begin with packet captures. Begin by understanding what the
+process is supposed to do.
+
 
 ## The central question
 
@@ -63,7 +67,7 @@ OpenModelica equation
 
 Nothing should appear in Grafana simply because it “looks realistic.”
 
-## Learning order
+## Longer roadmap — after the first session
 
 ### 1. Vessel
 Understand Cargo, PMS, propulsion, safety, bridge, engineering and ship/shore relationships.
