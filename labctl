@@ -24,6 +24,7 @@ cmd_doctor(){
   say "Checking prerequisites"
   have docker || fail "Docker is not installed or not in PATH."
   docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 is unavailable."
+  docker info >/dev/null 2>&1 || fail "Docker daemon is unreachable. Check daemon status and your user access; do not chmod the Docker socket."
   have python3 || fail "Python 3 is unavailable."
   printf 'Docker: %s\n' "$(docker --version)"
   printf 'Compose: %s\n' "$(docker compose version)"
@@ -35,7 +36,7 @@ cmd_build(){
   say "Compiling Cargo, PMS and Propulsion FMUs"
   docker compose run --rm modelica-builder
   say "Starting process models, I/O, alarm chronicle and learning portal"
-  docker compose up -d --build cargo-plant pms-plant propulsion-plant cargo-io pms-io propulsion-io vessel-coordinator alarm-engine learning-portal
+  docker compose up -d --build --wait --wait-timeout 180 cargo-plant pms-plant propulsion-plant cargo-io pms-io propulsion-io vessel-coordinator alarm-engine learning-portal
   cmd_status
 }
 cmd_up(){

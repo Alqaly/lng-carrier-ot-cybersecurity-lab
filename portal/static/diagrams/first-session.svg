@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 460" role="img" aria-labelledby="title desc">
+<title id="title">One transfer, three different paths</title><desc id="desc">Liquid goes from ship tank through pump and valve to shore. PMS supplies pump power. A teaching client or commissioned PLC exchanges Modbus commands and feedback with software I/O. PLC values later travel via OPC UA to the HMI and historian. This is an explanatory diagram, not runtime evidence.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker></defs>
+<rect width="860" height="460" rx="12" fill="#f3f7f8"/>
+<g font-family="system-ui,sans-serif" fill="#203945">
+<text x="24" y="32" font-size="20" font-weight="700">One transfer • follow the liquid, power and information separately</text>
+<rect x="268" y="52" width="240" height="58" rx="7" fill="#fff3d6" stroke="#936318"/><text x="290" y="77" font-size="17">PMS: generator → bus</text><text x="290" y="98" font-size="13">Power availability via coordinator</text>
+<path d="M310 110V165" stroke="#936318" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="30" y="165" width="165" height="86" rx="7" fill="#dbedf5" stroke="#1f6586"/><text x="50" y="197" font-size="18">Ship inventory</text><text x="50" y="223" font-size="15">Level falls</text>
+<rect x="263" y="165" width="110" height="86" rx="7" fill="white" stroke="#1f6586"/><text x="290" y="210" font-size="18">Pump</text>
+<rect x="446" y="165" width="110" height="86" rx="7" fill="white" stroke="#1f6586"/><text x="474" y="210" font-size="18">Valve</text>
+<rect x="640" y="165" width="187" height="86" rx="7" fill="#dbedf5" stroke="#1f6586"/><text x="659" y="197" font-size="18">Shore receiver</text><text x="659" y="223" font-size="15">Level rises</text>
+<path d="M195 205H261M373 205H444M556 205H638" stroke="#1f6586" stroke-width="4" marker-end="url(#arrow)"/>
+<text x="559" y="184" font-size="14">Flow</text>
+<path d="M318 253V277H502V253" fill="none" stroke="#677783" stroke-width="2" stroke-dasharray="5 4"/>
+<rect x="260" y="298" width="280" height="56" rx="7" fill="#fff" stroke="#677783"/><text x="282" y="321" font-size="17">Software I/O: commands + feedback</text><text x="282" y="342" font-size="14">Flow measurement → input register 2</text>
+<path d="M400 277V297" stroke="#677783" stroke-width="2"/>
+<rect x="30" y="298" width="180" height="56" rx="7" fill="#e8f1e9" stroke="#3d6845"/><text x="43" y="321" font-size="14">Teaching client OR PLC</text><text x="43" y="342" font-size="13">One command owner</text>
+<path d="M212 326H258" stroke="#3d6845" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"/><text x="212" y="288" font-size="13">Modbus</text>
+<rect x="575" y="385" width="250" height="48" rx="7" fill="#eee9f7" stroke="#725b91"/><text x="592" y="414" font-size="17">HMI display / historian record</text>
+<path d="M115 355V409H570" fill="none" stroke="#725b91" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/><text x="181" y="396" font-size="14">PLC → OPC UA • later commissioning</text>
+<text x="24" y="452" font-size="12">Teaching schematic, not a vessel P&amp;ID or captured result. Portal readings come separately from model HTTP APIs.</text>
+</g></svg>

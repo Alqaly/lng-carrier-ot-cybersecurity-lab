@@ -26,9 +26,10 @@ Pass condition: no failed static/research/pedagogy/traceability gate and rendere
 ```bash
 ./labctl build
 ./labctl smoke
-./labctl demo cargo
 ./labctl demo pms
+./labctl demo cargo
 ./labctl demo propulsion
+./labctl demo vessel
 ```
 
 These demos deliberately bypass the PLC. Pass condition: each dynamic model responds causally and the software I/O carries the expected Modbus values.

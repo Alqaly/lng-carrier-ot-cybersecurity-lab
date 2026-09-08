@@ -1,0 +1,93 @@
+{
+    "id": "lng-first-session-v1",
+    "title": "Explain one cargo transfer",
+    "outcome": "Trace a pump request into equipment feedback, liquid movement and a Modbus value; then explain why a sensor reading can disagree with the process.",
+    "evidence_boundary": "Saved notes and portal readings support practice, not acceptance evidence. Retain captures and commissioning outputs separately.",
+    "claim_boundary": "The lab is not commissioned until Gates A–G produce a final acceptance dossier whose result is FINAL: PASS.",
+  "steps": [
+    {
+      "id": "process",
+      "title": "First, follow the liquid",
+      "layer": "process",
+      "why": "An LNG carrier transports liquefied natural gas. In this simplified unloading model, liquid leaves the ship inventory, passes through a pump and valve, and enters a shore receiver. The source level falls only when liquid actually leaves it.",
+      "action": "Read the diagram from left to right. Point to the liquid path and then the separate electrical supply. No command is required yet.",
+      "command": "",
+      "expect": "You can identify the source, pump, valve and destination. Nothing here represents physical gas: the process is calculated by equations, while the lab runs real networking software.",
+      "trouble": "Live values may be unavailable while the models start. You can still read the lesson. Do not interpret unavailable data as a zero measurement.",
+      "explain": "Why is a falling source-tank level stronger evidence of transfer than a start request?",
+      "reference": "docs/00-learning/visual-guide.md"
+    },
+    {
+      "id": "power",
+      "title": "Give the pump electrical power",
+      "layer": "power",
+      "why": "PMS means power management system. A generator produces electricity; its breaker connects it to the bus, the shared supply. The Vessel Coordinator passes bus availability to the cargo model. A pump command cannot create its own electrical supply.",
+      "action": "On an isolated learning deployment with OpenPLC programs stopped, run this in the repository terminal. The demonstration controls software I/O directly and leaves generation running.",
+      "command": "./labctl demo pms",
+      "expect": "The live bus and cargo-power indicators below should become AVAILABLE. Inspect links.busAvailable and links.cargoPowerAvailable in the coordinator response before continuing.",
+      "trouble": "If either is false, inspect PMS and coordinator state. If it is unavailable, inspect service health. Do not diagnose the cargo pump until supply is established.",
+      "explain": "What is the difference between a running generator and an energized bus?",
+      "reference": "docs/03-architecture/vessel-profile.md"
+    },
+    {
+      "id": "transfer",
+      "title": "Separate request, feedback and result",
+      "layer": "control",
+      "why": "The demo requests valve opening and pump start through Modbus TCP. Feedback reports equipment state. Flow is the process consequence. Those are three different claims: a successful command response alone proves neither motor rotation nor liquid movement.",
+      "action": "Run the Cargo demo after power is available. Watch the read-only values below during the run. This is pre-PLC practice: do not run it while a PLC owns the same outputs or during a retained experiment.",
+      "command": "./labctl demo cargo",
+      "expect": "Valve feedback becomes true, pump feedback follows and measured flow rises. Source level falls and destination level rises, possibly by only a small amount. The demo then stops the pump and closes the valve; measurements settle gradually.",
+      "trouble": "No flow? Check power, valve position, pump feedback and active faults. A missing reading is not an OFF state. An interrupted demo requires checking neutral commands before retrying.",
+      "explain": "If pump feedback is true and measured flow is zero, what two different explanations should you investigate?",
+      "reference": "docs/06-scenarios/first-cargo-investigation.md"
+    },
+    {
+      "id": "packet",
+      "title": "Find the measurement inside a message",
+      "layer": "protocol",
+      "why": "Modbus TCP carries numbers, not their physical meaning. A read-input-register request uses function 04. Cargo input register 2 stores measured flow in whole m³/h. A different register table at address 2 would mean something else.",
+      "action": "Use two repository terminals. Start capture first; wait until tcpdump reports it is listening. Run the Cargo demo in the other terminal, then Ctrl-C the capture. Open the saved PCAP in Wireshark; filter tcp.port == 5020 and use Decode As → Modbus/TCP if needed. Preserve an existing default capture before recording another.",
+      "command": "# Terminal 1\n./labctl capture cargo modbus\n# Terminal 2, after capture is listening\n./labctl demo cargo",
+      "expect": "Locate the FC04 request and matching response by transaction ID. The demo reads seven registers starting at zero: flow is the third register. The illustrative single-register response below contains 07 08 hex = 1800 decimal = 1800 m³/h = 0.5 m³/s. Your actual capture will vary.",
+      "trouble": "Only TCP visible? Check Decode As and the non-default port. No traffic? Check that capture was listening before the demo and that you selected the Cargo I/O namespace. A valid packet does not prove that its sender was authorized.",
+      "explain": "Where do you obtain units and signal names if they are not carried in the response?",
+      "reference": "docs/05-protocols/packet-labs.md"
+    },
+    {
+      "id": "bias",
+      "title": "Investigate a reading that lies",
+      "layer": "measurement",
+      "why": "A biased sensor changes reported flow without creating extra liquid transfer. Research motivates comparing independent evidence: tank-level change estimates actual transfer while the transmitter reports a measurement. Their difference is a residual, not an automatic attack verdict.",
+      "action": "Predict what will change first. With PMS still available and the PLCs stopped, run the controlled fault exercise. Compare actual model flow and measured flow below. The script labels normal transfer, +20% bias and pump failure; it is not an unauthorized intrusion.",
+      "command": "./labctl demo cargo-fault",
+      "expect": "After sensor lag, biased measured flow tends toward 1.2 × actual flow. The later pump failure reduces speed and actual flow. On normal completion the exercise clears the injected inputs and stops transfer.",
+      "trouble": "Do not use a transient mismatch as a diagnosis. Sensor lag and timestamp alignment matter. If interrupted, do not assume cleanup ran: stop the temporary learning stack with docker compose stop and inspect before restarting. Do not use this stop command on a managed or shared deployment.",
+      "explain": "Why might the network carry a perfectly valid message containing a physically misleading value?",
+      "reference": "docs/09-research/research-to-model-matrix.md"
+    },
+    {
+      "id": "supervision",
+      "title": "Know what the portal does not prove",
+      "layer": "supervision",
+      "why": "This portal reads model HTTP APIs. It does not obtain the values below from PLC tags, Modbus captures, OPC UA or the historian. OPC UA later publishes named controller values, status and timestamps to operator displays and history. That path must be commissioned separately.",
+      "action": "Trace the second path in the diagram: I/O ↔ PLC, then PLC → OPC UA → HMI/historian. Read the controller commissioning guide before starting those services. No guessed NodeIds and no blind copy of another host's bindings.",
+      "command": "",
+      "expect": "You can distinguish a live model, a working control loop and a working supervisory display. A model can keep running while OPC UA publication or historian ingestion fails.",
+      "trouble": "An unbound FUXA screen does not mean the model failed. Likewise, live portal values do not prove FUXA, the PLC or historian is working.",
+      "explain": "If the portal updates but the operator display is stale, which path would you inspect?",
+      "reference": "docs/04-build/openplc-editor-commissioning.md"
+    },
+    {
+      "id": "explain",
+      "title": "Leave with an explanation, not a checkbox",
+      "layer": "evidence",
+      "why": "The first-session outcome is a defensible account of one event. More tabs visited or commands copied do not establish understanding. A public project should let another learner repeat your observations and challenge your conclusion.",
+      "action": "Write four sentences: what you expected, what you observed, which packet or model value supports it, and what remains uncertain. Keep your packet capture separately. Export the private practice notes below if you want to retain them.",
+      "command": "",
+      "expect": "You can explain the chain power → request → feedback → transfer → measurement → packet, and distinguish bias from equipment failure using more than one observation.",
+      "trouble": "If you cannot explain a link, return to that step. Practice progress is self-reported and is not accepted runtime evidence, a qualification or Gates A–G completion.",
+      "explain": "What does your evidence establish, and what does it not establish?",
+      "reference": "docs/00-learning/learning-journey.md"
+    }
+  ]
+}

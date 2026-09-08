@@ -3,10 +3,12 @@
 This repository is a **release candidate for target-server commissioning**.
 
 **Learner-experience correction:** source gates do not establish that the course
-is complete or easy to follow. The [teaching backlog](docs/00-learning/learner-experience-backlog.md)
-tracks missing runtime illustrations, commissioned screen walkthroughs, full
-chapter reviews and independent learner testing. The illustrated introduction
-and first Cargo exercise are improvements under review, not a finished-course claim.
+is complete or easy to follow. The executable Learning Portal now opens on a
+seven-step Guided start instead of the reference dashboard, and missing live
+values remain visibly unknown. The [teaching backlog](docs/00-learning/learner-experience-backlog.md)
+still tracks commissioned screen walkthroughs, full chapter reviews and
+independent learner testing. This is a tested first-session path, not a claim
+that the complete course is finished.
 
 The [evidence-first upgrade audit](docs/09-research/upgrade-audit-2026-09-05.md)
 records the learning journey, verification repairs, evidence compatibility and
@@ -37,6 +39,7 @@ standalone course delivery. A course-container healthcheck is not OT acceptance.
 - repeated-run aggregation that preserves unavailable metrics
 - checksum-indexed Gates A–G acceptance dossier tooling
 - resumable commissioning orchestration with commit pinning, run-scoped outputs and hashed manual evidence
+- guided first-session structure, navigation, offline fallback and unavailable-data semantics
 
 ## What is intentionally NOT claimed yet
 
@@ -63,7 +66,7 @@ Those claims become valid only after `docs/04-build/server-acceptance-test.md` G
 
 Preserve the printed run directory and use `./labctl commission resume <run-dir>`. The orchestrator completes the automatable gates and prints the exact evidence labels required for OpenPLC, HMI, reboot and restore checkpoints. It refuses source drift, dirty runs, unverified experiment indexes and evidence hash mismatches.
 
-After full commissioning:
+After the controller/supervisory runtime is healthy, and **before Gate G's reboot test**:
 
 ```bash
 ./labctl runtime-verify
@@ -71,6 +74,10 @@ sudo ./deploy/install-systemd.sh
 ```
 
 Finally run all experiments, preserve their required evidence, reboot-test the daemon and perform a restore test.
+
+The [reader-first audit](docs/09-research/reader-first-audit-2026-09-07.md)
+records source defects, fixes, coverage and remaining runtime/learning work.
+GitHub is the publication target; a separate website is optional, not a release gate.
 
 Gate F aggregates comparable repetitions from the same clean commit. Finish with `./labctl commission finalize <run-dir>`. Neither the orchestrator nor the dossier builder converts missing evidence into a pass.
 

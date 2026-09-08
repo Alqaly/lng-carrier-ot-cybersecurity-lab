@@ -4,6 +4,14 @@ Start with the vessel. Finish by defending an investigation with evidence.
 You do not need Docker to begin. Read the chapters and complete the paper
 exercises first; live exercises require an isolated, commissioned lab.
 
+If you already started the executable lab with `./labctl build`, open
+**http://127.0.0.1:8500** and complete **Guided start** first. It is the default
+portal view and walks through one Cargo transfer in seven connected steps:
+process, power, transfer, packet, sensor bias, supervision and explain-back.
+The portal remains readable when model telemetry is unavailable and never
+substitutes a sample value for a missing live value. Its saved notes are private
+practice, not commissioning evidence.
+
 Choose a path below. Progress stays in this browser on this device. Check a
 module only after attempting its explain-back without notes. It is a practice
 record, **not a certificate, verified evidence or a commissioned release**.

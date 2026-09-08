@@ -13,35 +13,62 @@ This lab lets you connect electrical supply, equipment feedback, measurement int
 *Original explanatory schematic of the aggregate teaching model, not a vessel P&ID or a screenshot.*
 The shore receiver is a mass-balance boundary. The lab does not model a complete cryogenic terminal.
 
-## What the research changed—not just what we cited
+## Understand the lab before installing it
 
-The papers did not provide a ready-made LNG-carrier model. They changed concrete
-engineering choices in this repository:
+An LNG carrier transports liquefied natural gas. This lab studies a simplified
+**unloading** operation: liquid leaves the ship through a pump and valve and
+enters a shore receiving inventory. The pump needs electrical power. The vessel's
+power management system (PMS) supplies it. Losing that supply can stop transfer
+even when nobody changes the pump command.
 
-| Published work | Decision implemented here | Where you can test it |
+The liquid is simulated; no gas or physical machinery is involved. The networking
+software exchanges real protocol messages inside the lab's Docker networks.
+Use a private lab host, never a vessel or employer's operational network.
+
+Five terms are enough to start:
+
+| Term | What it means in this project |
+|---|---|
+| Plant/model | Equations that calculate levels, flow, speed and electrical state |
+| I/O (input/output) | The software device translating commands and measurements into addresses |
+| PLC (programmable logic controller) | Software running the rules for when equipment may start or must stop |
+| Modbus TCP | Messages carrying reads/writes between a controller and an I/O device |
+| HMI / historian | The operator display / the record of how values changed over time |
+
+**Command is not feedback, and feedback is not flow.** “Start pump” is a request;
+“pump running” is an equipment indication; a changing tank inventory is evidence
+that liquid moved. Learning to separate those claims is the first objective.
+
+Read everything directly here on GitHub. A separate website is not required.
+
+## Start here
+
+Follow one path on your first visit:
+
+1. Read the [visual guide](docs/00-learning/visual-guide.md) before installing
+   anything. Leave when you can explain command, feedback and process result.
+2. Use [setup from a fresh or existing checkout](docs/04-build/first-run.md),
+   start the lab and complete **Guided start** in the Learning Portal.
+3. Complete the [first Cargo investigation](docs/06-scenarios/first-cargo-investigation.md),
+   then continue through the [learning journey](docs/00-learning/learning-journey.md).
+
+<details>
+<summary><strong>I already know which route I need</strong></summary>
+
+| Goal | Go directly to | Result |
 |---|---|---|
-| Cyber-SHIP | Treat Cargo, PMS and machinery as a connected system and label simulation/emulation/live-software fidelity | `vessel/coordinator.py` and `EXP-PMS-GEN-TRIP` |
-| Cyber-MAR | Build the integrated scenario from an operational dependency—electrical supply—before inventing an attack story | PMS → Cargo/machinery power propagation |
-| Lee's LNG-carrier PMS HIL study | Expose load sharing, reserve-based generator start, blackout state and staged load shedding | `PowerManagementPlant.mo`, `PowerManagement.st` and the generator-trip evaluator |
-| Mueller, Ziras & Heussen | Compare network-only, process-only and cross-layer investigations before claiming improvement | investigation capstone and `config/detection-claims.json` |
-| Ghaeini et al. | Check a reported sensor value against expected physical behavior | Cargo tank-mass-balance residual and `EXP-CARGO-SENSOR-BIAS` |
+| Read without installing | [Visual guide](docs/00-learning/visual-guide.md) | Explain one Cargo signal chain |
+| Run the first exercise | [Setup](docs/04-build/first-run.md) | Complete the seven-step guided session |
+| Investigate a running lab | [Cargo investigation](docs/06-scenarios/first-cargo-investigation.md) | Separate bias from equipment failure |
+| Commission the complete stack | [Gates A–G](docs/04-build/commissioning-orchestrator.md) | Retain PLC, HMI, historian, experiment and recovery evidence |
 
-Read [What the Research Changed](docs/09-research/research-to-model-matrix.md)
-for the source → decision → code → learner action → evidence → limitation chain.
-The machine-readable contract is checked in CI. Published results from those
-papers are **not** presented as results of this project.
+</details>
 
-## Choose one starting point
+<details>
+<summary><strong>Optional: render the same notes locally</strong></summary>
 
-| What you want | Start here | First useful result |
-|---|---|---|
-| Understand the project without installing anything | [Visual guide](docs/00-learning/visual-guide.md) | Explain a pump command, feedback and flow measurement |
-| Read the course in your browser | Course commands below | A local website with search and learning checkpoints |
-| Run your first process exercise | [Setup from a fresh or existing checkout](docs/04-build/first-run.md) | Observe Cargo flow and decode its raw I/O values |
-| Investigate a running lab | [First Cargo investigation](docs/06-scenarios/first-cargo-investigation.md) | Distinguish a sensor bias from a pump failure |
-| Commission and validate the complete stack | [Gates A–G](docs/04-build/commissioning-orchestrator.md) | Retain evidence for PLC, HMI, historian, experiments and recovery |
-
-## Open the course
+Skip this if you are reading on GitHub. This is a documentation preview, not
+the lab setup and not a requirement for any experiment.
 
 With Git, Docker and Docker Compose v2 already installed, run these commands **in a new directory**:
 
@@ -57,6 +84,8 @@ Stop it with `./labctl docs down`.
 Already have a checkout with local edits? Use the [existing-checkout instructions](docs/04-build/first-run.md#existing-checkout-with-local-changes) before updating.
 No Docker? The [native Python route](docs/04-build/first-run.md#read-the-course-without-docker) serves the same course.
 
+</details>
+
 ## Run the lab
 
 The reference target is a private Linux host with Docker Engine and Compose v2.
@@ -70,8 +99,18 @@ After completing its prerequisite steps:
 ./labctl smoke
 ```
 
-Open **http://127.0.0.1:8500** for the Learning Portal, then follow the
-[first Cargo exercise](docs/06-scenarios/first-cargo-investigation.md).
+Open **http://127.0.0.1:8500**. The Learning Portal now opens on **Guided
+start**, a seven-step first session that connects the process, electrical
+power, commands, feedback, Modbus, sensor bias and evidence. Every step tells
+you why it matters, what to do, what result to expect, what to inspect if it is
+different, and what you should be able to explain afterward. The portal is
+read-only; it displays model observations but does not issue process commands.
+
+![First-session teaching schematic separating the liquid, electrical and information paths](portal/static/diagrams/first-session.svg)
+
+After the guided session, use the detailed
+[first Cargo investigation](docs/06-scenarios/first-cargo-investigation.md) and
+then the [ten-module learning journey](docs/00-learning/learning-journey.md).
 The first build downloads images and compiles three FMUs; there is no measured universal installation time or minimum hardware size yet.
 
 At this stage, direct Modbus exercises let you study the process before configuring the PLCs.
@@ -119,6 +158,37 @@ That study uses physical test equipment; this project is software-based.
 [Marine reference](docs/01-vessel/marine-automation-reference.md) ·
 [Research limitations](docs/09-research/experimental-claim-boundaries.md)
 
+## What “research-based” means here
+
+It means a published idea led to a specific testable choice—not that citing a
+paper proves this lab works, or that its author invented every underlying idea.
+
+Consider the sensor-bias exercise. A network packet can correctly carry an
+incorrect measurement. To check it independently, the lab estimates flow from
+how quickly the source tank empties, then compares that estimate with the
+flow transmitter. That difference is called a **residual**.
+
+Worked example, **not a captured result**: a tank area of 1250 m² and a level
+drop of 0.004 m over 10 seconds imply `1250 × 0.004 / 10 = 0.5 m³/s`.
+If the transmitter reports 0.6 m³/s, the discrepancy is 20%. This is a reason
+to investigate; it is not proof of an attack. Sensor lag, timing errors or a
+wrong tank model can also create disagreement.
+
+The calculation lives in [process_residual.py](security/process_residual.py).
+The [research explanation](docs/09-research/research-to-model-matrix.md)
+connects the published work to this implementation, its exercise and its limits.
+
+| Research-informed choice | What you actually do |
+|---|---|
+| Coupled ship systems (Cyber-SHIP / Cyber-MAR) | Check PMS power before blaming Cargo control |
+| Observable PMS behavior (Lee's LNG-carrier study) | Follow generator trip → bus loss → downstream effect |
+| Physical consistency checking (Ghaeini et al.) | Compare measured flow with tank-level-derived flow |
+| Compare evidence conditions (Mueller, Ziras & Heussen) | Investigate the same event with network-only, process-only and combined evidence |
+
+These are adaptations, not reproductions of those papers' apparatus or algorithms.
+The repository does **not yet have results proving that combined evidence performs
+better**. The machine-readable research contract checks traceability, not scientific validity.
+
 ## What is still missing?
 
 **This is a developing educational lab. A green CI badge does not certify the learning experience or the live control loop.**
@@ -144,5 +214,5 @@ check the initial state, each command, the expected observation and the recovery
 A useful figure needs readable labels, a teaching question and a clear source/evidence status.
 
 [Learning journey](docs/00-learning/learning-journey.md) ·
-[Full course](docs/start-here.md) ·
-[Website and Docker delivery](docs/04-build/website-and-docker.md)
+[Full course on GitHub](docs/start-here.md) ·
+[Optional local documentation preview](docs/04-build/website-and-docker.md)

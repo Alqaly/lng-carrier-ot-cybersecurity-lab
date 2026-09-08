@@ -27,7 +27,7 @@ host or a checkout with local edits, complete [safe first run](first-run.md) fir
 This creates `evidence/commissioning/<timestamp>-gates-a-g/` and runs:
 
 - Gate A: preflight, complete static/research gates, rendered Compose validation without interpolating secrets;
-- Gate B: FMU/container build, runtime smoke, Cargo/PMS/Propulsion commissioning demos, and the cross-domain demo.
+- Gate B: FMU/container build, runtime smoke, **PMS first to establish power**, Cargo, Propulsion, and the cross-domain demo. A failed step stops this sequence.
 
 The command prints the run directory. Preserve that exact path for every following command:
 
@@ -37,6 +37,40 @@ RUN=evidence/commissioning/<timestamp>-gates-a-g
 ```
 
 Exit status `0` means the invoked automatic step completed, `2` means a validation failed, and `3` means the next gate requires live/manual evidence.
+
+## Preserve and diagnose a partial run
+
+Do not select a run merely because its directory is newest. Use the exact path
+printed when you started that acceptance session. `status` is read-only and
+reports retained evidence; it is not a new live health check. Its exit code is
+not the acceptance decision—read the gate lines and final result.
+
+Before CLI `run`, `resume`, `record` or `finalize` changes an existing run, it
+copies that entire run to `evidence/commissioning/history/<run-name>/before-*/run`.
+This preserves previous logs, hashes and attachments before a retry or deliberate
+replacement. These are independent copies, not hard links. Allow disk space for
+each copy; a failed copy aborts the operation. Keep one operator per run—concurrent
+commissioning commands are not supported. History is private, ignored by Git,
+and must be included in your evidence-retention/backup policy.
+
+If a checkpoint fails:
+
+```bash
+./labctl commission status "$RUN"
+```
+
+Inspect the failed artifact's `commands` list for the nonzero `exit_code` and its
+run-relative `log` path. Review logs locally and redact credentials before sharing.
+Fix the cause, then `./labctl commission resume "$RUN"`. Failed resource profiles
+are retried; invalid manual evidence is reported instead of silently skipped.
+No recorder can determine whether your screenshot observation is truthful:
+the operator must inspect it, and should not copy the example observation text
+unless it describes what actually happened.
+
+Do not pull or change source during a run. `finalize` and `resume` now explicitly
+check the current clean source against the frozen snapshot, including when every
+stored gate already says PASS. A source change needs a new commissioning run;
+never edit the old run's provenance to make it match.
 
 ## Gate C — record live PLC evidence
 
