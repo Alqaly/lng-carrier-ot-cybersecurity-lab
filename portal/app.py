@@ -31,6 +31,9 @@ CONTRACT_SOURCES = {
     "propulsion": "http://propulsion-plant:8300/contract",
 }
 
+LIST_SOURCES = frozenset({"alarms", "catalog", "history"})
+Payload = dict[str, Any] | list[dict[str, Any]]
+
 
 @app.get("/")
 def home() -> FileResponse:
@@ -48,12 +51,15 @@ def health() -> dict[str, Any]:
     }
 
 
-async def fetch_json(client: httpx.AsyncClient, url: str) -> dict[str, Any]:
+async def fetch_json(client: httpx.AsyncClient, url: str, *, expect_list: bool = False) -> Payload:
     try:
         response = await client.get(url)
         response.raise_for_status()
         payload = response.json()
-        if not isinstance(payload, dict):
+        if expect_list:
+            if not isinstance(payload, list) or not all(isinstance(item, dict) for item in payload):
+                raise ValueError("upstream response is not a list of objects")
+        elif not isinstance(payload, dict):
             raise ValueError("upstream response is not an object")
         return payload
     except (httpx.HTTPError, ValueError):
@@ -62,22 +68,22 @@ async def fetch_json(client: httpx.AsyncClient, url: str) -> dict[str, Any]:
 
 
 async def fetch_all(
-    client: httpx.AsyncClient, sources: dict[str, str]
-) -> dict[str, dict[str, Any]]:
+    client: httpx.AsyncClient, sources: dict[str, str], *, list_sources: frozenset[str] = frozenset()
+) -> dict[str, Payload]:
     results = await asyncio.gather(
-        *(fetch_json(client, url) for url in sources.values())
+        *(fetch_json(client, url, expect_list=name in list_sources) for name, url in sources.items())
     )
     return dict(zip(sources, results, strict=True))
 
 
 @app.get("/api/snapshot")
-async def snapshot() -> dict[str, dict[str, Any]]:
+async def snapshot() -> dict[str, Payload]:
     async with httpx.AsyncClient(timeout=1) as client:
-        return await fetch_all(client, SNAPSHOT_SOURCES)
+        return await fetch_all(client, SNAPSHOT_SOURCES, list_sources=LIST_SOURCES)
 
 
 @app.get("/api/contracts")
-async def contracts() -> dict[str, dict[str, Any]]:
+async def contracts() -> dict[str, Payload]:
     async with httpx.AsyncClient(timeout=1) as client:
         return await fetch_all(client, CONTRACT_SOURCES)
 

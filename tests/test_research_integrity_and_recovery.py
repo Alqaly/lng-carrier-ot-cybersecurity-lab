@@ -32,7 +32,7 @@ def test_readiness_covers_every_compose_service_and_resource_profiler_never_sets
  rp=(R/'tools/resource_profile.py').read_text(); assert "docker','stats','--no-stream" in rp and 'no automatic resource limits' in rp; assert 'mem_limit' not in rp
 def test_github_ci_is_read_only_sha_pinned_and_direct_dependencies_exact():
  wf=(R/'.github/workflows/quality.yml').read_text(); assert 'contents: read' in wf and 'ubuntu-24.04' in wf and 'persist-credentials: false' in wf; assert 'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803' in wf; assert 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' in wf
- assert (R/'requirements-ci.txt').read_text().splitlines()==['PyYAML==6.0.3','pytest==9.1.1']; assert (R/'requirements-docs.txt').read_text().strip()=='mkdocs-material==9.7.7'; assert (R/'.github/dependabot.yml').exists() and (R/'.github/CODEOWNERS').read_text().strip()=='* @Alqaly'
+ assert (R/'requirements-ci.txt').read_text().splitlines()==['PyYAML==6.0.3','pytest==9.1.1','-r portal/requirements.txt']; assert (R/'requirements-docs.txt').read_text().strip()=='mkdocs-material==9.7.7'; assert (R/'.github/dependabot.yml').exists() and (R/'.github/CODEOWNERS').read_text().strip()=='* @Alqaly'
 
 def test_secret_validator_accepts_private_values_and_rejects_placeholder(tmp_path):
     good=tmp_path/'good.env'; good.write_text('INFLUX_TOKEN=real-token-123\nINFLUX_PASSWORD=real-password-123\nGRAFANA_ADMIN_PASSWORD=real-grafana-123\n'); good.chmod(0o600)

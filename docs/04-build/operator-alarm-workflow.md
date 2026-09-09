@@ -90,6 +90,33 @@ The correct response is not to investigate five unrelated alarms independently. 
 
 ## Practical workflow
 
+### Read the display before drawing a conclusion
+
+The Learning Portal is a read-only view of several services, not a separate
+controller. Its **Alarm Chronicle** reads the alarm engine's records; it does
+not calculate a second set of alarms in your browser.
+
+| Display | What it means | What to do next |
+|---|---|---|
+| Active alarm with a priority and response | The chronicle reports an active condition | Read the consequence and first response; compare the process values and event order |
+| No active alarms reported by the chronicle | The alarm endpoint returned a valid list with no active records | Check process state and source freshness before concluding the process is normal |
+| Alarm state unavailable | The portal could not obtain a usable alarm list | Treat alarm status as unknown; do not interpret this as an all-clear |
+| No transitions recorded | The history endpoint returned an empty list | Confirm you captured the intended event and run |
+| Alarm history unavailable | History could not be retrieved or had an invalid response shape | Preserve other evidence and investigate the service connection |
+| `—`, `UNKNOWN`, or `?` beside a model value | That reading is missing or the model is not ready | Restore the data source before using the value as evidence; unknown flow is not zero flow |
+
+The response time at the top is the browser's receipt time, **not proof that
+every upstream reading is fresh**. A successful portal health check proves the
+portal serves its content, not that the PLCs, historian or complete lab are
+commissioned. Cross-check the source timestamps and retained run evidence.
+
+When a snapshot request fails, the dashboard clears previous readings instead
+of leaving them looking live. When only one source fails, usable responses from
+the other sources remain visible. Alarm messages are displayed as text, never
+executed as page markup.
+
+### Investigate one event
+
 1. Open Learning Portal `http://127.0.0.1:8500`.
 2. Keep the Alarm Chronicle visible.
 3. Capture PMS and Cargo Modbus traffic in separate terminals.
