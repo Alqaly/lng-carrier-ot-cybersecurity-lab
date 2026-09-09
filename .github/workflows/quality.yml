@@ -32,6 +32,8 @@ jobs:
       - run: node --test tests/learning_journey.test.cjs
       - run: node --check portal/static/guided-start.js
       - run: node --test tests/guided_start.test.cjs
+      - run: node --check portal/static/dashboard.js
+      - run: node --test tests/dashboard.test.cjs
       - run: bash -n labctl deploy/preflight.sh deploy/check-secrets.sh deploy/backup.sh deploy/restore.sh deploy/install-systemd.sh
       - run: mkdocs build --strict
   course-container:
@@ -82,6 +84,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:8501/ | grep --fixed-strings 'data-tab="learn" class="active">Guided start'
           curl --fail --silent http://127.0.0.1:8501/static/first-session.json | python3 -c 'import json,sys; data=json.load(sys.stdin); assert len(data["steps"]) == 7'
           curl --fail --silent --output /dev/null http://127.0.0.1:8501/static/guided-start.js
+          curl --fail --silent --output /dev/null http://127.0.0.1:8501/static/dashboard.js
           curl --fail --silent --output /dev/null http://127.0.0.1:8501/static/diagrams/first-session.svg
           curl --fail --silent http://127.0.0.1:8501/health | python3 -c 'import json,sys; assert json.load(sys.stdin)["scope"] == "portal-content-only"'
           curl --fail --silent --max-time 3 http://127.0.0.1:8501/api/snapshot | python3 -c 'import json,sys; data=json.load(sys.stdin); assert set(data) == {"cargo","pms","propulsion","vessel","alarms","catalog","history","alarm_metrics"}; assert all(v == {"ready": False, "error": "upstream unavailable"} for v in data.values())'

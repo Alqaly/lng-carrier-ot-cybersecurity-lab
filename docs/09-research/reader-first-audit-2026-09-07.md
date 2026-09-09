@@ -44,6 +44,36 @@ behavior tests passed, changed shell scripts passed `bash -n`, and
 parameterized functions produce the additional cases. The manifest regression
 now derives that count rather than asserting a stale hard-coded total.
 
+## Follow-up: alarm display contract — 9 September 2026
+
+Reviewing PR #16's merged baseline (`3482bb8`) found a regression missed by the
+offline container smoke test: `alarms/service.py` returns lists from `/alarms`,
+`/history` and `/catalog`, but the portal adapter accepted only objects. Valid
+alarm records therefore became unavailable responses. The dashboard then
+treated those responses as empty lists and could display **No active alarms**.
+
+The repair accepts a list of objects only for those three sources, keeps
+unavailable results distinct from valid empty lists, and exercises the actual
+FastAPI snapshot route with in-memory HTTP response fixtures. Other changes
+clear stale dashboard values after transport failure, preserve unknown values
+instead of manufacturing zeros, and render upstream strings through text nodes
+instead of HTML interpolation. Polling waits for each response before scheduling
+the next request, with a bounded browser timeout.
+
+The [operator alarm workflow](../04-build/operator-alarm-workflow.md) now explains
+what each unavailable/empty/active state means and what a reader should verify.
+Browser receipt time is not upstream freshness proof. Alarm Chronicle records
+are not equivalent to FUXA operator alarms or commissioned control behavior.
+
+Local verification: **153 Python cases and 20 JavaScript tests passed**;
+traceability, generated I/O, quality, deep-review, research, pedagogy, release and
+learning-contract checks passed; strict MkDocs build and diff whitespace checks
+passed. The manifest counts 151 Python test functions (153 parameterized cases).
+One third-party Starlette/AnyIO deprecation warning remains in the test client.
+These are adapter/rendering fixtures, not a browser usability study, a whole-
+project security certification or evidence from the target Docker/PLC stack.
+The full runtime acceptance boundary below is unchanged.
+
 ## What was reviewed, and what remains open
 
 | Area | Coverage in this pass | Still required |

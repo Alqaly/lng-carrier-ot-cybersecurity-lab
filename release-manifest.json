@@ -2,7 +2,7 @@
   "project": "LNG Carrier Virtual Engineering Lab",
   "artifact_state": "source_validated_commissioning_automation_ready",
   "static_validation": {
-    "pytest_expected": 146,
+    "pytest_expected": 151,
     "course_chapters": 10,
     "experiments": 7,
     "compose_services": 26,
@@ -31,6 +31,6 @@
   "course_container": "compose.docs.yml",
   "course_container_boundary": "static website only; separate from private OT runtime",
   "evidence_index_schema": 2,
-  "javascript_unit_tests": 15,
+  "javascript_unit_tests": 20,
   "upgrade_audit": "docs/09-research/upgrade-audit-2026-09-05.md"
 }
