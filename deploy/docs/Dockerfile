@@ -6,7 +6,7 @@ COPY mkdocs.yml .
 COPY docs ./docs
 RUN python -m mkdocs build --strict
 
-FROM nginx:1.30.4-alpine
+FROM nginx:1.31.5-alpine
 LABEL org.opencontainers.image.title="LNG Carrier Evidence-First Course" \
       org.opencontainers.image.source="https://github.com/Alqaly/lng-carrier-ot-cybersecurity-lab" \
       org.opencontainers.image.description="Static course only; no PLC, HMI, lab credentials or live process APIs"
